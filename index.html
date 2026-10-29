@@ -203,7 +203,7 @@
 
         <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-xl text-xs text-yellow-800 flex items-center gap-2">
           <i class="fa-solid fa-wand-magic-sparkles text-yellow-600 text-base shrink-0"></i>
-          <span><strong>Auto AI Gemini Quiz:</strong> 10 Soal Pilihan Ganda (A/B/C/D) murni disusun oleh AI Gemini dari isi berkas Anda. Dilengkapi auto-retry jika server AI sedang sibuk.</span>
+          <span><strong>Auto AI Ollama Quiz:</strong> 10 Soal Pilihan Ganda (A/B/C/D) diproses langsung oleh AI Ollama Lokal di laptop. Bebas limit & tanpa kuota global!</span>
         </div>
 
         <button type="submit" id="btn-submit"
@@ -298,7 +298,6 @@
     const db = getFirestore(app);
 
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyR30go-8sp-JWqgLQ6qdm1jCru3QoWqZUXHy92JgRT45-_0Jd6AePOQRImJgdS-t00/exec";
-    const GEMINI_API_KEY = "AQ.Ab8RN6Iyexfa1XRTo_KkjEW2kCxLhtVGaRYmXaCiMpbKcKsFfw";
 
     const DATA_PEGAWAI = [
       {"nip": "17241", "nama": "MOCHTAR MUHTADI IKSAN", "unit": "UIKSP", "pangkat": "Pelaksana"},
@@ -339,7 +338,7 @@
       {"nip": "16380", "nama": "MOCHAMAD FAJAR ARIANTO", "unit": "UPUR", "pangkat": "Staf"},
       {"nip": "16549", "nama": "CLARESTA ISLAMEY", "unit": "FDSEK", "pangkat": "Manajer"},
       {"nip": "16780", "nama": "MOCHAMAD HADI SAROSA", "unit": "UMI", "pangkat": "Pelaksana"},
-      {"nip": "16781", "nama": "MOCHAMMAM FATONI", "unit": "SK", "pangkat": "Pelaksana"},
+      {"nip": "16781", "nama": "MOCHAMMAD FATONI", "unit": "SK", "pangkat": "Pelaksana"},
       {"nip": "16873", "nama": "ADI PURNOMO", "unit": "UPUR", "pangkat": "Pelaksana"},
       {"nip": "17379", "nama": "ACHMAD MAULIDI EFFENDI", "unit": "UPUR", "pangkat": "Pelaksana"},
       {"nip": "17505", "nama": "RIZKY BANGKIT PUTRA LESMANA", "unit": "UPUR", "pangkat": "Pelaksana"},
@@ -477,8 +476,6 @@
       });
     };
 
-    // Model Gemini
-    const GEMINI_MODELS = ["gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-1.5-pro"];
     const MAX_PDF_INLINE_BYTES = 14 * 1024 * 1024;
     const MAX_TEXT_CHARS = 120000;
 
@@ -502,11 +499,6 @@
 
     async function extractFileContent(file, base64) {
       const ext = file.name.split('.').pop().toLowerCase();
-
-      if (ext === 'pdf') {
-        if (file.size > MAX_PDF_INLINE_BYTES) return { kind: 'toolarge' };
-        return { kind: 'pdf', base64 };
-      }
 
       if (ext === 'docx' || ext === 'pptx') {
         if (typeof JSZip === 'undefined') return { kind: 'unsupported' };
@@ -543,53 +535,6 @@
       return { kind: 'unsupported' };
     }
 
-    const QUIZ_SCHEMA = {
-      type: "ARRAY",
-      items: {
-        type: "OBJECT",
-        properties: {
-          soal:  { type: "STRING" },
-          a:     { type: "STRING" },
-          b:     { type: "STRING" },
-          c:     { type: "STRING" },
-          d:     { type: "STRING" },
-          kunci: { type: "STRING", enum: ["A", "B", "C", "D"] }
-        },
-        required: ["soal", "a", "b", "c", "d", "kunci"]
-      }
-    };
-
-    function buildQuizPrompt(judul, kategori, catatan, content) {
-      let sumber;
-      if (content.kind === 'pdf') {
-        sumber = 'SUMBER MATERI: dokumen PDF yang dilampirkan pada pesan ini. Baca dokumen tersebut secara menyeluruh.';
-      } else if (content.kind === 'text') {
-        sumber = `SUMBER MATERI (isi dokumen lengkap):\n"""\n${content.text}\n"""`;
-      } else {
-        sumber = 'SUMBER MATERI: tidak ada dokumen yang bisa dibaca, gunakan catatan/ringkasan dari pengunggah di bawah sebagai satu-satunya sumber.';
-      }
-
-      return `Anda adalah pakar pembuat soal evaluasi pembelajaran di lingkungan Bank Indonesia.
-Buatkan TEPAT 10 soal pilihan ganda (A, B, C, D) dalam Bahasa Indonesia murni berdasarkan ISI MATERI.
-
-${sumber}
-
-Konteks tambahan dari pengunggah:
-- Judul: "${judul}"
-- Kategori: "${kategori}"
-- Catatan/fokus: "${catatan || '-'}"
-
-ATURAN WAJIB:
-1. Setiap soal HARUS bisa dijawab secara presisi dari isi materi di atas.
-2. Sebarkan soal ke seluruh bagian materi.
-3. Variasikan jenis soal (fakta, konsep, penerapan).
-4. Dilarang membuat soal tentang nama file, nama penulis, atau format dokumen.
-5. Setiap soal punya satu jawaban benar dan tiga pengecoh yang masuk akal.
-6. Dilarang memakai opsi "semua jawaban benar", "semua salah", dan sejenisnya.
-7. Kembalikan HANYA JSON array murni:
-[{"soal":"...","a":"...","b":"...","c":"...","d":"...","kunci":"A"}]`;
-    }
-
     function shuffleArray(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -622,50 +567,22 @@ ATURAN WAJIB:
       return out;
     }
 
-    async function requestGemini(model, parts) {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ role: 'user', parts }],
-          generationConfig: {
-            temperature: 0.4,
-            maxOutputTokens: 16384,
-            responseMimeType: 'application/json',
-            responseSchema: QUIZ_SCHEMA
-          }
-        })
-      });
-
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        const err = new Error(data?.error?.message || `HTTP ${res.status}`);
-        err.status = res.status;
-        throw err;
-      }
-
-      const cand = data.candidates?.[0];
-      const text = (cand?.content?.parts || []).filter(p => p.text && !p.thought).map(p => p.text).join('');
-      if (!text) {
-        throw new Error('Respon Gemini kosong');
-      }
-      return text;
-    }
-
-    // Pemanggilan AI Gemini dengan Auto-Retry 3x
+    // PEMANGGILAN OLLAMA VIA NGROK LOKAL (100% BEBAS LIMIT)
     async function generateQuestionsWithGemini(judul, kategori, catatan, content) {
-      // URL ngrok Ollama lokal dari laptop kamu
       const OLLAMA_URL = "https://swept-composed-bunch.ngrok-free.dev/api/generate";
 
       let teksMateri = content.kind === 'text' ? content.text : (catatan || `${judul} mengenai ${kategori}`);
 
-      const promptText = `Anda adalah pakar pembuat soal evaluasi di Bank Indonesia.
-Buatkan TEPAT 10 soal pilihan ganda (A, B, C, D) dalam Bahasa Indonesia berdasarkan materi ini:
+      const promptText = `Anda adalah pakar pembuat soal evaluasi pembelajaran di lingkungan Bank Indonesia.
+Buatkan TEPAT 10 soal pilihan ganda (A, B, C, D) dalam Bahasa Indonesia murni berdasarkan materi berikut:
 Judul: ${judul}
 Kategori: ${kategori}
-Isi: ${teksMateri}
+Isi Ringkas/Materi: ${teksMateri}
 
-WAJIB balaskan HANYA format JSON Array murni tanpa penjelasan lain:
+ATURAN WAJIB:
+1. Setiap soal HARUS bisa dijawab secara presisi dari isi materi.
+2. Setiap soal punya satu jawaban benar dan tiga pengecoh yang masuk akal.
+3. Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun:
 [{"soal":"...","a":"...","b":"...","c":"...","d":"...","kunci":"A"}]`;
 
       try {
@@ -680,19 +597,17 @@ WAJIB balaskan HANYA format JSON Array murni tanpa penjelasan lain:
           })
         });
 
+        if (!res.ok) {
+          throw new Error(`Koneksi ngrok HTTP ${res.status}`);
+        }
+
         const data = await res.json();
         const quizList = JSON.parse(data.response);
         return normalizeQuestions(quizList);
       } catch (err) {
         console.error("Ollama ngrok error:", err);
-        throw new Error("Gagal terhubung ke AI Ollama Lokal. Pastikan ngrok dan Ollama di laptop aktif!");
+        throw new Error("Gagal terhubung ke AI Ollama Lokal. Pastikan Ollama & ngrok di laptop dalam keadaan aktif!");
       }
-    }
-
-      if (best.length >= 8) return best;
-      
-      // Jika AI benar-benar sibuk total
-      throw new Error("AI Gemini sedang mengalami trafik tinggi (High Demand). Silakan tunggu 10-15 detik lalu klik tombol Terbitkan kembali.");
     }
 
     // Submit Upload Materi
@@ -729,9 +644,8 @@ WAJIB balaskan HANYA format JSON Array murni tanpa penjelasan lain:
           content = { kind: 'unsupported' };
         }
 
-        setBtn('AI Gemini sedang menganalisis berkas & menyusun 10 kuis...');
+        setBtn('AI Ollama sedang meracik 10 kuis di laptop...');
         
-        // Panggil Gemini AI (Apabila High Demand, throw error yang akan ditangkap di catch)
         const questionsList = await generateQuestionsWithGemini(judul, kategori, isi, content);
 
         setBtn('Mengunggah file ke Google Drive...');
@@ -771,11 +685,11 @@ WAJIB balaskan HANYA format JSON Array murni tanpa penjelasan lain:
           poin: 50
         });
 
-        alert("Materi & 10 Kuis AI Berhasil Diterbitkan! Anda mendapatkan +50 Poin!");
+        alert("Materi & 10 Kuis AI Berhasil Diterbitkan via Ollama Lokal! Anda mendapatkan +50 Poin!");
         document.getElementById('form-upload').reset();
         toggleUploadModal(false);
       } catch (err) {
-        console.error("Error Upload / Gemini Busy:", err);
+        console.error("Error Upload:", err);
         alert(err.message || "Terjadi kesalahan saat mengunggah berkas.");
       } finally {
         btn.innerHTML = defaultBtnHTML;
