@@ -568,7 +568,7 @@
     }
 
     // PEMANGGILAN OLLAMA VIA NGROK LOKAL (100% BEBAS LIMIT)
-    async function generateQuestionsWithGemini(judul, kategori, catatan, content) {
+async function generateQuestionsWithGemini(judul, kategori, catatan, content) {
       const OLLAMA_URL = "https://swept-composed-bunch.ngrok-free.dev/api/generate";
 
       let teksMateri = content.kind === 'text' ? content.text : (catatan || `${judul} mengenai ${kategori}`);
@@ -588,7 +588,10 @@ ATURAN WAJIB:
       try {
         const res = await fetch(OLLAMA_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true' // BYPASS NGOK WARNING 403
+          },
           body: JSON.stringify({
             model: "llama3.2",
             prompt: promptText,
@@ -609,7 +612,7 @@ ATURAN WAJIB:
         throw new Error("Gagal terhubung ke AI Ollama Lokal. Pastikan Ollama & ngrok di laptop dalam keadaan aktif!");
       }
     }
-
+    
     // Submit Upload Materi
     document.getElementById('form-upload').addEventListener('submit', async (e) => {
       e.preventDefault();
