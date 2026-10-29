@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SINAU - Sharing Ilmu Nambah wawAsan terpadU</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: {
+        'bi-blue': '#003366',
+        'bi-blue-dark': '#002244',
+        'bi-blue-light': '#004080',
+        'bi-gold': '#D4AF37'
+      } } }
+    };
+  </script>
+  <!-- JSZip: untuk membaca isi file DOCX/PPTX di browser -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bi-blue: #003366;
+      --bi-blue-dark: #002244;
+      --bi-blue-light: #004080;
+      --bi-gold: #D4AF37;
+    }
+    .bg-bi-blue { background-color: var(--bi-blue); }
+    .bg-bi-blue-dark { background-color: var(--bi-blue-dark); }
+    .bg-bi-blue-light { background-color: var(--bi-blue-light); }
+    .text-bi-blue { color: var(--bi-blue); }
+    .text-bi-gold { color: var(--bi-gold); }
+    .border-bi-blue { border-color: var(--bi-blue); }
+    .banner-bi { background-image: linear-gradient(to right, var(--bi-blue), var(--bi-blue-light)); background-color: var(--bi-blue); }
+  </style>
+</head>
+<body class="bg-slate-100 text-gray-800 font-sans min-h-screen flex flex-col">
+
+  <!-- Header / Navbar -->
+  <header class="bg-bi-blue text-white shadow-lg sticky top-0 z-40 border-b-2 border-yellow-500">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-graduation-cap text-3xl text-yellow-400"></i>
+        <div>
+          <h1 class="text-xl font-bold tracking-wider text-white">SINAU</h1>
+          <p class="text-xs text-blue-200 font-light">Sharing Ilmu Nambah wawAsan terpadU • KPwBI Jember</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <!-- Status User & Login -->
+        <div id="user-info-bar" class="hidden items-center gap-3">
+          <div class="bg-bi-blue-dark border border-blue-400/30 px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2">
+            <i class="fa-solid fa-coins text-yellow-400"></i>
+            <span>Poin: <strong id="user-points" class="text-yellow-300">0</strong></span>
+          </div>
+          <div class="text-right hidden sm:block">
+            <div id="user-display-name" class="text-xs font-bold leading-tight">Pegawai BI</div>
+            <div id="user-display-nip" class="text-[10px] text-blue-200">NIP: -</div>
+          </div>
+          <button onclick="logoutPegawai()" title="Keluar" class="bg-red-600/80 hover:bg-red-700 text-white p-2 rounded-full text-xs transition">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </div>
+
+        <button id="btn-login-nav" onclick="toggleLoginModal(true)" class="bg-yellow-500 hover:bg-yellow-600 text-bi-blue font-bold px-4 py-1.5 rounded-full text-xs flex items-center gap-1.5 shadow transition">
+          <i class="fa-solid fa-right-to-bracket"></i> Login Pegawai
+        </button>
+
+        <button id="btn-upload-nav" onclick="toggleUploadModal(true)" class="hidden bg-yellow-500 hover:bg-yellow-600 text-bi-blue px-3.5 py-1.5 rounded-full text-xs font-bold items-center gap-1.5 shadow transition">
+          <i class="fa-solid fa-plus-circle text-sm"></i> Upload Materi
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8 w-full">
+    
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Banner Selamat Datang -->
+      <div class="banner-bi bg-gradient-to-r from-bi-blue to-bi-blue-light text-white p-6 rounded-2xl shadow-md border border-blue-900 flex justify-between items-center">
+        <div>
+          <span class="inline-block text-[11px] font-semibold bg-white/15 px-2.5 py-1 rounded-md text-yellow-300 border border-yellow-400/50">KPwBI Jember Internal Learning Platform</span>
+          <h2 class="text-lg font-bold mt-2">Platform Belajar & Berbagi Ilmu Together</h2>
+          <p class="text-xs text-blue-100 mt-1">Tingkatkan wawasan perbankan sentral, selesaikan kuis AI, dan kumpulkan poinmu!</p>
+        </div>
+        <button onclick="handleUploadClick()" class="bg-yellow-500 hover:bg-yellow-600 text-bi-blue px-4 py-2.5 rounded-xl text-xs font-bold shadow transition flex items-center gap-2 shrink-0 ml-4">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Upload (+50 Poin)
+        </button>
+      </div>
+
+      <!-- Feed Daftar Materi & Search Bar -->
+      <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <h2 class="text-base font-bold text-bi-blue flex items-center gap-2">
+            <i class="fa-solid fa-book-open text-yellow-600"></i> Modul & Materi Pembelajaran
+          </h2>
+          <!-- Input Search Materi -->
+          <div class="relative w-full sm:w-64">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+              <i class="fa-solid fa-search text-xs"></i>
+            </span>
+            <input type="text" id="input-search" oninput="filterMateriList()" placeholder="Cari judul/kategori materi..." 
+              class="w-full pl-9 pr-3 py-1.5 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-800 focus:outline-none">
+          </div>
+        </div>
+
+        <div id="materi-container" class="space-y-4">
+          <p class="text-gray-400 text-sm italic">Memuat materi dari database...</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Sidebar Leaderboard -->
+    <aside class="space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 sticky top-20">
+        <h2 class="text-base font-bold text-bi-blue mb-1 flex items-center gap-2">
+          <i class="fa-solid fa-trophy text-yellow-500"></i> Leaderboard SINAU
+        </h2>
+        <p class="text-xs text-gray-500 mb-4">Peringkat pegawai paling aktif belajar & berbagi ilmu.</p>
+        
+        <div id="leaderboard-container" class="space-y-2.5">
+          <p class="text-gray-400 text-sm italic">Belum ada aktivitas.</p>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Modal Login Pegawai -->
+  <div id="login-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-200">
+      <div class="text-center space-y-1">
+        <div class="w-12 h-12 bg-bi-blue text-yellow-400 rounded-full flex items-center justify-center mx-auto text-xl shadow">
+          <i class="fa-solid fa-user-lock"></i>
+        </div>
+        <h3 class="text-lg font-bold text-bi-blue">Login Pegawai SINAU</h3>
+        <p class="text-xs text-gray-500">Gunakan NIP dan Password pegawai Anda</p>
+      </div>
+
+      <form id="form-login" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">NIP Pegawai</label>
+          <input type="text" id="login-nip" placeholder="Contoh: 17241" required 
+            class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Password</label>
+          <input type="password" id="login-password" placeholder="Masukkan password" required 
+            class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
+        </div>
+
+        <div class="pt-2 flex gap-2">
+          <button type="button" onclick="toggleLoginModal(false)" class="w-1/3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 rounded-lg text-xs transition">
+            Batal
+          </button>
+          <button type="submit" class="w-2/3 bg-bi-blue hover:bg-bi-blue-dark text-white font-semibold py-2 rounded-lg text-xs transition shadow">
+            <i class="fa-solid fa-right-to-bracket mr-1"></i> Masuk Sistem
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Upload Materi -->
+  <div id="upload-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 border border-slate-200">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-base font-bold text-bi-blue flex items-center gap-2">
+          <i class="fa-solid fa-cloud-arrow-up text-yellow-600"></i> Upload Materi Baru (+50 Poin)
+        </h3>
+        <button onclick="toggleUploadModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="form-upload" class="space-y-3">
+        <div class="bg-blue-50 p-2.5 rounded-lg border border-blue-100 flex justify-between items-center">
+          <span class="text-xs text-blue-900 font-semibold"><i class="fa-solid fa-user-check mr-1 text-bi-blue"></i> Pengunggah:</span>
+          <span id="upload-author-display" class="text-xs font-bold text-bi-blue">-</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <input type="text" id="input-judul" placeholder="Judul Materi" required 
+            class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
+          <input type="text" id="input-kategori" placeholder="Kategori (misal: SPPUR/CBP)" required 
+            class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Catatan / Fokus Materi <span class="font-normal text-gray-500">(opsional)</span></label>
+          <textarea id="input-isi" rows="3" placeholder="Opsional: tulis topik/bagian yang ingin ditekankan. Soal kuis disusun murni dari isi file yang Anda unggah." 
+            class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none"></textarea>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-xs font-bold text-gray-700"><i class="fa-brands fa-google-drive text-green-600 mr-1"></i> Upload File Modul (PDF, PPT, Word)</label>
+          <input type="file" id="input-file" accept=".pdf,.ppt,.pptx,.doc,.docx" required
+            class="w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-bi-blue hover:file:bg-blue-100">
+        </div>
+
+        <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-xl text-xs text-yellow-800 flex items-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles text-yellow-600 text-base shrink-0"></i>
+          <span><strong>Auto AI Gemini Quiz:</strong> 10 Soal Pilihan Ganda (A/B/C/D) murni disusun oleh AI Gemini dari isi berkas Anda. Dilengkapi auto-retry jika server AI sedang sibuk.</span>
+        </div>
+
+        <button type="submit" id="btn-submit"
+          class="w-full bg-bi-blue hover:bg-bi-blue-dark text-white font-semibold py-2.5 rounded-lg text-sm transition shadow flex items-center justify-center gap-2">
+          <i class="fa-solid fa-paper-plane"></i> Terbitkan Materi & Generate Kuis AI
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Edit Materi -->
+  <div id="edit-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 border border-slate-200">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-base font-bold text-bi-blue flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square text-blue-600"></i> Edit Informasi Materi
+        </h3>
+        <button onclick="toggleEditModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="form-edit" class="space-y-3">
+        <input type="hidden" id="edit-materi-id">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Judul Materi</label>
+            <input type="text" id="edit-judul" required class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Kategori</label>
+            <input type="text" id="edit-kategori" required class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Catatan / Rincian Materi</label>
+          <textarea id="edit-isi" rows="3" class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none"></textarea>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="toggleEditModal(false)" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg text-xs transition">Batal</button>
+          <button type="submit" id="btn-save-edit" class="px-5 py-2 bg-bi-blue hover:bg-bi-blue-dark text-white font-semibold rounded-lg text-xs transition shadow flex items-center gap-1.5">
+            <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal pengerjaan Kuis AI 10 Soal -->
+  <div id="quiz-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4 border border-slate-200">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <h3 id="quiz-title-display" class="text-base font-bold text-bi-blue flex items-center gap-2">
+            <i class="fa-solid fa-brain text-yellow-600"></i> Kuis Pembelajaran (10 Soal AI)
+          </h3>
+          <p id="quiz-progress-text" class="text-xs text-gray-500 mt-0.5">Soal 1 dari 10</p>
+        </div>
+        <button onclick="toggleQuizModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="quiz-body" class="space-y-4">
+        <!-- Soal & Opsi Jawaban Render via JS -->
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-bi-blue-dark text-blue-200 text-xs text-center py-4 border-t border-blue-900">
+    SINAU Platform &copy; 2026 - KPwBI Jember
+  </footer>
+
+  <!-- Firebase SDK & Scripts -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCot0XGB8--jZrEd_AkC51CbT_UCTTLUpc",
+      authDomain: "sinau-bi-jember.firebaseapp.com",
+      projectId: "sinau-bi-jember",
+      storageBucket: "sinau-bi-jember.firebasestorage.app",
+      messagingSenderId: "377515721757",
+      appId: "1:377515721757:web:a32cd376586a7d8c22f2f4",
+      measurementId: "G-BSF19XCYRH"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyR30go-8sp-JWqgLQ6qdm1jCru3QoWqZUXHy92JgRT45-_0Jd6AePOQRImJgdS-t00/exec";
+    const GEMINI_API_KEY = "AQ.Ab8RN6Iyexfa1XRTo_KkjEW2kCxLhtVGaRYmXaCiMpbKcKsFfw";
+
+    const DATA_PEGAWAI = [
+      {"nip": "17241", "nama": "MOCHTAR MUHTADI IKSAN", "unit": "UIKSP", "pangkat": "Pelaksana"},
+      {"nip": "17471", "nama": "M BAYU SETIAWAN", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "17388", "nama": "ADHYTYA BAGUS RIZKIANTO", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "15133", "nama": "AGAPITO GANESHA JMN", "unit": "UIKSP", "pangkat": "Asisten Manajer"},
+      {"nip": "16405", "nama": "PANJI PAMUNGKAS AAY", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "15352", "nama": "RAMADHANI HERLLANDA", "unit": "FPPUKIS", "pangkat": "Staf"},
+      {"nip": "16728", "nama": "FIRMAN HIDAYAT", "unit": "UMI", "pangkat": "Pelaksana"},
+      {"nip": "13077", "nama": "MOH. ZUNI RISTIYANTO", "unit": "UPUR", "pangkat": "Manajer"},
+      {"nip": "13834", "nama": "IMRAN BESTARI", "unit": "UMI", "pangkat": "Manajer"},
+      {"nip": "13920", "nama": "EKO ANDRYANTO", "unit": "UPUR", "pangkat": "Staf"},
+      {"nip": "13953", "nama": "SUMA MARDIAN", "unit": "FPPUKIS", "pangkat": "Pelaksana"},
+      {"nip": "14072", "nama": "AGUNG JOKO PRASETYO", "unit": "FDSEK", "pangkat": "Staf"},
+      {"nip": "14079", "nama": "EKO SETIONO", "unit": "UMI", "pangkat": "Pelaksana"},
+      {"nip": "14156", "nama": "ADAM MASYKUR", "unit": "UMI", "pangkat": "Pelaksana"},
+      {"nip": "14176", "nama": "ACHMAD", "unit": "Deputi KaKPw", "pangkat": "Asisten Direktur"},
+      {"nip": "14501", "nama": "PURYANTO", "unit": "SK", "pangkat": "Asisten Manajer"},
+      {"nip": "14504", "nama": "RETNO WIDIYASTIWI", "unit": "FPPUKIS", "pangkat": "Asisten Manajer"},
+      {"nip": "14527", "nama": "WAHYU DWI PURTONO", "unit": "UIKSP", "pangkat": "Asisten Manajer"},
+      {"nip": "14587", "nama": "IQBAL REZA NUGRAHA", "unit": "KaKPw", "pangkat": "Deputi Direktur"},
+      {"nip": "14802", "nama": "SETIYAWAN ADHI NURILHAM", "unit": "Deputi KaKPw", "pangkat": "Asisten Direktur"},
+      {"nip": "15026", "nama": "DIMAS MAY SUMARNA", "unit": "UMI", "pangkat": "Pelaksana"},
+      {"nip": "15027", "nama": "ARIES PRIMAYANDI", "unit": "UMI", "pangkat": "Pelaksana"},
+      {"nip": "15046", "nama": "MOHAMMAD SODIK", "unit": "UMI", "pangkat": "Pelaksana"},
+      {"nip": "15068", "nama": "BAYUNANDA AFRIANTO", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "15372", "nama": "RIZKA NOVIA MARGARETTA", "unit": "UMI", "pangkat": "Asisten Manajer"},
+      {"nip": "15411", "nama": "TAUFAN ZAKARIA", "unit": "UIKSP", "pangkat": "Asisten Manajer"},
+      {"nip": "15693", "nama": "DEDI PRAKASA", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "15805", "nama": "DONI PRASETIYO", "unit": "UMI", "pangkat": "Pelaksana"},
+      {"nip": "16175", "nama": "ARFIAN SISWO BINTORO", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "16184", "nama": "BIONDI PRASADHA PRIYADHANA", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "16203", "nama": "HERDIAWAN ANTONO", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "16206", "nama": "JOHAN SAPUTRA", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "16244", "nama": "A ROBITH MUBAROK", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "16269", "nama": "ALVAN SIDIQ ASBULLAH", "unit": "UPUR", "pangkat": "Staf"},
+      {"nip": "16372", "nama": "M ARIF WICAKSONO A", "unit": "SK", "pangkat": "Staf"},
+      {"nip": "16380", "nama": "MOCHAMAD FAJAR ARIANTO", "unit": "UPUR", "pangkat": "Staf"},
+      {"nip": "16549", "nama": "CLARESTA ISLAMEY", "unit": "FDSEK", "pangkat": "Manajer"},
+      {"nip": "16780", "nama": "MOCHAMAD HADI SAROSA", "unit": "UMI", "pangkat": "Pelaksana"},
+      {"nip": "16781", "nama": "MOCHAMMAM FATONI", "unit": "SK", "pangkat": "Pelaksana"},
+      {"nip": "16873", "nama": "ADI PURNOMO", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "17379", "nama": "ACHMAD MAULIDI EFFENDI", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "17505", "nama": "RIZKY BANGKIT PUTRA LESMANA", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "17537", "nama": "WAHYU NOVIARTO", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "17795", "nama": "DWIANI KARTIKASARI", "unit": "FPPUKIS", "pangkat": "Asisten Manajer"},
+      {"nip": "17972", "nama": "FEBYOLLA PUTRI ANINDITYA", "unit": "FDSEK", "pangkat": "Asisten Manajer"},
+      {"nip": "18035", "nama": "NURINA SAVANTI WIDYA GOTAMI", "unit": "UIKSP", "pangkat": "Asisten Manajer"},
+      {"nip": "18332", "nama": "FIKRI RAHMAT MUTTAQIN", "unit": "FPPUKIS", "pangkat": "Asisten Manajer"},
+      {"nip": "17448", "nama": "HARI SUCIONO", "unit": "UPUR", "pangkat": "Pelaksana"}
+    ];
+
+    let currentUser = JSON.parse(localStorage.getItem('sinau_user')) || null;
+    let cachedMateriList = [];
+    let allMateriData = {};
+    let currentActiveMateriId = null;
+    let currentQuestions = [];
+    let currentQuestionIndex = 0;
+    let userAnswers = {};
+
+    function getCompletedQuizIds() {
+      if (!currentUser || !currentUser.nip) return new Set();
+      const saved = localStorage.getItem(`sinau_completed_quizzes_${currentUser.nip}`);
+      return new Set(saved ? JSON.parse(saved) : []);
+    }
+
+    function saveCompletedQuizId(materiId) {
+      if (!currentUser || !currentUser.nip) return;
+      const completed = getCompletedQuizIds();
+      completed.add(materiId);
+      localStorage.setItem(`sinau_completed_quizzes_${currentUser.nip}`, JSON.stringify(Array.from(completed)));
+    }
+
+    function updateUIForLogin() {
+      if (currentUser) {
+        document.getElementById('user-info-bar').classList.remove('hidden');
+        document.getElementById('user-info-bar').classList.add('flex');
+        document.getElementById('btn-login-nav').classList.add('hidden');
+        document.getElementById('btn-upload-nav').classList.remove('hidden');
+        document.getElementById('btn-upload-nav').classList.add('flex');
+
+        document.getElementById('user-display-name').innerText = currentUser.nama;
+        document.getElementById('user-display-nip').innerText = `NIP: ${currentUser.nip} (${currentUser.unit})`;
+        document.getElementById('upload-author-display').innerText = `${currentUser.nama} (${currentUser.nip})`;
+      } else {
+        document.getElementById('user-info-bar').classList.add('hidden');
+        document.getElementById('user-info-bar').classList.remove('flex');
+        document.getElementById('btn-login-nav').classList.remove('hidden');
+        document.getElementById('btn-upload-nav').classList.add('hidden');
+        document.getElementById('btn-upload-nav').classList.remove('flex');
+      }
+
+      renderMateriCards(document.getElementById('input-search')?.value || "");
+    }
+    updateUIForLogin();
+
+    window.toggleLoginModal = function(show) {
+      const modal = document.getElementById('login-modal');
+      if (show) modal.classList.remove('hidden');
+      else modal.classList.add('hidden');
+    };
+
+    window.toggleUploadModal = function(show) {
+      if (!currentUser) {
+        alert("Silakan Login Pegawai terlebih dahulu untuk mengunggah materi!");
+        toggleLoginModal(true);
+        return;
+      }
+      const modal = document.getElementById('upload-modal');
+      if (show) modal.classList.remove('hidden');
+      else modal.classList.add('hidden');
+    };
+
+    window.toggleEditModal = function(show) {
+      const modal = document.getElementById('edit-modal');
+      if (show) modal.classList.remove('hidden');
+      else modal.classList.add('hidden');
+    };
+
+    window.toggleQuizModal = function(show) {
+      const modal = document.getElementById('quiz-modal');
+      if (show) modal.classList.remove('hidden');
+      else modal.classList.add('hidden');
+    };
+
+    window.handleUploadClick = function() {
+      if (!currentUser) {
+        alert("Silakan Login Pegawai terlebih dahulu!");
+        toggleLoginModal(true);
+      } else {
+        toggleUploadModal(true);
+      }
+    };
+
+    window.logoutPegawai = function() {
+      if (confirm("Apakah Anda yakin ingin keluar dari sistem SINAU?")) {
+        localStorage.removeItem('sinau_user');
+        currentUser = null;
+        updateUIForLogin();
+        alert("Anda telah keluar.");
+      }
+    };
+
+    // Login Form Submit
+    document.getElementById('form-login').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nipInput = document.getElementById('login-nip').value.trim();
+      const passInput = document.getElementById('login-password').value.trim();
+
+      const found = DATA_PEGAWAI.find(p => p.nip === nipInput);
+
+      if (!found) {
+        alert("NIP tidak terdaftar dalam database Pegawai KPwBI Jember!");
+        return;
+      }
+
+      if (passInput !== "sinaubareng") {
+        alert("Password salah! Silakan periksa kembali password Anda.");
+        return;
+      }
+
+      currentUser = found;
+      localStorage.setItem('sinau_user', JSON.stringify(found));
+      updateUIForLogin();
+      toggleLoginModal(false);
+      document.getElementById('form-login').reset();
+      alert(`Selamat datang, ${found.nama}!`);
+    });
+
+    const readFileAsBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+      });
+    };
+
+    // Model Gemini
+    const GEMINI_MODELS = ["gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-1.5-pro"];
+    const MAX_PDF_INLINE_BYTES = 14 * 1024 * 1024;
+    const MAX_TEXT_CHARS = 120000;
+
+    const decodeXmlEntities = (s) => {
+      const t = document.createElement('textarea');
+      t.innerHTML = s;
+      return t.value;
+    };
+
+    const xmlToText = (xml, paraTag) => {
+      const withBreaks = xml
+        .replace(/<w:instrText[^>]*>[\s\S]*?<\/w:instrText>/g, '')
+        .replace(/<(?:a|w):br\s*\/>/g, '\n')
+        .replace(/<w:tab\s*\/>/g, ' ')
+        .replace(new RegExp(`</${paraTag}>`, 'g'), '\n');
+      return decodeXmlEntities(withBreaks.replace(/<[^>]+>/g, ''))
+        .replace(/[ \t]+\n/g, '\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+    };
+
+    async function extractFileContent(file, base64) {
+      const ext = file.name.split('.').pop().toLowerCase();
+
+      if (ext === 'pdf') {
+        if (file.size > MAX_PDF_INLINE_BYTES) return { kind: 'toolarge' };
+        return { kind: 'pdf', base64 };
+      }
+
+      if (ext === 'docx' || ext === 'pptx') {
+        if (typeof JSZip === 'undefined') return { kind: 'unsupported' };
+        const zip = await JSZip.loadAsync(file);
+        let text = '';
+
+        if (ext === 'docx') {
+          const docFile = zip.file('word/document.xml');
+          if (docFile) text = xmlToText(await docFile.async('string'), 'w:p');
+        } else {
+          const slideNum = (n) => parseInt(n.match(/(\d+)\.xml$/)[1], 10);
+          const slideNames = Object.keys(zip.files)
+            .filter(n => /^ppt\/slides\/slide\d+\.xml$/.test(n))
+            .sort((a, b) => slideNum(a) - slideNum(b));
+
+          const chunks = [];
+          for (const name of slideNames) {
+            const n = slideNum(name);
+            let chunk = `[Slide ${n}]\n` + xmlToText(await zip.file(name).async('string'), 'a:p');
+            const notesFile = zip.file(`ppt/notesSlides/notesSlide${n}.xml`);
+            if (notesFile) {
+              const notes = xmlToText(await notesFile.async('string'), 'a:p');
+              if (notes) chunk += `\n(Catatan pembicara: ${notes})`;
+            }
+            chunks.push(chunk);
+          }
+          text = chunks.join('\n\n');
+        }
+
+        if (text.length < 30) return { kind: 'empty' };
+        return { kind: 'text', text: text.slice(0, MAX_TEXT_CHARS) };
+      }
+
+      return { kind: 'unsupported' };
+    }
+
+    const QUIZ_SCHEMA = {
+      type: "ARRAY",
+      items: {
+        type: "OBJECT",
+        properties: {
+          soal:  { type: "STRING" },
+          a:     { type: "STRING" },
+          b:     { type: "STRING" },
+          c:     { type: "STRING" },
+          d:     { type: "STRING" },
+          kunci: { type: "STRING", enum: ["A", "B", "C", "D"] }
+        },
+        required: ["soal", "a", "b", "c", "d", "kunci"]
+      }
+    };
+
+    function buildQuizPrompt(judul, kategori, catatan, content) {
+      let sumber;
+      if (content.kind === 'pdf') {
+        sumber = 'SUMBER MATERI: dokumen PDF yang dilampirkan pada pesan ini. Baca dokumen tersebut secara menyeluruh.';
+      } else if (content.kind === 'text') {
+        sumber = `SUMBER MATERI (isi dokumen lengkap):\n"""\n${content.text}\n"""`;
+      } else {
+        sumber = 'SUMBER MATERI: tidak ada dokumen yang bisa dibaca, gunakan catatan/ringkasan dari pengunggah di bawah sebagai satu-satunya sumber.';
+      }
+
+      return `Anda adalah pakar pembuat soal evaluasi pembelajaran di lingkungan Bank Indonesia.
+Buatkan TEPAT 10 soal pilihan ganda (A, B, C, D) dalam Bahasa Indonesia murni berdasarkan ISI MATERI.
+
+${sumber}
+
+Konteks tambahan dari pengunggah:
+- Judul: "${judul}"
+- Kategori: "${kategori}"
+- Catatan/fokus: "${catatan || '-'}"
+
+ATURAN WAJIB:
+1. Setiap soal HARUS bisa dijawab secara presisi dari isi materi di atas.
+2. Sebarkan soal ke seluruh bagian materi.
+3. Variasikan jenis soal (fakta, konsep, penerapan).
+4. Dilarang membuat soal tentang nama file, nama penulis, atau format dokumen.
+5. Setiap soal punya satu jawaban benar dan tiga pengecoh yang masuk akal.
+6. Dilarang memakai opsi "semua jawaban benar", "semua salah", dan sejenisnya.
+7. Kembalikan HANYA JSON array murni:
+[{"soal":"...","a":"...","b":"...","c":"...","d":"...","kunci":"A"}]`;
+    }
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function normalizeQuestions(list) {
+      if (!Array.isArray(list)) return [];
+      const out = [];
+      for (const q of list) {
+        if (!q || typeof q !== 'object') continue;
+        const soal = String(q.soal || '').trim();
+        const kunci = String(q.kunci || '').trim().toUpperCase().charAt(0);
+        const opts = ['a', 'b', 'c', 'd'].map(k => String(q[k] ?? '').trim());
+        if (!soal || opts.some(o => !o) || !['A', 'B', 'C', 'D'].includes(kunci)) continue;
+
+        const correctIdx = 'ABCD'.indexOf(kunci);
+        const items = shuffleArray(opts.map((text, i) => ({ text, correct: i === correctIdx })));
+        out.push({
+          soal,
+          a: items[0].text,
+          b: items[1].text,
+          c: items[2].text,
+          d: items[3].text,
+          kunci: 'ABCD'[items.findIndex(x => x.correct)]
+        });
+      }
+      return out;
+    }
+
+    async function requestGemini(model, parts) {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts }],
+          generationConfig: {
+            temperature: 0.4,
+            maxOutputTokens: 16384,
+            responseMimeType: 'application/json',
+            responseSchema: QUIZ_SCHEMA
+          }
+        })
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const err = new Error(data?.error?.message || `HTTP ${res.status}`);
+        err.status = res.status;
+        throw err;
+      }
+
+      const cand = data.candidates?.[0];
+      const text = (cand?.content?.parts || []).filter(p => p.text && !p.thought).map(p => p.text).join('');
+      if (!text) {
+        throw new Error('Respon Gemini kosong');
+      }
+      return text;
+    }
+
+    // Pemanggilan AI Gemini dengan Auto-Retry 3x
+    async function generateQuestionsWithGemini(judul, kategori, catatan, content) {
+      const parts = [];
+      if (content.kind === 'pdf') {
+        parts.push({ inlineData: { mimeType: 'application/pdf', data: content.base64 } });
+      }
+      parts.push({ text: buildQuizPrompt(judul, kategori, catatan, content) });
+
+      let best = [];
+
+      for (const model of GEMINI_MODELS) {
+        for (let attempt = 1; attempt <= 3; attempt++) {
+          try {
+            const raw = await requestGemini(model, parts);
+            const cleaned = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
+            const list = normalizeQuestions(JSON.parse(cleaned.slice(cleaned.indexOf('['), cleaned.lastIndexOf(']') + 1)));
+
+            if (list.length >= 10) return list.slice(0, 10);
+            if (list.length > best.length) best = list;
+          } catch (err) {
+            console.warn(`Gemini (${model}) percobaan ${attempt} mengalami kendala:`, err.message);
+            // Tunggu 2 detik sebelum mencoba lagi
+            await new Promise(r => setTimeout(r, 2000));
+          }
+        }
+      }
+
+      if (best.length >= 8) return best;
+      
+      // Jika AI benar-benar sibuk total
+      throw new Error("AI Gemini sedang mengalami trafik tinggi (High Demand). Silakan tunggu 10-15 detik lalu klik tombol Terbitkan kembali.");
+    }
+
+    // Submit Upload Materi
+    document.getElementById('form-upload').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+
+      const btn = document.getElementById('btn-submit');
+      const defaultBtnHTML = `<i class="fa-solid fa-paper-plane mr-1"></i> Terbitkan Materi & Generate Kuis AI`;
+      const setBtn = (msg) => { btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ${msg}`; };
+
+      const judul = document.getElementById('input-judul').value;
+      const kategori = document.getElementById('input-kategori').value;
+      const isi = document.getElementById('input-isi').value;
+      const fileInput = document.getElementById('input-file').files[0];
+
+      if (!fileInput) {
+        alert("Silakan unggah file modul terlebih dahulu!");
+        return;
+      }
+
+      btn.disabled = true;
+
+      let driveLink = "";
+
+      try {
+        setBtn('Membaca berkas modul...');
+        const base64Data = await readFileAsBase64(fileInput);
+
+        let content;
+        try {
+          content = await extractFileContent(fileInput, base64Data);
+        } catch (ex) {
+          content = { kind: 'unsupported' };
+        }
+
+        setBtn('AI Gemini sedang menganalisis berkas & menyusun 10 kuis...');
+        
+        // Panggil Gemini AI (Apabila High Demand, throw error yang akan ditangkap di catch)
+        const questionsList = await generateQuestionsWithGemini(judul, kategori, isi, content);
+
+        setBtn('Mengunggah file ke Google Drive...');
+        const payload = {
+          fileName: fileInput.name,
+          mimeType: fileInput.type,
+          base64: base64Data
+        };
+
+        const response = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+        const resultText = await response.text();
+        if (resultText.includes("http")) {
+          const match = resultText.match(/https?:\/\/[^\s"]+/);
+          if (match) driveLink = match[0];
+        }
+
+        setBtn('Menyimpan materi ke database...');
+        await addDoc(collection(db, "materi"), {
+          pengarang: currentUser.nama,
+          nip: currentUser.nip,
+          unit: currentUser.unit,
+          judul, kategori, isi,
+          fileName: fileInput.name,
+          fileType: fileInput.type,
+          link: driveLink,
+          questions: questionsList,
+          timestamp: new Date()
+        });
+
+        await addDoc(collection(db, "users"), {
+          nama: currentUser.nama,
+          nip: currentUser.nip,
+          poin: 50
+        });
+
+        alert("Materi & 10 Kuis AI Berhasil Diterbitkan! Anda mendapatkan +50 Poin!");
+        document.getElementById('form-upload').reset();
+        toggleUploadModal(false);
+      } catch (err) {
+        console.error("Error Upload / Gemini Busy:", err);
+        alert(err.message || "Terjadi kesalahan saat mengunggah berkas.");
+      } finally {
+        btn.innerHTML = defaultBtnHTML;
+        btn.disabled = false;
+      }
+    });
+
+    // Helper Icon Cover File
+    function getFileThumbnailIcon(fileName) {
+      if (!fileName) return '<i class="fa-solid fa-file text-blue-600 text-3xl"></i>';
+      const ext = fileName.split('.').pop().toLowerCase();
+      if (ext === 'pdf') return '<i class="fa-solid fa-file-pdf text-red-500 text-3xl"></i>';
+      if (ext === 'ppt' || ext === 'pptx') return '<i class="fa-solid fa-file-powerpoint text-orange-500 text-3xl"></i>';
+      if (ext === 'doc' || ext === 'docx') return '<i class="fa-solid fa-file-word text-blue-600 text-3xl"></i>';
+      return '<i class="fa-solid fa-file-lines text-slate-500 text-3xl"></i>';
+    }
+
+    // Filter Search Materi
+    window.filterMateriList = function() {
+      const keyword = document.getElementById('input-search').value.toLowerCase();
+      renderMateriCards(keyword);
+    };
+
+    // Fungsi Buka Modal Edit Materi
+    window.bukaEditMateri = function(id) {
+      const item = allMateriData[id];
+      if (!item) return;
+
+      document.getElementById('edit-materi-id').value = id;
+      document.getElementById('edit-judul').value = item.judul || '';
+      document.getElementById('edit-kategori').value = item.kategori || '';
+      document.getElementById('edit-isi').value = item.isi || '';
+
+      toggleEditModal(true);
+    };
+
+    // Submit Edit Form
+    document.getElementById('form-edit').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('edit-materi-id').value;
+      if (!id) return;
+
+      const btn = document.getElementById('btn-save-edit');
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Menyimpan...`;
+      btn.disabled = true;
+
+      try {
+        const docRef = doc(db, "materi", id);
+        await updateDoc(docRef, {
+          judul: document.getElementById('edit-judul').value,
+          kategori: document.getElementById('edit-kategori').value,
+          isi: document.getElementById('edit-isi').value
+        });
+
+        alert("Informasi materi berhasil diperbarui!");
+        toggleEditModal(false);
+      } catch (err) {
+        console.error("Error Edit:", err);
+        alert("Gagal memperbarui materi.");
+      } finally {
+        btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan`;
+        btn.disabled = false;
+      }
+    });
+
+    // Fungsi Hapus Materi
+    window.hapusMateri = async function(id) {
+      const item = allMateriData[id];
+      if (!item) return;
+
+      if (confirm(`Apakah Anda yakin ingin menghapus materi "${item.judul}"?`)) {
+        try {
+          await deleteDoc(doc(db, "materi", id));
+          alert("Materi berhasil dihapus.");
+        } catch (err) {
+          console.error("Error Delete:", err);
+          alert("Gagal menghapus materi.");
+        }
+      }
+    };
+
+    function renderMateriCards(filterKeyword = "") {
+      const container = document.getElementById('materi-container');
+      container.innerHTML = "";
+
+      const completedSet = getCompletedQuizIds();
+
+      const kw = filterKeyword.toLowerCase();
+      const filtered = cachedMateriList.filter(({ item }) => {
+        if (!kw) return true;
+        return (item.judul || '').toLowerCase().includes(kw) ||
+               (item.kategori || '').toLowerCase().includes(kw) ||
+               (item.pengarang || '').toLowerCase().includes(kw);
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-gray-400">
+            <i class="fa-solid fa-search text-3xl mb-2 text-slate-300"></i>
+            <p class="text-sm">Tidak ada materi yang ditemukan.</p>
+          </div>`;
+        return;
+      }
+
+      filtered.forEach(({ id, item }) => {
+        const card = document.createElement('div');
+        card.className = "p-5 border border-slate-200 rounded-xl hover:shadow-md transition bg-white space-y-3 relative";
+        
+        let linkHTML = item.link ? `<a href="${item.link}" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-bi-blue bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-1.5 rounded-lg font-semibold transition"><i class="fa-brands fa-google-drive text-green-600"></i> Buka Lampiran Berkas (Google Drive)</a>` : '';
+        
+        let quizBtnHTML = '';
+        if (item.questions && item.questions.length > 0) {
+          const isDone = completedSet.has(id);
+          quizBtnHTML = `
+            <button onclick="mulaiKuisAI('${id}')" ${isDone ? 'disabled' : ''} class="text-xs ${isDone ? 'bg-slate-200 text-slate-500 cursor-not-allowed border border-slate-300' : 'bg-yellow-500 hover:bg-yellow-600 text-bi-blue'} font-bold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+              <i class="fa-solid ${isDone ? 'fa-check-double text-slate-400' : 'fa-brain'}"></i> ${isDone ? 'Kuis Selesai Dikerjakan' : `Kerjakan Kuis AI (${item.questions.length} Soal)`}
+            </button>
+          `;
+        }
+
+        let actionButtonsHTML = '';
+        if (currentUser && (currentUser.nip === item.nip || currentUser.nama === item.pengarang)) {
+          actionButtonsHTML = `
+            <div class="flex items-center gap-1.5 ml-2">
+              <button onclick="bukaEditMateri('${id}')" title="Edit Materi" class="p-1.5 text-xs text-blue-600 hover:bg-blue-50 rounded-md transition border border-blue-200">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button onclick="hapusMateri('${id}')" title="Hapus Materi" class="p-1.5 text-xs text-red-600 hover:bg-red-50 rounded-md transition border border-red-200">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          `;
+        }
+
+        const thumbIcon = getFileThumbnailIcon(item.fileName);
+        const displayFileName = item.fileName || 'Modul Pembelajaran';
+
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <span class="text-xs font-semibold px-2.5 py-0.5 bg-blue-100 text-bi-blue rounded-full">${item.kategori}</span>
+            <div class="flex items-center">
+              <span class="text-xs text-gray-400"><i class="fa-regular fa-user mr-1"></i>${item.pengarang} (${item.unit || 'BI Jember'})</span>
+              ${actionButtonsHTML}
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-3.5 py-1">
+            <div class="w-12 h-12 bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-center shrink-0 shadow-sm">
+              ${thumbIcon}
+            </div>
+            <div>
+              <h3 class="font-bold text-bi-blue text-base">${item.judul}</h3>
+              <p class="text-xs text-slate-500 mt-0.5 flex items-center gap-1"><i class="fa-solid fa-paperclip text-[10px]"></i> ${displayFileName}</p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t">
+            ${linkHTML}
+            ${quizBtnHTML}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Realtime Listener Firestore Materi
+    onSnapshot(collection(db, "materi"), (snapshot) => {
+      cachedMateriList = [];
+      allMateriData = {};
+
+      if (snapshot.empty) {
+        document.getElementById('materi-container').innerHTML = `
+          <div class="text-center py-8 text-gray-400">
+            <i class="fa-solid fa-folder-open text-4xl mb-2 text-slate-300"></i>
+            <p class="text-sm">Belum ada materi pembelajaran.</p>
+            <p class="text-xs text-slate-400 mt-1">Jadilah pegawai pertama yang berbagi ilmu!</p>
+          </div>`;
+        return;
+      }
+
+      snapshot.forEach((docSnap) => {
+        const id = docSnap.id;
+        const item = docSnap.data();
+        allMateriData[id] = item;
+        cachedMateriList.push({ id, item });
+      });
+
+      renderMateriCards(document.getElementById('input-search')?.value || "");
+    });
+
+    // Realtime Leaderboard
+    onSnapshot(collection(db, "users"), (snapshot) => {
+      const container = document.getElementById('leaderboard-container');
+      container.innerHTML = "";
+
+      const scores = {};
+      let userCurrentPoin = 0;
+
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        if (scores[data.nama]) {
+          scores[data.nama] += data.poin;
+        } else {
+          scores[data.nama] = data.poin;
+        }
+
+        if (currentUser && (data.nip === currentUser.nip || data.nama === currentUser.nama)) {
+          userCurrentPoin += data.poin;
+        }
+      });
+
+      if (currentUser) {
+        document.getElementById('user-points').innerText = userCurrentPoin;
+      }
+
+      const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+
+      if (sorted.length === 0) {
+        container.innerHTML = `<p class="text-xs text-gray-400 italic">Belum ada aktivitas.</p>`;
+        return;
+      }
+
+      sorted.forEach(([nama, totalPoin], index) => {
+        const row = document.createElement('div');
+        row.className = "flex justify-between items-center text-xs p-2.5 rounded-xl bg-slate-50 border border-slate-100 shadow-sm";
+        row.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="w-5 h-5 flex items-center justify-center font-bold text-[10px] rounded-full ${index === 0 ? 'bg-yellow-500 text-white shadow' : 'bg-slate-200 text-slate-700'}">${index + 1}</span>
+            <span class="font-semibold text-gray-700 truncate max-w-[130px]">${nama}</span>
+          </div>
+          <span class="font-bold text-bi-blue">${totalPoin} Pts</span>
+        `;
+        container.appendChild(row);
+      });
+    });
+
+    // Fungsi Pengerjaan Kuis AI
+    window.mulaiKuisAI = function(materiId) {
+      if (!currentUser) {
+        alert("Silakan Login Pegawai terlebih dahulu!");
+        toggleLoginModal(true);
+        return;
+      }
+
+      const completedSet = getCompletedQuizIds();
+      if (completedSet.has(materiId)) {
+        alert("Anda sudah pernah mengerjakan kuis untuk materi ini!");
+        return;
+      }
+
+      currentActiveMateriId = materiId;
+      const materi = allMateriData[materiId];
+      if (!materi || !materi.questions) return;
+
+      currentQuestions = materi.questions;
+      currentQuestionIndex = 0;
+      userAnswers = {};
+
+      document.getElementById('quiz-title-display').innerHTML = `<i class="fa-solid fa-brain text-yellow-600"></i> Kuis: ${materi.judul}`;
+      renderCurrentQuestion();
+      toggleQuizModal(true);
+    };
+
+    function renderCurrentQuestion() {
+      const q = currentQuestions[currentQuestionIndex];
+      const total = currentQuestions.length;
+      document.getElementById('quiz-progress-text').innerText = `Soal ${currentQuestionIndex + 1} dari ${total}`;
+
+      const body = document.getElementById('quiz-body');
+      
+      let optionsHTML = ['A', 'B', 'C', 'D'].map(optKey => {
+        const optVal = q[optKey.toLowerCase()];
+        const isSelected = userAnswers[currentQuestionIndex] === optKey;
+        return `
+          <button onclick="selectQuizOption('${optKey}')" class="w-full text-left p-3 rounded-xl border text-xs transition flex items-center justify-between ${isSelected ? 'bg-blue-100 border-bi-blue text-bi-blue font-bold shadow-sm' : 'bg-slate-50 border-slate-200 hover:bg-slate-100 text-gray-700'}">
+            <span><strong>${optKey}.</strong> ${optVal}</span>
+            ${isSelected ? '<i class="fa-solid fa-circle-check text-bi-blue"></i>' : ''}
+          </button>
+        `;
+      }).join('');
+
+      let navButtons = `
+        <div class="flex justify-between items-center pt-3 border-t">
+          <button onclick="prevQuestion()" ${currentQuestionIndex === 0 ? 'disabled class="opacity-40 text-xs px-3 py-1.5 border rounded-lg"' : 'class="text-xs px-3 py-1.5 border rounded-lg hover:bg-slate-100 font-semibold text-bi-blue"'}>
+            <i class="fa-solid fa-chevron-left mr-1"></i> Sebelum
+          </button>
+          ${currentQuestionIndex === total - 1 ? 
+            `<button onclick="submitAllQuiz()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg transition shadow">Selesai & Kirim Jawaban <i class="fa-solid fa-paper-plane ml-1"></i></button>` : 
+            `<button onclick="nextQuestion()" class="text-xs bg-bi-blue hover:bg-bi-blue-dark text-white font-semibold px-4 py-2 rounded-lg transition shadow">Berikut <i class="fa-solid fa-chevron-right ml-1"></i></button>`
+          }
+        </div>
+      `;
+
+      body.innerHTML = `
+        <div class="space-y-3">
+          <p class="text-sm font-bold text-gray-800 leading-relaxed">${currentQuestionIndex + 1}. ${q.soal}</p>
+          <div class="space-y-2">${optionsHTML}</div>
+        </div>
+        ${navButtons}
+      `;
+    }
+
+    window.selectQuizOption = function(optKey) {
+      userAnswers[currentQuestionIndex] = optKey;
+      renderCurrentQuestion();
+    };
+
+    window.prevQuestion = function() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        renderCurrentQuestion();
+      }
+    };
+
+    window.nextQuestion = function() {
+      if (currentQuestionIndex < currentQuestions.length - 1) {
+        currentQuestionIndex++;
+        renderCurrentQuestion();
+      }
+    };
+
+    window.submitAllQuiz = async function() {
+      let correctCount = 0;
+      currentQuestions.forEach((q, idx) => {
+        if (userAnswers[idx] === q.kunci) {
+          correctCount++;
+        }
+      });
+
+      const totalPoinEarned = correctCount * 10;
+
+      if (currentActiveMateriId) {
+        saveCompletedQuizId(currentActiveMateriId);
+      }
+
+      await addDoc(collection(db, "users"), {
+        nama: currentUser.nama,
+        nip: currentUser.nip,
+        poin: totalPoinEarned
+      });
+
+      alert(`Kuis Selesai!\nJawaban Benar: ${correctCount} dari ${currentQuestions.length} Soal.\nAnda Mendapatkan: +${totalPoinEarned} Poin!`);
+      toggleQuizModal(false);
+      renderMateriCards(document.getElementById('input-search')?.value || "");
+    };
+  </script>
+</body>
+</html>
