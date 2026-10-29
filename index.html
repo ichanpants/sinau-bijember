@@ -654,30 +654,40 @@ ATURAN WAJIB:
 
     // Pemanggilan AI Gemini dengan Auto-Retry 3x
     async function generateQuestionsWithGemini(judul, kategori, catatan, content) {
-      const parts = [];
-      if (content.kind === 'pdf') {
-        parts.push({ inlineData: { mimeType: 'application/pdf', data: content.base64 } });
+      // URL ngrok Ollama lokal dari laptop kamu
+      const OLLAMA_URL = "https://swept-composed-bunch.ngrok-free.dev/api/generate";
+
+      let teksMateri = content.kind === 'text' ? content.text : (catatan || `${judul} mengenai ${kategori}`);
+
+      const promptText = `Anda adalah pakar pembuat soal evaluasi di Bank Indonesia.
+Buatkan TEPAT 10 soal pilihan ganda (A, B, C, D) dalam Bahasa Indonesia berdasarkan materi ini:
+Judul: ${judul}
+Kategori: ${kategori}
+Isi: ${teksMateri}
+
+WAJIB balaskan HANYA format JSON Array murni tanpa penjelasan lain:
+[{"soal":"...","a":"...","b":"...","c":"...","d":"...","kunci":"A"}]`;
+
+      try {
+        const res = await fetch(OLLAMA_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: "llama3.2",
+            prompt: promptText,
+            stream: false,
+            format: "json"
+          })
+        });
+
+        const data = await res.json();
+        const quizList = JSON.parse(data.response);
+        return normalizeQuestions(quizList);
+      } catch (err) {
+        console.error("Ollama ngrok error:", err);
+        throw new Error("Gagal terhubung ke AI Ollama Lokal. Pastikan ngrok dan Ollama di laptop aktif!");
       }
-      parts.push({ text: buildQuizPrompt(judul, kategori, catatan, content) });
-
-      let best = [];
-
-      for (const model of GEMINI_MODELS) {
-        for (let attempt = 1; attempt <= 3; attempt++) {
-          try {
-            const raw = await requestGemini(model, parts);
-            const cleaned = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
-            const list = normalizeQuestions(JSON.parse(cleaned.slice(cleaned.indexOf('['), cleaned.lastIndexOf(']') + 1)));
-
-            if (list.length >= 10) return list.slice(0, 10);
-            if (list.length > best.length) best = list;
-          } catch (err) {
-            console.warn(`Gemini (${model}) percobaan ${attempt} mengalami kendala:`, err.message);
-            // Tunggu 2 detik sebelum mencoba lagi
-            await new Promise(r => setTimeout(r, 2000));
-          }
-        }
-      }
+    }
 
       if (best.length >= 8) return best;
       
