@@ -568,7 +568,7 @@
     }
 
     // PEMANGGILAN OLLAMA VIA NGROK LOKAL (100% BEBAS LIMIT)
-async function generateQuestionsWithGemini(judul, kategori, catatan, content) {
+    async function generateQuestionsWithGemini(judul, kategori, catatan, content) {
       const OLLAMA_URL = "https://swept-composed-bunch.ngrok-free.dev/api/generate";
 
       let teksMateri = content.kind === 'text' ? content.text : (catatan || `${judul} mengenai ${kategori}`);
@@ -590,7 +590,7 @@ ATURAN WAJIB:
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': 'true' // BYPASS NGOK WARNING 403
+            'ngrok-skip-browser-warning': 'true'
           },
           body: JSON.stringify({
             model: "llama3.2",
