@@ -585,13 +585,34 @@
       return arr;
     }
 
-    function normalizeQuestions(list) {
-      if (!Array.isArray(list)) return [];
+    // Ollama dengan format:"json" selalu mengembalikan OBJEK ({...}), bukan array ([...]).
+    // Biasanya AI membungkus soal di dalam objek, mis. {"soal":[...]} atau {"questions":[...]}.
+    // Fungsi ini mencari array soalnya di mana pun AI menaruhnya.
+    function extractQuestionArray(parsed, depth = 0) {
+      if (Array.isArray(parsed)) return parsed;
+      if (!parsed || typeof parsed !== 'object' || depth > 2) return [];
+      // Kalau objek ini sendiri adalah SATU soal
+      if (parsed.soal && (parsed.a || parsed.A)) return [parsed];
+      for (const val of Object.values(parsed)) {
+        if (Array.isArray(val) && val.length && typeof val[0] === 'object') return val;
+      }
+      for (const val of Object.values(parsed)) {
+        const found = extractQuestionArray(val, depth + 1);
+        if (found.length) return found;
+      }
+      return [];
+    }
+
+    function normalizeQuestions(rawParsed) {
+      const list = extractQuestionArray(rawParsed);
       const out = [];
-      for (const q of list) {
-        if (!q || typeof q !== 'object') continue;
-        const soal = String(q.soal || '').trim();
-        const kunci = String(q.kunci || '').trim().toUpperCase().charAt(0);
+      for (const q0 of list) {
+        if (!q0 || typeof q0 !== 'object') continue;
+        // Samakan nama kunci (AI kadang memakai huruf besar atau nama lain)
+        const q = {};
+        for (const [k, v] of Object.entries(q0)) q[k.toLowerCase()] = v;
+        const soal = String(q.soal || q.pertanyaan || q.question || '').trim();
+        const kunci = String(q.kunci || q.jawaban || q.answer || q.kunci_jawaban || '').trim().toUpperCase().charAt(0);
         const opts = ['a', 'b', 'c', 'd'].map(k => String(q[k] ?? '').trim());
         if (!soal || opts.some(o => !o) || !['A', 'B', 'C', 'D'].includes(kunci)) continue;
 
@@ -629,9 +650,12 @@ Isi Ringkas/Materi: ${teksMateri}
 ATURAN WAJIB:
 1. Setiap soal HARUS bisa dijawab secara presisi dari isi materi.
 2. Setiap soal punya satu jawaban benar dan tiga pengecoh yang masuk akal.
-3. Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun:
-[{"soal":"...","a":"...","b":"...","c":"...","d":"...","kunci":"A"}]`;
+3. Kembalikan HANYA sebuah objek JSON dengan satu properti "soal_kuis" berisi array 10 soal, tanpa penjelasan/pembuka/penutup apapun.
+4. Nilai "kunci" harus salah satu huruf: A, B, C, atau D.
+Format:
+{"soal_kuis":[{"soal":"...","a":"...","b":"...","c":"...","d":"...","kunci":"A"}]}`;
 
+      let data;
       try {
         const res = await fetch(OLLAMA_URL, {
           method: 'POST',
@@ -657,15 +681,29 @@ ATURAN WAJIB:
           throw new Error(`Koneksi ngrok HTTP ${res.status}`);
         }
 
-        const data = await res.json();
-        const quizList = JSON.parse(data.response);
-        return normalizeQuestions(quizList);
+        data = await res.json();
       } catch (err) {
         console.error("Ollama ngrok error:", err);
         throw new Error("Gagal terhubung ke AI Ollama Lokal. Pastikan Ollama & ngrok di laptop dalam keadaan aktif!");
       }
-      // Catatan: error "Isi file tidak bisa dibaca" dilempar di luar blok try ini (di atas),
-      // jadi pesannya tidak tertimpa pesan "Gagal terhubung".
+
+      // ===== Setelah terhubung: olah jawaban AI (di luar try di atas agar pesan errornya tepat) =====
+      console.log("Jawaban mentah dari Ollama:", data.response);   // bisa dilihat lewat F12 > Console
+
+      let parsed;
+      try {
+        parsed = JSON.parse(data.response);
+      } catch (err) {
+        console.error("JSON dari AI tidak valid:", err);
+        throw new Error("AI menjawab dengan format yang rusak. Silakan coba terbitkan ulang.");
+      }
+
+      const questions = normalizeQuestions(parsed);
+      // Jangan simpan materi dengan kuis kosong; lebih baik suruh coba lagi.
+      if (questions.length < 5) {
+        throw new Error(`AI hanya menghasilkan ${questions.length} soal yang valid (minimal 5). Silakan coba terbitkan ulang.`);
+      }
+      return questions;
     }
     
     // Submit Upload Materi
