@@ -17,6 +17,13 @@
   </script>
   <!-- JSZip: untuk membaca isi file DOCX/PPTX di browser -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <!-- pdf.js: untuk membaca teks di dalam file PDF di browser -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    }
+  </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -477,7 +484,9 @@
     };
 
     const MAX_PDF_INLINE_BYTES = 14 * 1024 * 1024;
-    const MAX_TEXT_CHARS = 120000;
+    // Batas teks yang dikirim ke AI. Llama 3.2 di laptop punya "ingatan" terbatas (konteks),
+    // jadi teks yang terlalu panjang akan terpotong diam-diam. 10.000 karakter ~ 3.000-3.500 token.
+    const MAX_TEXT_CHARS = 10000;
 
     const decodeXmlEntities = (s) => {
       const t = document.createElement('textarea');
@@ -499,6 +508,39 @@
 
     async function extractFileContent(file, base64) {
       const ext = file.name.split('.').pop().toLowerCase();
+
+      // ===== PDF: ekstrak teks per halaman pakai pdf.js =====
+      if (ext === 'pdf') {
+        if (typeof pdfjsLib === 'undefined') return { kind: 'unsupported' };
+        const buf = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+
+        const pages = [];
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const tc = await page.getTextContent();
+          const t = tc.items
+            .map(it => it.str + (it.hasEOL ? '\n' : ' '))
+            .join('')
+            .replace(/[ \t]+/g, ' ')
+            .replace(/\n{3,}/g, '\n\n')
+            .trim();
+          if (t) pages.push({ n: i, t });
+        }
+
+        const total = pages.reduce((s, p) => s + p.t.length, 0);
+        // Kalau hampir tidak ada teks, berarti PDF berupa gambar hasil scan
+        if (total < 30) return { kind: 'empty' };
+
+        // Jatah karakter dibagi rata ke semua halaman, supaya kuis mencakup
+        // seluruh dokumen (bukan hanya halaman-halaman awal).
+        const perPage = Math.max(200, Math.floor(MAX_TEXT_CHARS / pages.length));
+        const text = pages
+          .map(p => `[Halaman ${p.n}]\n${p.t.slice(0, perPage)}`)
+          .join('\n\n')
+          .slice(0, MAX_TEXT_CHARS);
+        return { kind: 'text', text };
+      }
 
       if (ext === 'docx' || ext === 'pptx') {
         if (typeof JSZip === 'undefined') return { kind: 'unsupported' };
@@ -571,7 +613,12 @@
     async function generateQuestionsWithGemini(judul, kategori, catatan, content) {
       const OLLAMA_URL = "https://swept-composed-bunch.ngrok-free.dev/api/generate";
 
-      let teksMateri = content.kind === 'text' ? content.text : (catatan || `${judul} mengenai ${kategori}`);
+      // Kalau isi file tidak terbaca (mis. PDF hasil scan) dan tidak ada catatan,
+      // lebih baik berhenti daripada AI mengarang soal dari judul saja.
+      if (content.kind !== 'text' && !(catatan && catatan.trim().length >= 30)) {
+        throw new Error("Isi file tidak bisa dibaca (kemungkinan PDF hasil scan/gambar). Tulis ringkasan materi di kolom Catatan (minimal 30 karakter), atau unggah file versi teks.");
+      }
+      let teksMateri = content.kind === 'text' ? content.text : catatan;
 
       const promptText = `Anda adalah pakar pembuat soal evaluasi pembelajaran di lingkungan Bank Indonesia.
 Buatkan TEPAT 10 soal pilihan ganda (A, B, C, D) dalam Bahasa Indonesia murni berdasarkan materi berikut:
@@ -596,7 +643,11 @@ ATURAN WAJIB:
             model: "llama3.2",
             prompt: promptText,
             stream: false,
-            format: "json"
+            format: "json",
+            options: {
+              num_ctx: 6144,      // ukuran "ingatan" model (default 4096 terlalu kecil)
+              temperature: 0.3    // lebih rendah = lebih setia pada isi materi
+            }
           })
         });
 
@@ -611,6 +662,8 @@ ATURAN WAJIB:
         console.error("Ollama ngrok error:", err);
         throw new Error("Gagal terhubung ke AI Ollama Lokal. Pastikan Ollama & ngrok di laptop dalam keadaan aktif!");
       }
+      // Catatan: error "Isi file tidak bisa dibaca" dilempar di luar blok try ini (di atas),
+      // jadi pesannya tidak tertimpa pesan "Gagal terhubung".
     }
     
     // Submit Upload Materi
