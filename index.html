@@ -635,9 +635,11 @@ ATURAN WAJIB:
       try {
         const res = await fetch(OLLAMA_URL, {
           method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': 'true'
+          // Header 'ngrok-skip-browser-warning' sengaja DIHAPUS dari sini karena tidak ada
+          // di daftar header yang diizinkan Ollama (CORS), sehingga browser memblokir request.
+          // Header itu sekarang ditambahkan oleh ngrok sendiri (lihat flag --request-header-add).
+          headers: {
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             model: "llama3.2",
