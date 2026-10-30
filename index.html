@@ -44,19 +44,19 @@
 
   <!-- Header / Navbar -->
   <header class="bg-bi-blue text-white shadow-lg sticky top-0 z-40 border-b-2 border-yellow-500">
-    <div class="max-w-6xl mx-auto px-4 py-2.5 flex justify-between items-center">
+    <div class="max-w-6xl mx-auto px-3 sm:px-4 py-2.5 flex justify-between items-center">
       
       <!-- Brand & Menu Dropdown Desk -->
-      <div class="flex items-center gap-6">
-        <div class="flex items-center gap-2.5 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-          <i class="fa-solid fa-graduation-cap text-3xl text-yellow-400"></i>
+      <div class="flex items-center gap-3 sm:gap-6">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+          <i class="fa-solid fa-graduation-cap text-2xl sm:text-3xl text-yellow-400"></i>
           <div>
-            <h1 class="text-xl font-bold tracking-wider text-white leading-none">SINAU</h1>
-            <p class="text-[10px] text-blue-200 font-light mt-0.5">KPwBI Jember</p>
+            <h1 class="text-lg sm:text-xl font-bold tracking-wider text-white leading-none">SINAU</h1>
+            <p class="text-[9px] sm:text-[10px] text-blue-200 font-light mt-0.5">KPwBI Jember</p>
           </div>
         </div>
 
-        <!-- Menu Dropdown Website -->
+        <!-- Menu Dropdown Website Desktop -->
         <nav class="hidden md:flex items-center gap-1 text-xs">
           <!-- Dropdown Pembelajaran -->
           <div class="relative group">
@@ -84,7 +84,7 @@
             <div class="absolute left-0 top-full pt-1 hidden group-hover:block w-52 z-50">
               <div class="bg-white text-gray-800 rounded-xl shadow-xl border border-slate-200 py-2 text-xs space-y-1">
                 <a href="#" onclick="alert('Aturan Poin SINAU:\n- Upload Materi Baru = +50 Poin\n- Mengerjakan Kuis = +10 Poin per Jawaban Benar')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-500"></i> Ketentuan Poin</a>
-                <a href="#" onclick="alert('Petunjuk Upload Modul:\n1. Klik Upload Materi\n2. Pilih Berkas PDF/Word/PPT\n3. AI Ollama Lokal akan memproses 10 Soal Kuis secara otomatis!')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-upload text-blue-600"></i> Cara Unggah Modul</a>
+                <a href="#" onclick="alert('Petunjuk Upload Modul:\n1. Klik Upload Materi\n2. Pilih Berkas PDF/Word/PPT\n3. AI Ollama Lokal akan memproses 10 Soal Kuis\n4. Anda bisa memeriksa & mengedit kuis sebelum diterbitkan!')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-upload text-blue-600"></i> Cara Unggah Modul</a>
               </div>
             </div>
           </div>
@@ -92,30 +92,39 @@
       </div>
 
       <!-- Right Nav / User Bar -->
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Quick Analytics Icon for Mobile -->
+        <button onclick="toggleTrafficModal(true)" title="Traffic Analytics" class="md:hidden p-1.5 bg-bi-blue-light hover:bg-bi-blue-dark border border-blue-400/30 text-emerald-400 rounded-full text-xs">
+          <i class="fa-solid fa-chart-line"></i>
+        </button>
+
         <!-- Badge User & Dropdown Profile -->
-        <div id="user-info-bar" class="hidden items-center gap-2.5">
-          <div class="bg-bi-blue-dark border border-blue-400/30 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
-            <i class="fa-solid fa-coins text-yellow-400"></i>
-            <span id="user-points" class="text-yellow-300 font-bold">0</span> Pts
+        <div id="user-info-bar" class="hidden items-center gap-1.5 sm:gap-2.5">
+          <div class="bg-bi-blue-dark border border-blue-400/30 px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold flex items-center gap-1">
+            <i class="fa-solid fa-coins text-yellow-400 text-xs"></i>
+            <span id="user-points" class="text-yellow-300 font-bold">0</span> <span class="hidden sm:inline">Pts</span>
           </div>
 
           <!-- User Dropdown Menu -->
           <div class="relative group">
-            <button class="bg-bi-blue-light hover:bg-bi-blue-dark px-3 py-1 rounded-full text-xs font-bold border border-blue-400/40 flex items-center gap-2 transition">
-              <i class="fa-solid fa-circle-user text-yellow-400 text-sm"></i>
-              <span id="user-display-name" class="max-w-[100px] truncate">Pegawai</span>
-              <i class="fa-solid fa-chevron-down text-[9px] opacity-70"></i>
+            <button class="bg-bi-blue-light hover:bg-bi-blue-dark px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold border border-blue-400/40 flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-circle-user text-yellow-400 text-xs sm:text-sm"></i>
+              <span id="user-display-name" class="max-w-[70px] sm:max-w-[100px] truncate">Pegawai</span>
+              <span id="superadmin-badge" class="hidden bg-red-500 text-white text-[8px] px-1 rounded uppercase font-black">ADMIN</span>
+              <i class="fa-solid fa-chevron-down text-[8px] opacity-70"></i>
             </button>
-            <div class="absolute right-0 top-full pt-1 hidden group-hover:block w-56 z-50">
+            <div class="absolute right-0 top-full pt-1 hidden group-hover:block w-52 sm:w-56 z-50">
               <div class="bg-white text-gray-800 rounded-xl shadow-xl border border-slate-200 p-3 space-y-2 text-xs">
                 <div class="border-b pb-2">
-                  <p id="profile-full-name" class="font-bold text-bi-blue">Nama Pegawai</p>
+                  <p id="profile-full-name" class="font-bold text-bi-blue truncate">Nama Pegawai</p>
                   <p id="user-display-nip" class="text-[10px] text-gray-500">NIP: -</p>
                   <p id="profile-unit" class="text-[10px] text-gray-500">Unit: -</p>
                 </div>
                 <button onclick="toggleUploadModal(true)" class="w-full text-left px-2 py-1.5 hover:bg-blue-50 rounded-lg font-semibold text-bi-blue flex items-center gap-2">
                   <i class="fa-solid fa-cloud-arrow-up text-yellow-600"></i> Unggah Modul
+                </button>
+                <button onclick="bukaModalGantiPass()" class="w-full text-left px-2 py-1.5 hover:bg-blue-50 rounded-lg font-semibold text-gray-700 flex items-center gap-2">
+                  <i class="fa-solid fa-key text-blue-600"></i> Ubah Password
                 </button>
                 <button onclick="logoutPegawai()" class="w-full text-left px-2 py-1.5 hover:bg-red-50 rounded-lg font-semibold text-red-600 flex items-center gap-2 border-t pt-2">
                   <i class="fa-solid fa-right-from-bracket"></i> Keluar (Logout)
@@ -125,39 +134,39 @@
           </div>
         </div>
 
-        <button id="btn-login-nav" onclick="toggleLoginModal(true)" class="bg-yellow-500 hover:bg-yellow-600 text-bi-blue font-bold px-4 py-1.5 rounded-full text-xs flex items-center gap-1.5 shadow transition">
-          <i class="fa-solid fa-right-to-bracket"></i> Login Pegawai
+        <button id="btn-login-nav" onclick="toggleLoginModal(true)" class="bg-yellow-500 hover:bg-yellow-600 text-bi-blue font-bold px-3 sm:px-4 py-1.5 rounded-full text-xs flex items-center gap-1 shadow transition">
+          <i class="fa-solid fa-right-to-bracket"></i> <span>Login</span>
         </button>
 
-        <button id="btn-upload-nav" onclick="toggleUploadModal(true)" class="hidden bg-yellow-500 hover:bg-yellow-600 text-bi-blue px-3.5 py-1.5 rounded-full text-xs font-bold items-center gap-1.5 shadow transition">
-          <i class="fa-solid fa-plus-circle text-sm"></i> Upload
+        <button id="btn-upload-nav" onclick="toggleUploadModal(true)" class="hidden bg-yellow-500 hover:bg-yellow-600 text-bi-blue px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-bold items-center gap-1 shadow transition">
+          <i class="fa-solid fa-plus-circle text-xs sm:text-sm"></i> <span class="hidden sm:inline">Upload</span>
         </button>
       </div>
     </div>
   </header>
 
   <!-- Main Content -->
-  <main class="max-w-6xl mx-auto px-4 py-6 flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8 w-full">
+  <main class="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 w-full">
     
-    <div class="lg:col-span-2 space-y-6">
+    <div class="lg:col-span-2 space-y-4 sm:space-y-6">
       
-      <!-- HERO BANNER SPANDUK SINAU v2.0 -->
-      <div class="relative overflow-hidden rounded-2xl shadow-lg border border-blue-900 group">
+      <!-- HERO BANNER SPANDUK SINAU v2.0 (Mobile Optimized) -->
+      <div class="relative overflow-hidden rounded-xl sm:rounded-2xl shadow-md border border-blue-900 group bg-bi-blue">
         <img src="Spanduk Modern SINAU v2.0.png" alt="SINAU v2.0 - Sharing Ilmu Nambah wawAsan terpadU" 
-             class="w-full h-auto object-cover rounded-2xl transform transition duration-500 group-hover:scale-[1.01]">
+             class="w-full h-auto object-contain rounded-xl sm:rounded-2xl transform transition duration-500 group-hover:scale-[1.01]">
         
-        <!-- Overlay Tombol Action Cepat di Atas Banner -->
-        <div class="absolute bottom-3 right-3 flex items-center gap-2">
-          <button onclick="handleUploadClick()" class="bg-yellow-500 hover:bg-yellow-600 text-bi-blue px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-md transition flex items-center gap-1.5">
-            <i class="fa-solid fa-cloud-arrow-up"></i> Upload Modul (+50 Pts)
+        <!-- Overlay Tombol Action Cepat -->
+        <div class="absolute bottom-1.5 right-1.5 sm:bottom-3 sm:right-3 flex items-center gap-1.5">
+          <button onclick="handleUploadClick()" class="bg-yellow-500/90 hover:bg-yellow-500 text-bi-blue px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-[9px] sm:text-xs font-bold shadow-md transition flex items-center gap-1 backdrop-blur-xs">
+            <i class="fa-solid fa-cloud-arrow-up text-[10px] sm:text-xs"></i> <span>Upload Modul</span> <span class="hidden sm:inline">(+50 Pts)</span>
           </button>
         </div>
       </div>
 
       <!-- Feed Daftar Materi & Search Bar -->
-      <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+      <section class="bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 space-y-4">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <h2 class="text-base font-bold text-bi-blue flex items-center gap-2">
+          <h2 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
             <i class="fa-solid fa-book-open text-yellow-600"></i> Modul & Materi Pembelajaran
           </h2>
           <!-- Input Search Materi -->
@@ -170,28 +179,28 @@
           </div>
         </div>
 
-        <div id="materi-container" class="space-y-4">
-          <p class="text-gray-400 text-sm italic">Memuat materi dari database...</p>
+        <div id="materi-container" class="space-y-3 sm:space-y-4">
+          <p class="text-gray-400 text-xs sm:text-sm italic">Memuat materi dari database...</p>
         </div>
       </section>
     </div>
 
     <!-- Sidebar Leaderboard & Traffic Quick Widget -->
     <aside class="space-y-6">
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 sticky top-20 space-y-6">
+      <div class="bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 sticky top-16 sm:top-20 space-y-5 sm:space-y-6">
         <div>
-          <h2 class="text-base font-bold text-bi-blue mb-1 flex items-center gap-2">
+          <h2 class="text-sm sm:text-base font-bold text-bi-blue mb-0.5 flex items-center gap-2">
             <i class="fa-solid fa-trophy text-yellow-500"></i> Leaderboard SINAU
           </h2>
-          <p class="text-xs text-gray-500 mb-4">Peringkat pegawai paling aktif belajar & berbagi ilmu.</p>
+          <p class="text-[11px] sm:text-xs text-gray-500 mb-3 sm:mb-4">Peringkat pegawai paling aktif belajar & berbagi ilmu.</p>
           
-          <div id="leaderboard-container" class="space-y-2.5">
-            <p class="text-gray-400 text-sm italic">Belum ada aktivitas.</p>
+          <div id="leaderboard-container" class="space-y-2">
+            <p class="text-gray-400 text-xs italic">Belum ada aktivitas.</p>
           </div>
         </div>
 
         <!-- Quick Traffic Widget Sidebar -->
-        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+        <div class="bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-200 space-y-2.5">
           <div class="flex justify-between items-center border-b pb-2">
             <h3 class="text-xs font-bold text-bi-blue flex items-center gap-1.5">
               <i class="fa-solid fa-chart-simple text-emerald-600"></i> Traffic Visitors
@@ -200,12 +209,12 @@
           </div>
           <div class="grid grid-cols-2 gap-2 text-center">
             <div class="bg-white p-2 rounded-lg border">
-              <p class="text-[10px] text-gray-500">Total Kunjungan</p>
-              <p id="stat-views-count" class="text-sm font-bold text-bi-blue">0</p>
+              <p class="text-[9px] sm:text-[10px] text-gray-500">Total Kunjungan</p>
+              <p id="stat-views-count" class="text-xs sm:text-sm font-bold text-bi-blue">0</p>
             </div>
             <div class="bg-white p-2 rounded-lg border">
-              <p class="text-[10px] text-gray-500">Modul Pembelajaran</p>
-              <p id="stat-materi-count" class="text-sm font-bold text-yellow-600">0</p>
+              <p class="text-[9px] sm:text-[10px] text-gray-500">Modul Pembelajaran</p>
+              <p id="stat-materi-count" class="text-xs sm:text-sm font-bold text-yellow-600">0</p>
             </div>
           </div>
         </div>
@@ -215,70 +224,70 @@
   </main>
 
   <!-- Modal Analytics Traffic Pengunjung -->
-  <div id="traffic-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-5 border border-slate-200">
-      <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="text-base font-bold text-bi-blue flex items-center gap-2">
-          <i class="fa-solid fa-chart-line text-emerald-600"></i> Analisis Traffic & Statistik SINAU
+  <div id="traffic-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200">
+      <div class="flex justify-between items-center border-b pb-2.5">
+        <h3 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
+          <i class="fa-solid fa-chart-line text-emerald-600"></i> Analisis Traffic & Statistik
         </h3>
         <button onclick="toggleTrafficModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <div class="grid grid-cols-2 gap-3">
-        <div class="p-3.5 bg-blue-50 border border-blue-200 rounded-xl">
-          <div class="flex items-center gap-2 text-bi-blue mb-1">
-            <i class="fa-solid fa-eye text-base"></i>
-            <span class="text-xs font-semibold">Total Pageviews</span>
+      <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
+        <div class="p-3 bg-blue-50 border border-blue-200 rounded-xl">
+          <div class="flex items-center gap-1.5 text-bi-blue mb-0.5">
+            <i class="fa-solid fa-eye text-xs sm:text-sm"></i>
+            <span class="text-[11px] sm:text-xs font-semibold">Total Views</span>
           </div>
-          <p id="modal-stat-views" class="text-xl font-bold text-bi-blue">0</p>
-          <p class="text-[10px] text-gray-500 mt-0.5">Total dibuka oleh pegawai</p>
+          <p id="modal-stat-views" class="text-lg sm:text-xl font-bold text-bi-blue">0</p>
+          <p class="text-[9px] sm:text-[10px] text-gray-500">Dibuka pegawai</p>
         </div>
 
-        <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl">
-          <div class="flex items-center gap-2 text-emerald-700 mb-1">
-            <i class="fa-solid fa-file-powerpoint text-base"></i>
-            <span class="text-xs font-semibold">Total Modul</span>
+        <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
+          <div class="flex items-center gap-1.5 text-emerald-700 mb-0.5">
+            <i class="fa-solid fa-file-powerpoint text-xs sm:text-sm"></i>
+            <span class="text-[11px] sm:text-xs font-semibold">Total Modul</span>
           </div>
-          <p id="modal-stat-materi" class="text-xl font-bold text-emerald-700">0</p>
-          <p class="text-[10px] text-gray-500 mt-0.5">Modul berhasil diterbitkan</p>
+          <p id="modal-stat-materi" class="text-lg sm:text-xl font-bold text-emerald-700">0</p>
+          <p class="text-[9px] sm:text-[10px] text-gray-500">Modul terbit</p>
         </div>
 
-        <div class="p-3.5 bg-yellow-50 border border-yellow-200 rounded-xl">
-          <div class="flex items-center gap-2 text-yellow-800 mb-1">
-            <i class="fa-solid fa-brain text-base"></i>
-            <span class="text-xs font-semibold">Kuis Selesai</span>
+        <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
+          <div class="flex items-center gap-1.5 text-yellow-800 mb-0.5">
+            <i class="fa-solid fa-brain text-xs sm:text-sm"></i>
+            <span class="text-[11px] sm:text-xs font-semibold">Kuis Selesai</span>
           </div>
-          <p id="modal-stat-quizzes" class="text-xl font-bold text-yellow-800">0</p>
-          <p class="text-[10px] text-gray-500 mt-0.5">Sesi pengerjaan kuis AI</p>
+          <p id="modal-stat-quizzes" class="text-lg sm:text-xl font-bold text-yellow-800">0</p>
+          <p class="text-[9px] sm:text-[10px] text-gray-500">Sesi Kuis AI</p>
         </div>
 
-        <div class="p-3.5 bg-purple-50 border border-purple-200 rounded-xl">
-          <div class="flex items-center gap-2 text-purple-700 mb-1">
-            <i class="fa-solid fa-users text-base"></i>
-            <span class="text-xs font-semibold">Pegawai Aktif</span>
+        <div class="p-3 bg-purple-50 border border-purple-200 rounded-xl">
+          <div class="flex items-center gap-1.5 text-purple-700 mb-0.5">
+            <i class="fa-solid fa-users text-xs sm:text-sm"></i>
+            <span class="text-[11px] sm:text-xs font-semibold">Pegawai Aktif</span>
           </div>
-          <p id="modal-stat-users" class="text-xl font-bold text-purple-700">0</p>
-          <p class="text-[10px] text-gray-500 mt-0.5">Terdaftar di Leaderboard</p>
+          <p id="modal-stat-users" class="text-lg sm:text-xl font-bold text-purple-700">0</p>
+          <p class="text-[9px] sm:text-[10px] text-gray-500">Di Leaderboard</p>
         </div>
       </div>
 
-      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-gray-600 space-y-1">
-        <p class="font-bold text-bi-blue flex items-center gap-1.5"><i class="fa-solid fa-shield-halved"></i> Laporan Keamanan Traffic</p>
-        <p>Aktivitas traffic terpantau secara internal & aman di server Firebase KPwBI Jember.</p>
+      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-[11px] text-gray-600 space-y-0.5">
+        <p class="font-bold text-bi-blue flex items-center gap-1"><i class="fa-solid fa-shield-halved"></i> Keamanan Server</p>
+        <p class="text-[10px]">Aktivitas terenkripsi internal Firebase KPwBI Jember.</p>
       </div>
     </div>
   </div>
 
   <!-- Modal Login Pegawai -->
   <div id="login-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-200">
+    <div class="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200">
       <div class="text-center space-y-1">
-        <div class="w-12 h-12 bg-bi-blue text-yellow-400 rounded-full flex items-center justify-center mx-auto text-xl shadow">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-bi-blue text-yellow-400 rounded-full flex items-center justify-center mx-auto text-lg sm:text-xl shadow">
           <i class="fa-solid fa-user-lock"></i>
         </div>
-        <h3 class="text-lg font-bold text-bi-blue">Login Pegawai SINAU</h3>
+        <h3 class="text-base sm:text-lg font-bold text-bi-blue">Login Pegawai SINAU</h3>
         <p class="text-xs text-gray-500">Gunakan NIP dan Password pegawai Anda</p>
       </div>
 
@@ -290,17 +299,60 @@
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Password</label>
+          <div class="flex justify-between items-center mb-1">
+            <label class="block text-xs font-semibold text-gray-700">Password</label>
+            <button type="button" onclick="bukaModalGantiPass()" class="text-[10px] text-blue-600 hover:underline font-semibold">Lupa / Ganti Password?</button>
+          </div>
           <input type="password" id="login-password" placeholder="Masukkan password" required 
             class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
         </div>
 
-        <div class="pt-2 flex gap-2">
-          <button type="button" onclick="toggleLoginModal(false)" class="w-1/3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 rounded-lg text-xs transition">
-            Batal
+        <div class="pt-1 flex flex-col gap-2">
+          <div class="flex gap-2">
+            <button type="button" onclick="toggleLoginModal(false)" class="w-1/3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 rounded-lg text-xs transition">
+              Batal
+            </button>
+            <button type="submit" class="w-2/3 bg-bi-blue hover:bg-bi-blue-dark text-white font-semibold py-2 rounded-lg text-xs transition shadow">
+              <i class="fa-solid fa-right-to-bracket mr-1"></i> Masuk Pegawai
+            </button>
+          </div>
+          <button type="button" onclick="loginSebagaiTamu()" class="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold py-2 rounded-lg text-xs transition flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-user-astronaut"></i> Masuk sebagai User Tamu (Guest)
           </button>
-          <button type="submit" class="w-2/3 bg-bi-blue hover:bg-bi-blue-dark text-white font-semibold py-2 rounded-lg text-xs transition shadow">
-            <i class="fa-solid fa-right-to-bracket mr-1"></i> Masuk Sistem
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Ganti / Lupa Password Firebase -->
+  <div id="reset-pass-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="text-sm font-bold text-bi-blue flex items-center gap-2">
+          <i class="fa-solid fa-key text-yellow-600"></i> Buat / Ganti Password
+        </h3>
+        <button onclick="toggleResetPassModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="form-reset-pass" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">NIP Pegawai</label>
+          <input type="text" id="reset-nip" placeholder="Masukkan NIP Anda" required 
+            class="w-full px-3.5 py-2 text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Password Baru</label>
+          <input type="password" id="reset-pass-new" placeholder="Password baru" required 
+            class="w-full px-3.5 py-2 text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="toggleResetPassModal(false)" class="px-3 py-1.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg text-xs transition">Batal</button>
+          <button type="submit" id="btn-save-pass" class="px-4 py-1.5 bg-bi-blue hover:bg-bi-blue-dark text-white font-semibold rounded-lg text-xs transition shadow flex items-center gap-1.5">
+            <i class="fa-solid fa-floppy-disk"></i> Simpan Password Baru
           </button>
         </div>
       </form>
@@ -308,10 +360,10 @@
   </div>
 
   <!-- Modal Upload Materi -->
-  <div id="upload-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 border border-slate-200">
-      <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="text-base font-bold text-bi-blue flex items-center gap-2">
+  <div id="upload-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-3.5 border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b pb-2.5">
+        <h3 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
           <i class="fa-solid fa-cloud-arrow-up text-yellow-600"></i> Upload Materi Baru (+50 Poin)
         </h3>
         <button onclick="toggleUploadModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
@@ -321,47 +373,75 @@
 
       <form id="form-upload" class="space-y-3">
         <div class="bg-blue-50 p-2.5 rounded-lg border border-blue-100 flex justify-between items-center">
-          <span class="text-xs text-blue-900 font-semibold"><i class="fa-solid fa-user-check mr-1 text-bi-blue"></i> Pengunggah:</span>
-          <span id="upload-author-display" class="text-xs font-bold text-bi-blue">-</span>
+          <span class="text-[11px] sm:text-xs text-blue-900 font-semibold"><i class="fa-solid fa-user-check mr-1 text-bi-blue"></i> Pengunggah:</span>
+          <span id="upload-author-display" class="text-[11px] sm:text-xs font-bold text-bi-blue truncate max-w-[180px]">-</span>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <input type="text" id="input-judul" placeholder="Judul Materi" required 
-            class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
+            class="w-full px-3.5 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
           <input type="text" id="input-kategori" placeholder="Kategori (misal: SPPUR/CBP)" required 
-            class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
+            class="w-full px-3.5 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
         </div>
 
         <div>
           <label class="block text-xs font-bold text-gray-700 mb-1">Catatan / Fokus Materi <span class="font-normal text-gray-500">(opsional)</span></label>
-          <textarea id="input-isi" rows="3" placeholder="Opsional: tulis topik/bagian yang ingin ditekankan. Soal kuis disusun murni dari isi file yang Anda unggah." 
-            class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none"></textarea>
+          <textarea id="input-isi" rows="2" placeholder="Opsional: tulis topik/bagian yang ingin ditekankan." 
+            class="w-full px-3.5 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none"></textarea>
         </div>
 
         <div class="space-y-1">
           <label class="block text-xs font-bold text-gray-700"><i class="fa-brands fa-google-drive text-green-600 mr-1"></i> Upload File Modul (PDF, PPT, Word)</label>
           <input type="file" id="input-file" accept=".pdf,.ppt,.pptx,.doc,.docx" required
-            class="w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-bi-blue hover:file:bg-blue-100">
+            class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-bi-blue hover:file:bg-blue-100">
         </div>
 
-        <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-xl text-xs text-yellow-800 flex items-center gap-2">
-          <i class="fa-solid fa-wand-magic-sparkles text-yellow-600 text-base shrink-0"></i>
-          <span><strong>Auto AI Ollama Quiz:</strong> 10 Soal Pilihan Ganda (A/B/C/D) diproses langsung oleh AI Ollama Lokal di laptop. Bebas limit & tanpa kuota global!</span>
+        <div class="p-2.5 bg-yellow-50 border border-yellow-200 rounded-xl text-[11px] text-yellow-800 flex items-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles text-yellow-600 text-sm shrink-0"></i>
+          <span><strong>Auto AI Ollama Quiz:</strong> AI meracik kuis sederhana & Anda bisa mengecek/mengedit kuis sebelum terbit!</span>
         </div>
 
         <button type="submit" id="btn-submit"
-          class="w-full bg-bi-blue hover:bg-bi-blue-dark text-white font-semibold py-2.5 rounded-lg text-sm transition shadow flex items-center justify-center gap-2">
-          <i class="fa-solid fa-paper-plane"></i> Terbitkan Materi & Generate Kuis AI
+          class="w-full bg-bi-blue hover:bg-bi-blue-dark text-white font-semibold py-2.5 rounded-lg text-xs sm:text-sm transition shadow flex items-center justify-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Racik Kuis AI & Periksa Soal
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Modal Edit Materi -->
-  <div id="edit-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 border border-slate-200">
+  <!-- Modal Editor & Pratinjau Kuis AI Sebelum Terbit / Edit Superadmin -->
+  <div id="edit-quiz-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-3xl w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="text-base font-bold text-bi-blue flex items-center gap-2">
+        <div>
+          <h3 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
+            <i class="fa-solid fa-pen-to-square text-yellow-600"></i> Periksa & Edit 10 Soal Kuis AI
+          </h3>
+          <p class="text-[11px] sm:text-xs text-gray-500">Silakan betulkan teks soal atau kunci jawaban jika hasil Ollama kurang pas.</p>
+        </div>
+        <button onclick="toggleEditQuizModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="quiz-editor-container" class="space-y-4">
+        <!-- Render 10 Form Input Kuis via JS -->
+      </div>
+
+      <div class="pt-3 border-t flex justify-end gap-2 sticky bottom-0 bg-white p-2 border-t">
+        <button type="button" onclick="toggleEditQuizModal(false)" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg text-xs transition">Batal</button>
+        <button type="button" id="btn-save-final-quiz" onclick="simpanFinalKuisMateri()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs transition shadow flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-check"></i> Simpan & Terbitkan Materi (+50 Pts)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Edit Informasi Materi -->
+  <div id="edit-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200">
+      <div class="flex justify-between items-center border-b pb-2.5">
+        <h3 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
           <i class="fa-solid fa-pen-to-square text-blue-600"></i> Edit Informasi Materi
         </h3>
         <button onclick="toggleEditModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
@@ -371,20 +451,20 @@
 
       <form id="form-edit" class="space-y-3">
         <input type="hidden" id="edit-materi-id">
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-gray-700 mb-1">Judul Materi</label>
-            <input type="text" id="edit-judul" required class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
+            <input type="text" id="edit-judul" required class="w-full px-3.5 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
           </div>
           <div>
             <label class="block text-xs font-semibold text-gray-700 mb-1">Kategori</label>
-            <input type="text" id="edit-kategori" required class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
+            <input type="text" id="edit-kategori" required class="w-full px-3.5 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
           </div>
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">Catatan / Rincian Materi</label>
-          <textarea id="edit-isi" rows="3" class="w-full px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none"></textarea>
+          <textarea id="edit-isi" rows="3" class="w-full px-3.5 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none"></textarea>
         </div>
 
         <div class="pt-2 flex justify-end gap-2">
@@ -398,14 +478,14 @@
   </div>
 
   <!-- Modal pengerjaan Kuis AI 10 Soal -->
-  <div id="quiz-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4 border border-slate-200">
-      <div class="flex justify-between items-center border-b pb-3">
+  <div id="quiz-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b pb-2.5">
         <div>
-          <h3 id="quiz-title-display" class="text-base font-bold text-bi-blue flex items-center gap-2">
+          <h3 id="quiz-title-display" class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
             <i class="fa-solid fa-brain text-yellow-600"></i> Kuis Pembelajaran (10 Soal AI)
           </h3>
-          <p id="quiz-progress-text" class="text-xs text-gray-500 mt-0.5">Soal 1 dari 10</p>
+          <p id="quiz-progress-text" class="text-[11px] sm:text-xs text-gray-500 mt-0.5">Soal 1 dari 10</p>
         </div>
         <button onclick="toggleQuizModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
           <i class="fa-solid fa-xmark"></i>
@@ -418,14 +498,14 @@
     </div>
   </div>
 
-  <footer class="bg-bi-blue-dark text-blue-200 text-xs text-center py-4 border-t border-blue-900">
+  <footer class="bg-bi-blue-dark text-blue-200 text-[11px] sm:text-xs text-center py-3.5 border-t border-blue-900">
     SINAU Platform &copy; 2026 - KPwBI Jember
   </footer>
 
   <!-- Firebase SDK & Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, increment, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCot0XGB8--jZrEd_AkC51CbT_UCTTLUpc",
@@ -442,8 +522,12 @@
 
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyR30go-8sp-JWqgLQ6qdm1jCru3QoWqZUXHy92JgRT45-_0Jd6AePOQRImJgdS-t00/exec";
 
+    // AKUN SUPERADMIN NIP: 17241 (Mochtar Muhtadi IKSAN)
+    const SUPERADMIN_NIP = "17241";
+
     const DATA_PEGAWAI = [
       {"nip": "17241", "nama": "MOCHTAR MUHTADI IKSAN", "unit": "UIKSP", "pangkat": "Pelaksana"},
+      {"nip": "00000", "nama": "Guest User (Tamu)", "unit": "Umum", "pangkat": "Tamu"},
       {"nip": "17471", "nama": "M BAYU SETIAWAN", "unit": "UPUR", "pangkat": "Pelaksana"},
       {"nip": "17388", "nama": "ADHYTYA BAGUS RIZKIANTO", "unit": "UPUR", "pangkat": "Pelaksana"},
       {"nip": "15133", "nama": "AGAPITO GANESHA JMN", "unit": "UIKSP", "pangkat": "Asisten Manajer"},
@@ -481,7 +565,7 @@
       {"nip": "16380", "nama": "MOCHAMAD FAJAR ARIANTO", "unit": "UPUR", "pangkat": "Staf"},
       {"nip": "16549", "nama": "CLARESTA ISLAMEY", "unit": "FDSEK", "pangkat": "Manajer"},
       {"nip": "16780", "nama": "MOCHAMAD HADI SAROSA", "unit": "UMI", "pangkat": "Pelaksana"},
-      {"nip": "16781", "nama": "MOCHAMMAD FATONI", "unit": "SK", "pangkat": "Pelaksana"},
+      {"nip": "16781", "nama": "MOCHMAMMAD FATONI", "unit": "SK", "pangkat": "Pelaksana"},
       {"nip": "16873", "nama": "ADI PURNOMO", "unit": "UPUR", "pangkat": "Pelaksana"},
       {"nip": "17379", "nama": "ACHMAD MAULIDI EFFENDI", "unit": "UPUR", "pangkat": "Pelaksana"},
       {"nip": "17505", "nama": "RIZKY BANGKIT PUTRA LESMANA", "unit": "UPUR", "pangkat": "Pelaksana"},
@@ -500,6 +584,9 @@
     let currentQuestions = [];
     let currentQuestionIndex = 0;
     let userAnswers = {};
+
+    let pendingUploadData = null;
+    let editingExistingMateriId = null;
 
     // TRACKING TRAFFIC PAGEVIEW STATS (FIREBASE)
     async function trackPageTraffic() {
@@ -534,6 +621,10 @@
       localStorage.setItem(`sinau_completed_quizzes_${currentUser.nip}`, JSON.stringify(Array.from(completed)));
     }
 
+    function isSuperAdmin() {
+      return currentUser && currentUser.nip === SUPERADMIN_NIP;
+    }
+
     function updateUIForLogin() {
       if (currentUser) {
         document.getElementById('user-info-bar').classList.remove('hidden');
@@ -547,6 +638,12 @@
         document.getElementById('user-display-nip').innerText = `NIP: ${currentUser.nip}`;
         document.getElementById('profile-unit').innerText = `Unit: ${currentUser.unit} (${currentUser.pangkat || 'Pegawai'})`;
         document.getElementById('upload-author-display').innerText = `${currentUser.nama} (${currentUser.nip})`;
+
+        if (isSuperAdmin()) {
+          document.getElementById('superadmin-badge').classList.remove('hidden');
+        } else {
+          document.getElementById('superadmin-badge').classList.add('hidden');
+        }
       } else {
         document.getElementById('user-info-bar').classList.add('hidden');
         document.getElementById('user-info-bar').classList.remove('flex');
@@ -559,10 +656,33 @@
     }
     updateUIForLogin();
 
+    window.loginSebagaiTamu = function() {
+      const guestObj = DATA_PEGAWAI.find(p => p.nip === "00000");
+      currentUser = guestObj;
+      localStorage.setItem('sinau_user', JSON.stringify(guestObj));
+      updateUIForLogin();
+      toggleLoginModal(false);
+      alert("Anda berhasil masuk sebagai User Tamu (Guest). Selamat belajar!");
+    };
+
     window.toggleLoginModal = function(show) {
       const modal = document.getElementById('login-modal');
       if (show) modal.classList.remove('hidden');
       else modal.classList.add('hidden');
+    };
+
+    window.toggleResetPassModal = function(show) {
+      const modal = document.getElementById('reset-pass-modal');
+      if (show) modal.classList.remove('hidden');
+      else modal.classList.add('hidden');
+    };
+
+    window.bukaModalGantiPass = function() {
+      toggleLoginModal(false);
+      if (currentUser && currentUser.nip) {
+        document.getElementById('reset-nip').value = currentUser.nip;
+      }
+      toggleResetPassModal(true);
     };
 
     window.toggleUploadModal = function(show) {
@@ -578,6 +698,12 @@
 
     window.toggleEditModal = function(show) {
       const modal = document.getElementById('edit-modal');
+      if (show) modal.classList.remove('hidden');
+      else modal.classList.add('hidden');
+    };
+
+    window.toggleEditQuizModal = function(show) {
+      const modal = document.getElementById('edit-quiz-modal');
       if (show) modal.classList.remove('hidden');
       else modal.classList.add('hidden');
     };
@@ -620,8 +746,8 @@
       }
     };
 
-    // Login Form Submit
-    document.getElementById('form-login').addEventListener('submit', (e) => {
+    // Login Form Submit (Cek Password Kustom dari Firebase)
+    document.getElementById('form-login').addEventListener('submit', async (e) => {
       e.preventDefault();
       const nipInput = document.getElementById('login-nip').value.trim();
       const passInput = document.getElementById('login-password').value.trim();
@@ -633,17 +759,88 @@
         return;
       }
 
-      if (passInput !== "sinaubareng") {
-        alert("Password salah! Silakan periksa kembali password Anda.");
+      if (nipInput === "00000") {
+        currentUser = found;
+        localStorage.setItem('sinau_user', JSON.stringify(found));
+        updateUIForLogin();
+        toggleLoginModal(false);
         return;
       }
 
-      currentUser = found;
-      localStorage.setItem('sinau_user', JSON.stringify(found));
-      updateUIForLogin();
-      toggleLoginModal(false);
-      document.getElementById('form-login').reset();
-      alert(`Selamat datang, ${found.nama}!`);
+      // Cek password custom di Firebase
+      try {
+        const passDocRef = doc(db, "passwords", nipInput);
+        const passSnap = await getDoc(passDocRef);
+
+        let validPass = "sinaubareng";
+        if (passSnap.exists()) {
+          validPass = passSnap.data().password || "sinaubareng";
+        }
+
+        if (passInput !== validPass) {
+          alert("Password salah! Silakan periksa kembali password Anda.");
+          return;
+        }
+
+        currentUser = found;
+        localStorage.setItem('sinau_user', JSON.stringify(found));
+        updateUIForLogin();
+        toggleLoginModal(false);
+        document.getElementById('form-login').reset();
+        alert(`Selamat datang, ${found.nama}!`);
+
+      } catch (err) {
+        console.error("Error Checking Password:", err);
+        // Fallback default password
+        if (passInput === "sinaubareng") {
+          currentUser = found;
+          localStorage.setItem('sinau_user', JSON.stringify(found));
+          updateUIForLogin();
+          toggleLoginModal(false);
+        } else {
+          alert("Gagal memverifikasi password.");
+        }
+      }
+    });
+
+    // Reset / Ganti Password Submit
+    document.getElementById('form-reset-pass').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nipInput = document.getElementById('reset-nip').value.trim();
+      const newPassInput = document.getElementById('reset-pass-new').value.trim();
+
+      const found = DATA_PEGAWAI.find(p => p.nip === nipInput);
+      if (!found) {
+        alert("NIP tidak terdaftar!");
+        return;
+      }
+
+      if (newPassInput.length < 4) {
+        alert("Password baru minimal 4 karakter!");
+        return;
+      }
+
+      const btn = document.getElementById('btn-save-pass');
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Menyimpan...`;
+      btn.disabled = true;
+
+      try {
+        await setDoc(doc(db, "passwords", nipInput), {
+          nip: nipInput,
+          password: newPassInput,
+          updatedAt: new Date()
+        });
+
+        alert(`Password untuk ${found.nama} (NIP: ${nipInput}) berhasil diperbarui! Silakan login dengan password baru.`);
+        toggleResetPassModal(false);
+        toggleLoginModal(true);
+      } catch (err) {
+        console.error("Error Reset Pass:", err);
+        alert("Gagal memperbarui password.");
+      } finally {
+        btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Simpan Password Baru`;
+        btn.disabled = false;
+      }
     });
 
     const readFileAsBase64 = (file) => {
@@ -655,8 +852,7 @@
       });
     };
 
-    const MAX_PDF_INLINE_BYTES = 14 * 1024 * 1024;
-    const MAX_TEXT_CHARS = 10000;
+    const MAX_TEXT_CHARS = 8000;
 
     const decodeXmlEntities = (s) => {
       const t = document.createElement('textarea');
@@ -729,7 +925,7 @@
             const notesFile = zip.file(`ppt/notesSlides/notesSlide${n}.xml`);
             if (notesFile) {
               const notes = xmlToText(await notesFile.async('string'), 'a:p');
-              if (notes) chunk += `\n(Catatan pembicara: ${notes})`;
+              if (notes) chunk += `\n(Catatan: ${notes})`;
             }
             chunks.push(chunk);
           }
@@ -743,14 +939,6 @@
       return { kind: 'unsupported' };
     }
 
-    function shuffleArray(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-
     function normalizeQuestions(list) {
       if (!Array.isArray(list)) return [];
       const out = [];
@@ -761,40 +949,37 @@
         const opts = ['a', 'b', 'c', 'd'].map(k => String(q[k] ?? '').trim());
         if (!soal || opts.some(o => !o) || !['A', 'B', 'C', 'D'].includes(kunci)) continue;
 
-        const correctIdx = 'ABCD'.indexOf(kunci);
-        const items = shuffleArray(opts.map((text, i) => ({ text, correct: i === correctIdx })));
         out.push({
           soal,
-          a: items[0].text,
-          b: items[1].text,
-          c: items[2].text,
-          d: items[3].text,
-          kunci: 'ABCD'[items.findIndex(x => x.correct)]
+          a: opts[0],
+          b: opts[1],
+          c: opts[2],
+          d: opts[3],
+          kunci: kunci
         });
       }
       return out;
     }
 
-    // PEMANGGILAN OLLAMA VIA NGROK LOKAL
+    // PROMPT SEDERHANA KE OLLAMA NGROK
     async function generateQuestionsWithGemini(judul, kategori, catatan, content) {
       const OLLAMA_URL = "https://swept-composed-bunch.ngrok-free.dev/api/generate";
 
       if (content.kind !== 'text' && !(catatan && catatan.trim().length >= 30)) {
-        throw new Error("Isi file tidak bisa dibaca (kemungkinan PDF hasil scan/gambar). Tulis ringkasan materi di kolom Catatan (minimal 30 karakter), atau unggah file versi teks.");
+        throw new Error("Isi file tidak bisa dibaca (PDF hasil scan/gambar). Tulis ringkasan materi di kolom Catatan (minimal 30 karakter).");
       }
       let teksMateri = content.kind === 'text' ? content.text : catatan;
 
-      const promptText = `Anda adalah pakar pembuat soal evaluasi pembelajaran di lingkungan Bank Indonesia.
-Buatkan TEPAT 10 soal pilihan ganda (A, B, C, D) dalam Bahasa Indonesia murni berdasarkan materi berikut:
+      const promptText = `Buatkan TEPAT 10 soal kuis pilihan ganda SEDERHANA & JELAS dalam Bahasa Indonesia berdasarkan teks ini:
 Judul: ${judul}
 Kategori: ${kategori}
-Isi Ringkas/Materi: ${teksMateri}
+Materi: ${teksMateri}
 
-ATURAN WAJIB:
-1. Setiap soal HARUS bisa dijawab secara presisi dari isi materi.
-2. Setiap soal punya satu jawaban benar dan tiga pengecoh yang masuk akal.
-3. Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun:
-[{"soal":"...","a":"...","b":"...","c":"...","d":"...","kunci":"A"}]`;
+SYARAT FORMAT:
+1. Soal harus langsung berorientasi fakta/definisi utama.
+2. Setiap soal punya 4 pilihan jawaban (A, B, C, D) dan 1 kunci jawaban pasti.
+3. Kembalikan HANYA JSON MURNI tanpa penjelasan apapun:
+[{"soal":"Sebutkan...","a":"...","b":"...","c":"...","d":"...","kunci":"A"}]`;
 
       try {
         const res = await fetch(OLLAMA_URL, {
@@ -809,8 +994,8 @@ ATURAN WAJIB:
             stream: false,
             format: "json",
             options: {
-              num_ctx: 6144,
-              temperature: 0.3
+              num_ctx: 4096,
+              temperature: 0.2
             }
           })
         });
@@ -824,17 +1009,17 @@ ATURAN WAJIB:
         return normalizeQuestions(quizList);
       } catch (err) {
         console.error("Ollama ngrok error:", err);
-        throw new Error("Gagal terhubung ke AI Ollama Lokal. Pastikan Ollama & ngrok di laptop dalam keadaan aktif!");
+        throw new Error("Gagal terhubung ke AI Ollama Lokal. Pastikan Ollama & ngrok di laptop aktif!");
       }
     }
 
-    // Submit Upload Materi
+    // Submit Upload Form -> Racik Kuis AI & Buka Modal Review Editor
     document.getElementById('form-upload').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!currentUser) return;
 
       const btn = document.getElementById('btn-submit');
-      const defaultBtnHTML = `<i class="fa-solid fa-paper-plane mr-1"></i> Terbitkan Materi & Generate Kuis AI`;
+      const defaultBtnHTML = `<i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Racik Kuis AI & Periksa Soal`;
       const setBtn = (msg) => { btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ${msg}`; };
 
       const judul = document.getElementById('input-judul').value;
@@ -849,8 +1034,6 @@ ATURAN WAJIB:
 
       btn.disabled = true;
 
-      let driveLink = "";
-
       try {
         setBtn('Membaca berkas modul...');
         const base64Data = await readFileAsBase64(fileInput);
@@ -862,50 +1045,23 @@ ATURAN WAJIB:
           content = { kind: 'unsupported' };
         }
 
-        setBtn('AI Ollama sedang meracik 10 kuis di laptop...');
-        
+        setBtn('AI Ollama meracik 10 kuis di laptop...');
         const questionsList = await generateQuestionsWithGemini(judul, kategori, isi, content);
 
-        setBtn('Mengunggah file ke Google Drive...');
-        const payload = {
-          fileName: fileInput.name,
-          mimeType: fileInput.type,
-          base64: base64Data
-        };
-
-        const response = await fetch(APPS_SCRIPT_URL, {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
-
-        const resultText = await response.text();
-        if (resultText.includes("http")) {
-          const match = resultText.match(/https?:\/\/[^\s"]+/);
-          if (match) driveLink = match[0];
-        }
-
-        setBtn('Menyimpan materi ke database...');
-        await addDoc(collection(db, "materi"), {
-          pengarang: currentUser.nama,
-          nip: currentUser.nip,
-          unit: currentUser.unit,
+        pendingUploadData = {
           judul, kategori, isi,
           fileName: fileInput.name,
           fileType: fileInput.type,
-          link: driveLink,
-          questions: questionsList,
-          timestamp: new Date()
-        });
+          base64Data,
+          questions: questionsList
+        };
 
-        await addDoc(collection(db, "users"), {
-          nama: currentUser.nama,
-          nip: currentUser.nip,
-          poin: 50
-        });
+        editingExistingMateriId = null;
 
-        alert("Materi & 10 Kuis AI Berhasil Diterbitkan via Ollama Lokal! Anda mendapatkan +50 Poin!");
-        document.getElementById('form-upload').reset();
+        renderQuizEditor(questionsList);
         toggleUploadModal(false);
+        toggleEditQuizModal(true);
+
       } catch (err) {
         console.error("Error Upload:", err);
         alert(err.message || "Terjadi kesalahan saat mengunggah berkas.");
@@ -915,14 +1071,156 @@ ATURAN WAJIB:
       }
     });
 
+    // Render Form Edit Kuis
+    function renderQuizEditor(questions) {
+      const container = document.getElementById('quiz-editor-container');
+      container.innerHTML = "";
+
+      questions.forEach((q, idx) => {
+        const box = document.createElement('div');
+        box.className = "p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2.5 text-xs";
+        
+        box.innerHTML = `
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-bi-blue">Soal Nomor ${idx + 1}</span>
+            <div class="flex items-center gap-1.5">
+              <label class="font-semibold text-gray-600">Kunci Jawaban:</label>
+              <select id="editor-kunci-${idx}" class="px-2 py-1 bg-white border border-gray-300 rounded font-bold text-bi-blue focus:ring-1 focus:ring-blue-800">
+                <option value="A" ${q.kunci === 'A' ? 'selected' : ''}>A</option>
+                <option value="B" ${q.kunci === 'B' ? 'selected' : ''}>B</option>
+                <option value="C" ${q.kunci === 'C' ? 'selected' : ''}>C</option>
+                <option value="D" ${q.kunci === 'D' ? 'selected' : ''}>D</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <input type="text" id="editor-soal-${idx}" value="${q.soal.replace(/"/g, '&quot;')}" required placeholder="Teks Pertanyaan" 
+              class="w-full px-3 py-1.5 border border-gray-300 rounded-lg font-medium text-gray-800 focus:ring-1 focus:ring-blue-800">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div class="flex items-center gap-1">
+              <span class="font-bold text-gray-500 w-4">A.</span>
+              <input type="text" id="editor-opt-a-${idx}" value="${q.a.replace(/"/g, '&quot;')}" required class="w-full px-2.5 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-800">
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="font-bold text-gray-500 w-4">B.</span>
+              <input type="text" id="editor-opt-b-${idx}" value="${q.b.replace(/"/g, '&quot;')}" required class="w-full px-2.5 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-800">
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="font-bold text-gray-500 w-4">C.</span>
+              <input type="text" id="editor-opt-c-${idx}" value="${q.c.replace(/"/g, '&quot;')}" required class="w-full px-2.5 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-800">
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="font-bold text-gray-500 w-4">D.</span>
+              <input type="text" id="editor-opt-d-${idx}" value="${q.d.replace(/"/g, '&quot;')}" required class="w-full px-2.5 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-800">
+            </div>
+          </div>
+        `;
+        container.appendChild(box);
+      });
+    }
+
+    // Mengambil data dari Editor Kuis
+    function collectEditedQuiz() {
+      const updated = [];
+      for (let i = 0; i < 10; i++) {
+        const soal = document.getElementById(`editor-soal-${i}`)?.value || "";
+        const a = document.getElementById(`editor-opt-a-${i}`)?.value || "";
+        const b = document.getElementById(`editor-opt-b-${i}`)?.value || "";
+        const c = document.getElementById(`editor-opt-c-${i}`)?.value || "";
+        const d = document.getElementById(`editor-opt-d-${i}`)?.value || "";
+        const kunci = document.getElementById(`editor-kunci-${i}`)?.value || "A";
+
+        if (soal && a && b && c && d) {
+          updated.push({ soal, a, b, c, d, kunci });
+        }
+      }
+      return updated;
+    }
+
+    // Simpan Final Kuis & Terbitkan Ke Firestore / Drive
+    window.simpanFinalKuisMateri = async function() {
+      const finalQuestions = collectEditedQuiz();
+      if (finalQuestions.length < 1) {
+        alert("Harap lengkapi pertanyaan kuis terlebih dahulu!");
+        return;
+      }
+
+      const btn = document.getElementById('btn-save-final-quiz');
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Menyimpan...`;
+      btn.disabled = true;
+
+      try {
+        if (editingExistingMateriId) {
+          const docRef = doc(db, "materi", editingExistingMateriId);
+          await updateDoc(docRef, { questions: finalQuestions });
+          alert("Soal kuis berhasil diperbarui!");
+        } else if (pendingUploadData) {
+          let driveLink = "";
+          const payload = {
+            fileName: pendingUploadData.fileName,
+            mimeType: pendingUploadData.fileType,
+            base64: pendingUploadData.base64Data
+          };
+
+          const response = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
+
+          const resultText = await response.text();
+          if (resultText.includes("http")) {
+            const match = resultText.match(/https?:\/\/[^\s"]+/);
+            if (match) driveLink = match[0];
+          }
+
+          await addDoc(collection(db, "materi"), {
+            pengarang: currentUser.nama,
+            nip: currentUser.nip,
+            unit: currentUser.unit,
+            judul: pendingUploadData.judul,
+            kategori: pendingUploadData.kategori,
+            isi: pendingUploadData.isi,
+            fileName: pendingUploadData.fileName,
+            fileType: pendingUploadData.fileType,
+            link: driveLink,
+            questions: finalQuestions,
+            timestamp: new Date()
+          });
+
+          await addDoc(collection(db, "users"), {
+            nama: currentUser.nama,
+            nip: currentUser.nip,
+            poin: 50
+          });
+
+          alert("Materi & Kuis AI Terverifikasi Berhasil Diterbitkan! Anda mendapatkan +50 Poin!");
+        }
+
+        toggleEditQuizModal(false);
+        pendingUploadData = null;
+        editingExistingMateriId = null;
+        document.getElementById('form-upload').reset();
+
+      } catch (err) {
+        console.error("Error Simpan Final:", err);
+        alert("Gagal menyimpan materi.");
+      } finally {
+        btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Simpan & Terbitkan Materi (+50 Pts)`;
+        btn.disabled = false;
+      }
+    };
+
     // Helper Icon Cover File
     function getFileThumbnailIcon(fileName) {
-      if (!fileName) return '<i class="fa-solid fa-file text-blue-600 text-3xl"></i>';
+      if (!fileName) return '<i class="fa-solid fa-file text-blue-600 text-2xl sm:text-3xl"></i>';
       const ext = fileName.split('.').pop().toLowerCase();
-      if (ext === 'pdf') return '<i class="fa-solid fa-file-pdf text-red-500 text-3xl"></i>';
-      if (ext === 'ppt' || ext === 'pptx') return '<i class="fa-solid fa-file-powerpoint text-orange-500 text-3xl"></i>';
-      if (ext === 'doc' || ext === 'docx') return '<i class="fa-solid fa-file-word text-blue-600 text-3xl"></i>';
-      return '<i class="fa-solid fa-file-lines text-slate-500 text-3xl"></i>';
+      if (ext === 'pdf') return '<i class="fa-solid fa-file-pdf text-red-500 text-2xl sm:text-3xl"></i>';
+      if (ext === 'ppt' || ext === 'pptx') return '<i class="fa-solid fa-file-powerpoint text-orange-500 text-2xl sm:text-3xl"></i>';
+      if (ext === 'doc' || ext === 'docx') return '<i class="fa-solid fa-file-word text-blue-600 text-2xl sm:text-3xl"></i>';
+      return '<i class="fa-solid fa-file-lines text-slate-500 text-2xl sm:text-3xl"></i>';
     }
 
     // Filter Search Materi
@@ -931,7 +1229,19 @@ ATURAN WAJIB:
       renderMateriCards(keyword);
     };
 
-    // Fungsi Buka Modal Edit Materi
+    // Buka Edit Kuis untuk Materi Eksisting (Superadmin / Owner)
+    window.bukaEditKuisMateri = function(id) {
+      const item = allMateriData[id];
+      if (!item || !item.questions) return;
+
+      editingExistingMateriId = id;
+      pendingUploadData = null;
+
+      renderQuizEditor(item.questions);
+      toggleEditQuizModal(true);
+    };
+
+    // Buka Edit Informasi Materi
     window.bukaEditMateri = function(id) {
       const item = allMateriData[id];
       if (!item) return;
@@ -944,7 +1254,7 @@ ATURAN WAJIB:
       toggleEditModal(true);
     };
 
-    // Submit Edit Form
+    // Submit Edit Form Informasi Materi
     document.getElementById('form-edit').addEventListener('submit', async (e) => {
       e.preventDefault();
       const id = document.getElementById('edit-materi-id').value;
@@ -973,7 +1283,7 @@ ATURAN WAJIB:
       }
     });
 
-    // Fungsi Hapus Materi
+    // Fungsi Hapus Materi (Superadmin atau Pemilik)
     window.hapusMateri = async function(id) {
       const item = allMateriData[id];
       if (!item) return;
@@ -1006,37 +1316,40 @@ ATURAN WAJIB:
 
       if (filtered.length === 0) {
         container.innerHTML = `
-          <div class="text-center py-8 text-gray-400">
-            <i class="fa-solid fa-search text-3xl mb-2 text-slate-300"></i>
-            <p class="text-sm">Tidak ada materi yang ditemukan.</p>
+          <div class="text-center py-6 text-gray-400">
+            <i class="fa-solid fa-search text-2xl mb-1.5 text-slate-300"></i>
+            <p class="text-xs sm:text-sm">Tidak ada materi yang ditemukan.</p>
           </div>`;
         return;
       }
 
       filtered.forEach(({ id, item }) => {
         const card = document.createElement('div');
-        card.className = "p-5 border border-slate-200 rounded-xl hover:shadow-md transition bg-white space-y-3 relative";
+        card.className = "p-3.5 sm:p-5 border border-slate-200 rounded-xl hover:shadow-md transition bg-white space-y-2.5 sm:space-y-3 relative";
         
-        let linkHTML = item.link ? `<a href="${item.link}" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-bi-blue bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-1.5 rounded-lg font-semibold transition"><i class="fa-brands fa-google-drive text-green-600"></i> Buka Lampiran Berkas (Google Drive)</a>` : '';
+        let linkHTML = item.link ? `<a href="${item.link}" target="_blank" class="w-full sm:w-auto text-center inline-flex items-center justify-center gap-1.5 text-xs text-bi-blue bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-1.5 rounded-lg font-semibold transition"><i class="fa-brands fa-google-drive text-green-600"></i> Buka Lampiran Berkas</a>` : '';
         
         let quizBtnHTML = '';
         if (item.questions && item.questions.length > 0) {
           const isDone = completedSet.has(id);
           quizBtnHTML = `
-            <button onclick="mulaiKuisAI('${id}')" ${isDone ? 'disabled' : ''} class="text-xs ${isDone ? 'bg-slate-200 text-slate-500 cursor-not-allowed border border-slate-300' : 'bg-yellow-500 hover:bg-yellow-600 text-bi-blue'} font-bold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-sm">
-              <i class="fa-solid ${isDone ? 'fa-check-double text-slate-400' : 'fa-brain'}"></i> ${isDone ? 'Kuis Selesai Dikerjakan' : `Kerjakan Kuis AI (${item.questions.length} Soal)`}
+            <button onclick="mulaiKuisAI('${id}')" ${isDone ? 'disabled' : ''} class="w-full sm:w-auto text-xs ${isDone ? 'bg-slate-200 text-slate-500 cursor-not-allowed border border-slate-300' : 'bg-yellow-500 hover:bg-yellow-600 text-bi-blue'} font-bold px-3.5 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5 shadow-sm">
+              <i class="fa-solid ${isDone ? 'fa-check-double text-slate-400' : 'fa-brain'}"></i> ${isDone ? 'Kuis Selesai' : `Kerjakan Kuis (${item.questions.length} Soal)`}
             </button>
           `;
         }
 
         let actionButtonsHTML = '';
-        if (currentUser && (currentUser.nip === item.nip || currentUser.nama === item.pengarang)) {
+        const canManage = isSuperAdmin() || (currentUser && (currentUser.nip === item.nip || currentUser.nama === item.pengarang));
+
+        if (canManage) {
           actionButtonsHTML = `
             <div class="flex items-center gap-1.5 ml-2">
-              <button onclick="bukaEditMateri('${id}')" title="Edit Materi" class="p-1.5 text-xs text-blue-600 hover:bg-blue-50 rounded-md transition border border-blue-200">
+              ${item.questions ? `<button onclick="bukaEditKuisMateri('${id}')" title="Edit Soal Kuis" class="p-1 sm:p-1.5 text-xs text-yellow-600 hover:bg-yellow-50 rounded-md transition border border-yellow-300"><i class="fa-solid fa-brain"></i></button>` : ''}
+              <button onclick="bukaEditMateri('${id}')" title="Edit Info Materi" class="p-1 sm:p-1.5 text-xs text-blue-600 hover:bg-blue-50 rounded-md transition border border-blue-200">
                 <i class="fa-solid fa-pen-to-square"></i>
               </button>
-              <button onclick="hapusMateri('${id}')" title="Hapus Materi" class="p-1.5 text-xs text-red-600 hover:bg-red-50 rounded-md transition border border-red-200">
+              <button onclick="hapusMateri('${id}')" title="Hapus Materi" class="p-1 sm:p-1.5 text-xs text-red-600 hover:bg-red-50 rounded-md transition border border-red-200">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
             </div>
@@ -1048,24 +1361,24 @@ ATURAN WAJIB:
 
         card.innerHTML = `
           <div class="flex justify-between items-start">
-            <span class="text-xs font-semibold px-2.5 py-0.5 bg-blue-100 text-bi-blue rounded-full">${item.kategori}</span>
+            <span class="text-[10px] sm:text-xs font-semibold px-2 py-0.5 bg-blue-100 text-bi-blue rounded-full">${item.kategori}</span>
             <div class="flex items-center">
-              <span class="text-xs text-gray-400"><i class="fa-regular fa-user mr-1"></i>${item.pengarang} (${item.unit || 'BI Jember'})</span>
+              <span class="text-[10px] sm:text-xs text-gray-400 truncate max-w-[140px] sm:max-w-none"><i class="fa-regular fa-user mr-1"></i>${item.pengarang}</span>
               ${actionButtonsHTML}
             </div>
           </div>
           
-          <div class="flex items-center gap-3.5 py-1">
-            <div class="w-12 h-12 bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-center shrink-0 shadow-sm">
+          <div class="flex items-center gap-3 py-0.5">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-center shrink-0 shadow-sm">
               ${thumbIcon}
             </div>
-            <div>
-              <h3 class="font-bold text-bi-blue text-base">${item.judul}</h3>
-              <p class="text-xs text-slate-500 mt-0.5 flex items-center gap-1"><i class="fa-solid fa-paperclip text-[10px]"></i> ${displayFileName}</p>
+            <div class="min-w-0 flex-1">
+              <h3 class="font-bold text-bi-blue text-sm sm:text-base truncate">${item.judul}</h3>
+              <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5 flex items-center gap-1 truncate"><i class="fa-solid fa-paperclip text-[10px]"></i> ${displayFileName}</p>
             </div>
           </div>
 
-          <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-2 border-t">
             ${linkHTML}
             ${quizBtnHTML}
           </div>
@@ -1084,10 +1397,10 @@ ATURAN WAJIB:
 
       if (snapshot.empty) {
         document.getElementById('materi-container').innerHTML = `
-          <div class="text-center py-8 text-gray-400">
-            <i class="fa-solid fa-folder-open text-4xl mb-2 text-slate-300"></i>
-            <p class="text-sm">Belum ada materi pembelajaran.</p>
-            <p class="text-xs text-slate-400 mt-1">Jadilah pegawai pertama yang berbagi ilmu!</p>
+          <div class="text-center py-6 text-gray-400">
+            <i class="fa-solid fa-folder-open text-3xl mb-1.5 text-slate-300"></i>
+            <p class="text-xs sm:text-sm">Belum ada materi pembelajaran.</p>
+            <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">Jadilah pegawai pertama yang berbagi ilmu!</p>
           </div>`;
         return;
       }
@@ -1142,13 +1455,13 @@ ATURAN WAJIB:
 
       sorted.forEach(([nama, totalPoin], index) => {
         const row = document.createElement('div');
-        row.className = "flex justify-between items-center text-xs p-2.5 rounded-xl bg-slate-50 border border-slate-100 shadow-sm";
+        row.className = "flex justify-between items-center text-xs p-2 sm:p-2.5 rounded-xl bg-slate-50 border border-slate-100 shadow-sm";
         row.innerHTML = `
-          <div class="flex items-center gap-2">
-            <span class="w-5 h-5 flex items-center justify-center font-bold text-[10px] rounded-full ${index === 0 ? 'bg-yellow-500 text-white shadow' : 'bg-slate-200 text-slate-700'}">${index + 1}</span>
-            <span class="font-semibold text-gray-700 truncate max-w-[130px]">${nama}</span>
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-bold text-[9px] sm:text-[10px] rounded-full shrink-0 ${index === 0 ? 'bg-yellow-500 text-white shadow' : 'bg-slate-200 text-slate-700'}">${index + 1}</span>
+            <span class="font-semibold text-gray-700 truncate max-w-[110px] sm:max-w-[130px]">${nama}</span>
           </div>
-          <span class="font-bold text-bi-blue">${totalPoin} Pts</span>
+          <span class="font-bold text-bi-blue shrink-0">${totalPoin} Pts</span>
         `;
         container.appendChild(row);
       });
@@ -1192,7 +1505,7 @@ ATURAN WAJIB:
         const optVal = q[optKey.toLowerCase()];
         const isSelected = userAnswers[currentQuestionIndex] === optKey;
         return `
-          <button onclick="selectQuizOption('${optKey}')" class="w-full text-left p-3 rounded-xl border text-xs transition flex items-center justify-between ${isSelected ? 'bg-blue-100 border-bi-blue text-bi-blue font-bold shadow-sm' : 'bg-slate-50 border-slate-200 hover:bg-slate-100 text-gray-700'}">
+          <button onclick="selectQuizOption('${optKey}')" class="w-full text-left p-2.5 sm:p-3 rounded-xl border text-xs transition flex items-center justify-between ${isSelected ? 'bg-blue-100 border-bi-blue text-bi-blue font-bold shadow-sm' : 'bg-slate-50 border-slate-200 hover:bg-slate-100 text-gray-700'}">
             <span><strong>${optKey}.</strong> ${optVal}</span>
             ${isSelected ? '<i class="fa-solid fa-circle-check text-bi-blue"></i>' : ''}
           </button>
@@ -1201,20 +1514,20 @@ ATURAN WAJIB:
 
       let navButtons = `
         <div class="flex justify-between items-center pt-3 border-t">
-          <button onclick="prevQuestion()" ${currentQuestionIndex === 0 ? 'disabled class="opacity-40 text-xs px-3 py-1.5 border rounded-lg"' : 'class="text-xs px-3 py-1.5 border rounded-lg hover:bg-slate-100 font-semibold text-bi-blue"'}>
+          <button onclick="prevQuestion()" ${currentQuestionIndex === 0 ? 'disabled class="opacity-40 text-xs px-2.5 py-1.5 border rounded-lg"' : 'class="text-xs px-2.5 py-1.5 border rounded-lg hover:bg-slate-100 font-semibold text-bi-blue"'}>
             <i class="fa-solid fa-chevron-left mr-1"></i> Sebelum
           </button>
           ${currentQuestionIndex === total - 1 ? 
-            `<button onclick="submitAllQuiz()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg transition shadow">Selesai & Kirim Jawaban <i class="fa-solid fa-paper-plane ml-1"></i></button>` : 
-            `<button onclick="nextQuestion()" class="text-xs bg-bi-blue hover:bg-bi-blue-dark text-white font-semibold px-4 py-2 rounded-lg transition shadow">Berikut <i class="fa-solid fa-chevron-right ml-1"></i></button>`
+            `<button onclick="submitAllQuiz()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-1.5 rounded-lg transition shadow">Selesai & Kirim <i class="fa-solid fa-paper-plane ml-1"></i></button>` : 
+            `<button onclick="nextQuestion()" class="text-xs bg-bi-blue hover:bg-bi-blue-dark text-white font-semibold px-3.5 py-1.5 rounded-lg transition shadow">Berikut <i class="fa-solid fa-chevron-right ml-1"></i></button>`
           }
         </div>
       `;
 
       body.innerHTML = `
-        <div class="space-y-3">
-          <p class="text-sm font-bold text-gray-800 leading-relaxed">${currentQuestionIndex + 1}. ${q.soal}</p>
-          <div class="space-y-2">${optionsHTML}</div>
+        <div class="space-y-2.5">
+          <p class="text-xs sm:text-sm font-bold text-gray-800 leading-relaxed">${currentQuestionIndex + 1}. ${q.soal}</p>
+          <div class="space-y-1.5 sm:space-y-2">${optionsHTML}</div>
         </div>
         ${navButtons}
       `;
