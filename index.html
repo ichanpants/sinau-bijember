@@ -84,7 +84,7 @@
             <div class="absolute left-0 top-full pt-1 hidden group-hover:block w-52 z-50">
               <div class="bg-white text-gray-800 rounded-xl shadow-xl border border-slate-200 py-2 text-xs space-y-1">
                 <a href="#" onclick="alert('Aturan Poin SINAU:\n- Upload Materi Baru = +50 Poin\n- Mengerjakan Kuis = +10 Poin per Jawaban Benar')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-500"></i> Ketentuan Poin</a>
-                <a href="#" onclick="alert('Petunjuk Upload Modul:\n1. Klik Upload Materi\n2. Pilih Berkas PDF/Word/PPT\n3. AI Ollama Lokal akan memproses 10 Soal Kuis\n4. Anda bisa memeriksa & mengedit kuis sebelum diterbitkan!')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-upload text-blue-600"></i> Cara Unggah Modul</a>
+                <a href="#" onclick="alert('Petunjuk Upload Modul:\n1. Klik Upload Materi\n2. Pilih Berkas PDF/Word/PPT\n3. AI Ollama Lokal akan memproses 10 Soal Kuis\n4. Anda bisa memeriksa & mengedit kuis (visual / copas JSON langsung)!')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-upload text-blue-600"></i> Cara Unggah Modul</a>
               </div>
             </div>
           </div>
@@ -398,7 +398,7 @@
 
         <div class="p-2.5 bg-yellow-50 border border-yellow-200 rounded-xl text-[11px] text-yellow-800 flex items-center gap-2">
           <i class="fa-solid fa-wand-magic-sparkles text-yellow-600 text-sm shrink-0"></i>
-          <span><strong>Auto AI Ollama Quiz:</strong> AI meracik kuis sederhana & Anda bisa mengecek/mengedit kuis sebelum terbit!</span>
+          <span><strong>Auto AI Ollama Quiz:</strong> AI meracik kuis & Anda bisa mengecek/mengedit kuis (visual atau copas JSON langsung)!</span>
         </div>
 
         <button type="submit" id="btn-submit"
@@ -412,23 +412,59 @@
   <!-- Modal Editor & Pratinjau Kuis AI Sebelum Terbit / Edit Superadmin -->
   <div id="edit-quiz-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl max-w-3xl w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200 max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center border-b pb-3">
+      
+      <!-- Top Control Bar Mode Switcher -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b pb-3">
         <div>
           <h3 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
             <i class="fa-solid fa-pen-to-square text-yellow-600"></i> Periksa & Edit 10 Soal Kuis AI
           </h3>
-          <p class="text-[11px] sm:text-xs text-gray-500">Silakan betulkan teks soal atau kunci jawaban jika hasil Ollama kurang pas.</p>
+          <p class="text-[11px] sm:text-xs text-gray-500">Edit satu per satu atau copas langsung JSON mentah dari Gemini/Ollama.</p>
         </div>
-        <button onclick="toggleEditQuizModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
-          <i class="fa-solid fa-xmark"></i>
+
+        <!-- Toggle Switch Mode Visual VS Mode Massal (JSON) -->
+        <div class="flex items-center bg-slate-100 p-1 rounded-xl border shrink-0">
+          <button type="button" id="tab-mode-visual" onclick="switchQuizEditorTab('visual')" class="px-3 py-1 text-xs font-bold rounded-lg transition bg-white text-bi-blue shadow-xs">
+            <i class="fa-solid fa-list-check mr-1"></i> Form Visual
+          </button>
+          <button type="button" id="tab-mode-json" onclick="switchQuizEditorTab('json')" class="px-3 py-1 text-xs font-bold rounded-lg transition text-gray-600 hover:text-bi-blue">
+            <i class="fa-solid fa-code mr-1"></i> Copas JSON
+          </button>
+        </div>
+      </div>
+
+      <!-- MODE 1: Form Input Visual 1-per-1 -->
+      <div id="quiz-editor-visual-wrapper" class="space-y-4">
+        <div id="quiz-editor-container" class="space-y-4">
+          <!-- Render 10 Form Input Kuis via JS -->
+        </div>
+      </div>
+
+      <!-- MODE 2: Copas Langsung Raw JSON (Aman & Cepat) -->
+      <div id="quiz-editor-json-wrapper" class="hidden space-y-3">
+        <div class="bg-blue-50 border border-blue-200 p-3 rounded-xl text-xs text-blue-900 space-y-1">
+          <p class="font-bold flex items-center gap-1.5"><i class="fa-solid fa-copy text-bi-blue"></i> Salin Prompt / Copas Jawaban JSON Gemini</p>
+          <p class="text-[11px] text-slate-600">Kamu bisa minta Gemini/ChatGPT di HP/Laptop meracik 10 soal, lalu langsung paste hasilnya ke dalam kotak di bawah ini:</p>
+          <div class="pt-1 flex gap-2">
+            <button type="button" onclick="copyGeminiPrompt()" class="bg-white hover:bg-slate-100 border text-bi-blue px-2.5 py-1 rounded font-bold text-[10px] transition">
+              <i class="fa-regular fa-copy mr-1"></i> Salin Prompt Gemini
+            </button>
+            <button type="button" onclick="copyCurrentQuizJSON()" class="bg-white hover:bg-slate-100 border text-yellow-700 px-2.5 py-1 rounded font-bold text-[10px] transition">
+              <i class="fa-solid fa-code mr-1"></i> Salin JSON Kuis Saat Ini
+            </button>
+          </div>
+        </div>
+
+        <textarea id="editor-raw-json" rows="12" placeholder='Paste teks format JSON dari Gemini/Ollama di sini...'
+          class="w-full p-3 font-mono text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-800 focus:outline-none bg-slate-900 text-emerald-400"></textarea>
+        
+        <button type="button" onclick="parseRawJSONToVisual()" class="w-full py-2 bg-bi-blue hover:bg-bi-blue-dark text-white font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-arrows-rotate"></i> Terapkan & Sinkronkan JSON ke Form Visual
         </button>
       </div>
 
-      <div id="quiz-editor-container" class="space-y-4">
-        <!-- Render 10 Form Input Kuis via JS -->
-      </div>
-
-      <div class="pt-3 border-t flex justify-end gap-2 sticky bottom-0 bg-white p-2 border-t">
+      <!-- Modal Footer -->
+      <div class="pt-3 border-t flex justify-between items-center sticky bottom-0 bg-white p-2">
         <button type="button" onclick="toggleEditQuizModal(false)" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg text-xs transition">Batal</button>
         <button type="button" id="btn-save-final-quiz" onclick="simpanFinalKuisMateri()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs transition shadow flex items-center gap-1.5">
           <i class="fa-solid fa-circle-check"></i> Simpan & Terbitkan Materi (+50 Pts)
@@ -767,7 +803,6 @@
         return;
       }
 
-      // Cek password custom di Firebase
       try {
         const passDocRef = doc(db, "passwords", nipInput);
         const passSnap = await getDoc(passDocRef);
@@ -791,7 +826,6 @@
 
       } catch (err) {
         console.error("Error Checking Password:", err);
-        // Fallback default password
         if (passInput === "sinaubareng") {
           currentUser = found;
           localStorage.setItem('sinau_user', JSON.stringify(found));
@@ -1071,7 +1105,73 @@ SYARAT FORMAT:
       }
     });
 
-    // Render Form Edit Kuis
+    // FUNGSI UTAMA FITUR COPAS BULK JSON VS FORM VISUAL[cite: 14]
+    window.switchQuizEditorTab = function(mode) {
+      const btnVisual = document.getElementById('tab-mode-visual');
+      const btnJson = document.getElementById('tab-mode-json');
+      const wrapVisual = document.getElementById('quiz-editor-visual-wrapper');
+      const wrapJson = document.getElementById('quiz-editor-json-wrapper');
+
+      if (mode === 'visual') {
+        btnVisual.className = "px-3 py-1 text-xs font-bold rounded-lg transition bg-white text-bi-blue shadow-xs";
+        btnJson.className = "px-3 py-1 text-xs font-bold rounded-lg transition text-gray-600 hover:text-bi-blue";
+        wrapVisual.classList.remove('hidden');
+        wrapJson.classList.add('hidden');
+      } else {
+        btnJson.className = "px-3 py-1 text-xs font-bold rounded-lg transition bg-white text-bi-blue shadow-xs";
+        btnVisual.className = "px-3 py-1 text-xs font-bold rounded-lg transition text-gray-600 hover:text-bi-blue";
+        wrapJson.classList.remove('hidden');
+        wrapVisual.classList.add('hidden');
+
+        // Isi textarea dengan JSON kuis saat ini
+        const currentData = collectEditedQuiz();
+        document.getElementById('editor-raw-json').value = JSON.stringify(currentData, null, 2);
+      }
+    };
+
+    // Terapkan JSON Mentah ke Form Visual
+    window.parseRawJSONToVisual = function() {
+      const rawText = document.getElementById('editor-raw-json').value.trim();
+      if (!rawText) {
+        alert("Kotak JSON masih kosong!");
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(rawText);
+        const normalized = normalizeQuestions(parsed);
+
+        if (normalized.length === 0) {
+          alert("Format JSON tidak valid! Pastikan mengandung array berisi object soal, a, b, c, d, dan kunci.");
+          return;
+        }
+
+        renderQuizEditor(normalized);
+        switchQuizEditorTab('visual');
+        alert(`Berhasil mengimpor ${normalized.length} soal kuis dari JSON! Form visual telah terisi otomatis.`);
+
+      } catch (err) {
+        alert("Gagal membaca JSON! Pastikan format JSON dari Gemini/Ollama sudah benar (tanpa tanda koma berlebih).");
+      }
+    };
+
+    window.copyGeminiPrompt = function() {
+      const prompt = `Buatkan TEPAT 10 soal kuis pilihan ganda SEDERHANA & JELAS dalam Bahasa Indonesia.
+SYARAT FORMAT:
+Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun:
+[{"soal":"Pertanyaan...","a":"Opsi A","b":"Opsi B","c":"Opsi C","d":"Opsi D","kunci":"A"}]`;
+
+      navigator.clipboard.writeText(prompt);
+      alert("Prompt khusus Gemini berhasil disalin ke clipboard!");
+    };
+
+    window.copyCurrentQuizJSON = function() {
+      const currentData = collectEditedQuiz();
+      navigator.clipboard.writeText(JSON.stringify(currentData, null, 2));
+      alert("JSON 10 Soal Kuis berhasil disalin!");
+    };
+
+    // Render Form Edit Kuis Visual[cite: 14]
     function renderQuizEditor(questions) {
       const container = document.getElementById('quiz-editor-container');
       container.innerHTML = "";
@@ -1122,10 +1222,19 @@ SYARAT FORMAT:
       });
     }
 
-    // Mengambil data dari Editor Kuis
+    // Mengambil data dari Editor Kuis (Bekerja otomatis baik dari Mode Visual maupun JSON)
     function collectEditedQuiz() {
+      // Jika user sedang di tab JSON, pastikan ter-parse dulu
+      const wrapJson = document.getElementById('quiz-editor-json-wrapper');
+      if (wrapJson && !wrapJson.classList.contains('hidden')) {
+        parseRawJSONToVisual();
+      }
+
       const updated = [];
-      for (let i = 0; i < 10; i++) {
+      const container = document.getElementById('quiz-editor-container');
+      const totalCount = container ? container.children.length : 0;
+
+      for (let i = 0; i < totalCount; i++) {
         const soal = document.getElementById(`editor-soal-${i}`)?.value || "";
         const a = document.getElementById(`editor-opt-a-${i}`)?.value || "";
         const b = document.getElementById(`editor-opt-b-${i}`)?.value || "";
@@ -1237,6 +1346,7 @@ SYARAT FORMAT:
       editingExistingMateriId = id;
       pendingUploadData = null;
 
+      switchQuizEditorTab('visual');
       renderQuizEditor(item.questions);
       toggleEditQuizModal(true);
     };
