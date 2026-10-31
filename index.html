@@ -98,7 +98,7 @@
             </button>
             <div class="absolute left-0 top-full pt-1 hidden group-hover:block w-52 z-50">
               <div class="bg-white text-gray-800 rounded-xl shadow-xl border border-slate-200 py-2 text-xs space-y-1">
-                <a href="#" onclick="alert('Skema Poin Pembelajaran SINAU:\n- Unggah Dokumen / Video = +50 Poin\n- Kuis Terbit oleh Admin = +30 Poin (Pengunggah)\n- Admin Racik Kuis = +20 Poin\n- Kerjakan Kuis = +10 Poin / Jawaban Benar\n- Beri Feedback & Like = Interaktif!')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-500"></i> Ketentuan Poin</a>
+                <a href="#" onclick="alert('Skema Poin Pembelajaran SINAU:\n- Unggah Dokumen / Video = +50 Poin\n- Kuis Terbit oleh Admin = +30 Poin (Pengunggah)\n- Kerjakan Kuis = +10 Poin / Jawaban Benar\n- Beri Feedback & Like = Interaktif!')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-500"></i> Ketentuan Poin</a>
                 <a href="#" onclick="alert('Cara Berbagi Modul & Video:\n1. Klik Upload (Khusus Pegawai)\n2. Pilih Jenis: Dokumen atau Video Pembelajaran\n3. Upload File (+50 Poin Instan)\n4. Request Kuis ke WA Admin untuk kuis AI')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-upload text-blue-600"></i> Cara Upload Konten</a>
               </div>
             </div>
@@ -408,7 +408,7 @@
     </div>
   </div>
 
-  <!-- Modal Upload Materi / Video (DENGAN TOGGLE 2 PILIHAN) -->
+  <!-- Modal Upload Materi / Video -->
   <div id="upload-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-3.5 border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-2.5">
@@ -421,7 +421,7 @@
       </div>
 
       <form id="form-upload" class="space-y-3">
-        <!-- PILIHAN TIPE KONTEN: DOKUMEN VS VIDEO -->
+        <!-- PILIHAN TIPE KONTEN -->
         <div class="space-y-1">
           <label class="block text-xs font-bold text-gray-700">Pilih Jenis Konten Pembelajaran:</label>
           <div class="grid grid-cols-2 gap-2">
@@ -509,7 +509,7 @@
     </div>
   </div>
 
-  <!-- Modal Editor Kuis (Fitur Admin Only) -->
+  <!-- Modal Editor Kuis (Fitur Admin Only - SENYAP) -->
   <div id="edit-quiz-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl max-w-3xl w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200 max-h-[90vh] overflow-y-auto">
       
@@ -522,7 +522,6 @@
           <p class="text-[11px] sm:text-xs text-gray-500">Edit visual atau copas langsung JSON mentah dari Gemini/Ollama.</p>
         </div>
 
-        <!-- Toggle Switch Mode Visual VS Mode Massal (JSON) -->
         <div class="flex items-center bg-slate-100 p-1 rounded-xl border shrink-0">
           <button type="button" id="tab-mode-visual" onclick="switchQuizEditorTab('visual')" class="px-3 py-1 text-xs font-bold rounded-lg transition bg-white text-bi-blue shadow-xs">
             <i class="fa-solid fa-list-check mr-1"></i> Form Visual
@@ -567,7 +566,7 @@
       <div class="pt-3 border-t flex justify-between items-center sticky bottom-0 bg-white p-2">
         <button type="button" onclick="toggleEditQuizModal(false)" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg text-xs transition">Batal</button>
         <button type="button" id="btn-save-final-quiz" onclick="simpanFinalKuisMateri()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs transition shadow flex items-center gap-1.5">
-          <i class="fa-solid fa-circle-check"></i> Terbitkan Kuis (+20 Pts Admin & +30 Pts Pengunggah)
+          <i class="fa-solid fa-circle-check"></i> Terbitkan Kuis Pembelajaran
         </button>
       </div>
     </div>
@@ -613,7 +612,7 @@
     </div>
   </div>
 
-  <!-- Modal Pengerjaan Kuis AI 10 Soal -->
+  <!-- Modal Pengerjaan & Evaluasi Hasil Kuis AI 10 Soal -->
   <div id="quiz-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl max-w-xl w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-2.5">
@@ -629,7 +628,7 @@
       </div>
 
       <div id="quiz-body" class="space-y-4">
-        <!-- Soal & Opsi Jawaban Render via JS -->
+        <!-- Soal & Opsi Jawaban ATAU Hasil Evaluasi Kuis Render via JS -->
       </div>
     </div>
   </div>
@@ -771,7 +770,7 @@
       localStorage.setItem(`sinau_completed_quizzes_${currentUser.nip}`, JSON.stringify(Array.from(completed)));
     }
 
-    // SWITCH TIPE UPLOAD (DOKUMEN VS VIDEO)
+    // SWITCH TIPE UPLOAD
     window.switchUploadType = function(type) {
       currentSelectedUploadType = type;
       const lblDoc = document.getElementById('label-type-doc');
@@ -1280,7 +1279,7 @@
         }
 
         const newDocRef = await addDoc(collection(db, "materi"), {
-          contentType: currentSelectedUploadType, // "dokumen" ATAU "video"
+          contentType: currentSelectedUploadType,
           pengarang: currentUser.nama,
           nip: currentUser.nip,
           unit: currentUser.unit,
@@ -1462,7 +1461,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       return updated;
     }
 
-    // SIMPAN FINAL KUIS OLEH ADMIN
+    // SIMPAN FINAL KUIS OLEH ADMIN (SENYAP)
     window.simpanFinalKuisMateri = async function() {
       if (!isSuperAdmin()) {
         alert("Hanya Admin yang berwenang menerbitkan kuis!");
@@ -1486,6 +1485,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
 
           await updateDoc(docRef, { questions: finalQuestions });
 
+          // Bonus Poin Admin Diberikan Senyap di Background
           await addDoc(collection(db, "users"), {
             nama: currentUser.nama,
             nip: currentUser.nip,
@@ -1509,7 +1509,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
             }
           }
 
-          alert("Kuis berhasil diterbitkan! Poin telah disalurkan (+20 Poin Admin & +30 Poin Pengunggah).");
+          alert("Kuis berhasil diterbitkan!");
         }
 
         toggleEditQuizModal(false);
@@ -1519,7 +1519,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
         console.error("Error Simpan Kuis:", err);
         alert("Gagal menyimpan kuis.");
       } finally {
-        btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Terbitkan Kuis (+20 Pts Admin & +30 Pts Pengunggah)`;
+        btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Terbitkan Kuis Pembelajaran`;
         btn.disabled = false;
       }
     };
@@ -1611,7 +1611,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       }
     };
 
-    // RENDER FEED MATERI (DIBAEDAKAN PANEL WARNA ORANGE UNTUK VIDEO VS BIRU UNTUK DOKUMEN)
+    // RENDER FEED MATERI
     function renderMateriCards(filterKeyword = "") {
       const container = document.getElementById('materi-container');
       container.innerHTML = "";
@@ -1650,7 +1650,6 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
         const isVideo = item.contentType === 'video';
         const card = document.createElement('div');
         
-        // WARNA PANEL: ORANGE UNTUK VIDEO, BIRU UNTUK DOKUMEN
         card.className = isVideo 
           ? "p-3.5 sm:p-5 border-2 border-orange-200 bg-orange-50/40 rounded-xl hover:shadow-md transition space-y-3 relative"
           : "p-3.5 sm:p-5 border border-slate-200 bg-white rounded-xl hover:shadow-md transition space-y-3 relative";
@@ -1676,8 +1675,8 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
         if (item.questions && item.questions.length > 0) {
           const isDone = completedSet.has(id);
           quizBtnHTML = `
-            <button onclick="mulaiKuisAI('${id}')" ${isDone ? 'disabled' : ''} class="w-full sm:w-auto text-xs ${isDone ? 'bg-slate-200 text-slate-500 cursor-not-allowed border border-slate-300' : 'bg-yellow-500 hover:bg-yellow-600 text-bi-blue'} font-bold px-3.5 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5 shadow-sm">
-              <i class="fa-solid ${isDone ? 'fa-check-double text-slate-400' : 'fa-brain'}"></i> ${isDone ? 'Kuis Selesai' : `Kerjakan Kuis (${item.questions.length} Soal)`}
+            <button onclick="mulaiKuisAI('${id}')" class="w-full sm:w-auto text-xs ${isDone ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-yellow-500 hover:bg-yellow-600 text-bi-blue'} font-bold px-3.5 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5 shadow-sm">
+              <i class="fa-solid ${isDone ? 'fa-square-check' : 'fa-brain'}"></i> ${isDone ? 'Lihat Hasil & Kunci Jawaban' : `Kerjakan Kuis (${item.questions.length} Soal)`}
             </button>
           `;
         } else {
@@ -1779,7 +1778,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
             ${quizBtnHTML}
           </div>
 
-          <!-- SEKSI KOMENTAR DENGAN AUTOCOMPLETE DROPDOWN MENTION -->
+          <!-- SEKSI KOMENTAR -->
           <div id="comments-section-${id}" class="hidden pt-3 border-t space-y-2 bg-slate-50/50 p-3 rounded-xl border border-slate-100 relative">
             <h4 class="text-xs font-bold text-bi-blue flex items-center gap-1.5">
               <i class="fa-solid fa-comments text-blue-600"></i> Diskusi & Feedback Pegawai
@@ -1915,17 +1914,11 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       });
     });
 
-    // Pengerjaan Kuis AI
+    // MULAI KUIS AI ATAU BUKA LAYAR EVALUASI
     window.mulaiKuisAI = function(materiId) {
       if (!currentUser) {
         alert("Silakan Login terlebih dahulu!");
         toggleLoginModal(true);
-        return;
-      }
-
-      const completedSet = getCompletedQuizIds();
-      if (completedSet.has(materiId)) {
-        alert("Anda sudah pernah mengerjakan kuis untuk materi ini!");
         return;
       }
 
@@ -1934,6 +1927,15 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       if (!materi || !materi.questions) return;
 
       currentQuestions = materi.questions;
+
+      const completedSet = getCompletedQuizIds();
+      if (completedSet.has(materiId)) {
+        // JIKA SUDAH SELESAI -> TAMPILKAN LAYAR EVALUASI PENUH & KUNCI JAWABAN
+        renderEvaluationResultScreen();
+        toggleQuizModal(true);
+        return;
+      }
+
       currentQuestionIndex = 0;
       userAnswers = {};
 
@@ -2000,6 +2002,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       }
     };
 
+    // KIRIM KUIS & TAMPILKAN EVALUASI LENGKAP
     window.submitAllQuiz = async function() {
       let correctCount = 0;
       currentQuestions.forEach((q, idx) => {
@@ -2012,6 +2015,8 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
 
       if (currentActiveMateriId) {
         saveCompletedQuizId(currentActiveMateriId);
+        // Simpan jawaban user untuk evaluasi
+        localStorage.setItem(`sinau_answers_${currentUser.nip}_${currentActiveMateriId}`, JSON.stringify(userAnswers));
       }
 
       await addDoc(collection(db, "users"), {
@@ -2020,10 +2025,75 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
         poin: totalPoinEarned
       });
 
-      alert(`Kuis Selesai!\nJawaban Benar: ${correctCount} dari ${currentQuestions.length} Soal.\nAnda Mendapatkan: +${totalPoinEarned} Poin!`);
-      toggleQuizModal(false);
+      renderEvaluationResultScreen(correctCount, totalPoinEarned);
       renderMateriCards(document.getElementById('input-search')?.value || "");
     };
+
+    // RENDERING LAYAR EVALUASI KUIS (DETAIL BENAR/SALAH & KUNCI JAWABAN)
+    function renderEvaluationResultScreen(customCorrectCount = null, customPoin = null) {
+      document.getElementById('quiz-title-display').innerHTML = `<i class="fa-solid fa-square-poll-vertical text-emerald-600"></i> Evaluasi Hasil Kuis`;
+      document.getElementById('quiz-progress-text').innerText = `Tinjauan Kuis & Kunci Jawaban`;
+
+      const savedAnswersRaw = localStorage.getItem(`sinau_answers_${currentUser.nip}_${currentActiveMateriId}`);
+      const savedAnswers = savedAnswersRaw ? JSON.parse(savedAnswersRaw) : userAnswers;
+
+      let correctCount = 0;
+      currentQuestions.forEach((q, idx) => {
+        if (savedAnswers[idx] === q.kunci) correctCount++;
+      });
+
+      const scorePoin = customPoin !== null ? customPoin : (correctCount * 10);
+
+      const body = document.getElementById('quiz-body');
+
+      let reviewListHTML = currentQuestions.map((q, idx) => {
+        const userAns = savedAnswers[idx] || "-";
+        const isCorrect = userAns === q.kunci;
+
+        return `
+          <div class="p-3 bg-slate-50 border rounded-xl space-y-1.5 text-xs">
+            <div class="flex justify-between items-start gap-2">
+              <span class="font-bold text-gray-800">${idx + 1}. ${q.soal}</span>
+              <span class="px-2 py-0.5 font-bold rounded-full text-[10px] shrink-0 ${isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                ${isCorrect ? '<i class="fa-solid fa-circle-check mr-1"></i>BENAR' : '<i class="fa-solid fa-circle-xmark mr-1"></i>SALAH'}
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-slate-200/60">
+              <div class="${isCorrect ? 'text-emerald-700 font-semibold' : 'text-rose-700 font-semibold'}">
+                Jawaban Anda: <strong>${userAns}. ${q[userAns.toLowerCase()] || '-'}</strong>
+              </div>
+              <div class="text-emerald-800 font-bold">
+                Kunci Jawaban: <strong>${q.kunci}. ${q[q.kunci.toLowerCase()]}</strong>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      body.innerHTML = `
+        <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-center space-y-1">
+          <h4 class="text-sm font-bold text-emerald-900">Selamat! Kuis Telah Selesai Mengerjakan</h4>
+          <p class="text-xs text-emerald-800">Jawaban Benar: <strong>${correctCount} / ${currentQuestions.length} Soal</strong></p>
+          <p class="text-xs font-black text-bi-blue pt-0.5"><i class="fa-solid fa-coins text-yellow-500 mr-1"></i> Perolehan: +${scorePoin} Poin</p>
+        </div>
+
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold text-bi-blue flex items-center gap-1.5">
+            <i class="fa-solid fa-list-check text-blue-600"></i> Evaluasi Per Pertanyaan:
+          </h4>
+          <div class="space-y-2 max-h-72 overflow-y-auto pr-1">
+            ${reviewListHTML}
+          </div>
+        </div>
+
+        <div class="pt-2 border-t">
+          <button onclick="toggleQuizModal(false)" class="w-full py-2 bg-bi-blue hover:bg-bi-blue-dark text-white font-bold text-xs rounded-xl transition shadow">
+            Tutup Evaluasi
+          </button>
+        </div>
+      `;
+    }
   </script>
 </body>
 </html>
