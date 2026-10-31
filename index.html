@@ -96,8 +96,8 @@
             </button>
             <div class="absolute left-0 top-full pt-1 hidden group-hover:block w-52 z-50">
               <div class="bg-white text-gray-800 rounded-xl shadow-xl border border-slate-200 py-2 text-xs space-y-1">
-                <a href="#" onclick="alert('Skema Poin Pembelajaran SINAU:\n- Unggah Modul Baru = +50 Poin\n- Kuis Terbit oleh Admin = +30 Poin (Pegawai)\n- Admin Racik Kuis = +20 Poin\n- Kerjakan Kuis = +10 Poin / Jawaban Benar')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-500"></i> Ketentuan Poin Baru</a>
-                <a href="#" onclick="alert('Cara Berbagi Modul:\n1. Klik Upload Modul\n2. Pilih Berkas PDF/Word/PPT (+50 Poin Langsung!)\n3. Klik Request Kuis ke WA Admin (+30 Poin jika Kuis Terbit!)')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-upload text-blue-600"></i> Cara Unggah Modul</a>
+                <a href="#" onclick="alert('Skema Poin Pembelajaran SINAU:\n- Unggah Modul Baru = +50 Poin\n- Kuis Terbit oleh Admin = +30 Poin (Pengunggah)\n- Admin Racik Kuis = +20 Poin\n- Kerjakan Kuis = +10 Poin / Jawaban Benar\n- Beri Feedback/Komen = Interaktif!')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-500"></i> Ketentuan Poin</a>
+                <a href="#" onclick="alert('Cara Berbagi Modul:\n1. Klik Upload Modul (Khusus Pegawai)\n2. Pilih Berkas PDF/Word/PPT (+50 Poin Instan)\n3. Klik Request Kuis ke WA Admin (+30 Poin jika Kuis Terbit)')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-upload text-blue-600"></i> Cara Unggah Modul</a>
               </div>
             </div>
           </div>
@@ -133,7 +133,7 @@
                   <p id="user-display-nip" class="text-[10px] text-gray-500">NIP: -</p>
                   <p id="profile-unit" class="text-[10px] text-gray-500">Unit: -</p>
                 </div>
-                <button onclick="toggleUploadModal(true)" class="w-full text-left px-2 py-1.5 hover:bg-blue-50 rounded-lg font-semibold text-bi-blue flex items-center gap-2">
+                <button id="btn-dropdown-upload" onclick="toggleUploadModal(true)" class="w-full text-left px-2 py-1.5 hover:bg-blue-50 rounded-lg font-semibold text-bi-blue flex items-center gap-2">
                   <i class="fa-solid fa-cloud-arrow-up text-yellow-600"></i> Unggah Modul (+50 Pts)
                 </button>
                 <button onclick="bukaModalGantiPass()" class="w-full text-left px-2 py-1.5 hover:bg-blue-50 rounded-lg font-semibold text-gray-700 flex items-center gap-2">
@@ -163,13 +163,13 @@
     
     <div class="lg:col-span-2 space-y-4 sm:space-y-6">
       
-      <!-- HERO BANNER SPANDUK SINAU v2.0 (Mobile Optimized) -->
+      <!-- HERO BANNER SPANDUK SINAU v2.0 -->
       <div class="relative overflow-hidden rounded-xl sm:rounded-2xl shadow-md border border-blue-900 group bg-bi-blue">
         <img src="Spanduk Modern SINAU v2.0.png" alt="SINAU v2.0 - Sharing Ilmu Nambah wawAsan terpadU" 
              class="w-full h-auto object-contain rounded-xl sm:rounded-2xl transform transition duration-500 group-hover:scale-[1.01]">
         
-        <!-- Overlay Tombol Action Cepat -->
-        <div class="absolute bottom-1.5 right-1.5 sm:bottom-3 sm:right-3 flex items-center gap-1.5">
+        <!-- Overlay Tombol Action Cepat (Hanya Muncul Jika Bukan Guest) -->
+        <div id="hero-upload-btn-container" class="absolute bottom-1.5 right-1.5 sm:bottom-3 sm:right-3 flex items-center gap-1.5">
           <button onclick="handleUploadClick()" class="bg-yellow-500/90 hover:bg-yellow-500 text-bi-blue px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-[9px] sm:text-xs font-bold shadow-md transition flex items-center gap-1 backdrop-blur-xs">
             <i class="fa-solid fa-cloud-arrow-up text-[10px] sm:text-xs"></i> <span>Upload Modul</span> <span class="hidden sm:inline">(+50 Pts)</span>
           </button>
@@ -179,20 +179,23 @@
       <!-- Feed Daftar Materi & Search Bar -->
       <section class="bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 space-y-4">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <h2 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
-            <i class="fa-solid fa-book-open text-yellow-600"></i> Modul & Materi Pembelajaran
-          </h2>
+          <div>
+            <h2 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
+              <i class="fa-solid fa-fire text-orange-500"></i> Modul Pembelajaran (Urutan Engagement)
+            </h2>
+            <p class="text-[10px] sm:text-xs text-gray-500">Modul dengan Like & Komentar terbanyak otomatis muncul di paling atas.</p>
+          </div>
           <!-- Input Search Materi -->
           <div class="relative w-full sm:w-64">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
               <i class="fa-solid fa-search text-xs"></i>
             </span>
-            <input type="text" id="input-search" oninput="filterMateriList()" placeholder="Cari judul/kategori materi..." 
+            <input type="text" id="input-search" oninput="filterMateriList()" placeholder="Cari judul/kategori..." 
               class="w-full pl-9 pr-3 py-1.5 text-xs border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-800 focus:outline-none">
           </div>
         </div>
 
-        <div id="materi-container" class="space-y-3 sm:space-y-4">
+        <div id="materi-container" class="space-y-4">
           <p class="text-gray-400 text-xs sm:text-sm italic">Memuat materi dari database...</p>
         </div>
       </section>
@@ -236,12 +239,12 @@
 
   </main>
 
-  <!-- Modal Analytics Traffic Pengunjung -->
+  <!-- Modal Analytics Traffic & Engagement Pengunjung -->
   <div id="traffic-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-2.5">
         <h3 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
-          <i class="fa-solid fa-chart-line text-emerald-600"></i> Analisis Traffic & Statistik
+          <i class="fa-solid fa-chart-line text-emerald-600"></i> Analisis Traffic & Engagement Modul
         </h3>
         <button onclick="toggleTrafficModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
           <i class="fa-solid fa-xmark"></i>
@@ -283,6 +286,27 @@
           </div>
           <p id="modal-stat-users" class="text-lg sm:text-xl font-bold text-purple-700">0</p>
           <p class="text-[9px] sm:text-[10px] text-gray-500">Di Leaderboard</p>
+        </div>
+      </div>
+
+      <!-- ANALITIK BARU: HIGHLIGHT MODUL TERPOPULER & MODUL PERLU PERHATIAN -->
+      <div class="space-y-2 border-t pt-3">
+        <h4 class="text-xs font-bold text-bi-blue flex items-center gap-1.5">
+          <i class="fa-solid fa-chart-pie text-orange-500"></i> Insight Engagement Materi
+        </h4>
+
+        <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl space-y-1">
+          <p class="text-[11px] font-bold text-amber-900 flex items-center gap-1">
+            <i class="fa-solid fa-crown text-yellow-500"></i> Modul Terpopuler (Highest Engagement):
+          </p>
+          <p id="analytics-top-module" class="text-xs font-semibold text-bi-blue truncate">-</p>
+        </div>
+
+        <div class="p-3 bg-rose-50 border border-rose-200 rounded-xl space-y-1">
+          <p class="text-[11px] font-bold text-rose-900 flex items-center gap-1">
+            <i class="fa-solid fa-triangle-exclamation text-rose-500"></i> Perlu Perhatian (Belum Ada Kuis):
+          </p>
+          <p id="analytics-attention-module" class="text-xs font-semibold text-rose-700 truncate">-</p>
         </div>
       </div>
 
@@ -372,7 +396,7 @@
     </div>
   </div>
 
-  <!-- Modal Upload Materi (Sistem Cepat Tanpa Antre Kuis AI) -->
+  <!-- Modal Upload Materi (Khusus Pegawai Resmi) -->
   <div id="upload-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-3.5 border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-2.5">
@@ -411,7 +435,7 @@
 
         <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-[11px] text-emerald-800 flex items-center gap-2">
           <i class="fa-solid fa-bolt text-emerald-600 text-sm shrink-0"></i>
-          <span><strong>Instan & Bebas Hambatan:</strong> Modul langsung terbit dan Anda mendapatkan <strong>+50 Poin</strong> instan! Pembuatan kuis bisa direquest ke Admin setelahnya.</span>
+          <span><strong>Instan & Bebas Hambatan:</strong> Modul langsung terbit dan Anda mendapatkan <strong>+50 Poin</strong> instan!</span>
         </div>
 
         <button type="submit" id="btn-submit"
@@ -422,7 +446,7 @@
     </div>
   </div>
 
-  <!-- Modal Pilih Admin WhatsApp Request Kuis -->
+  <!-- Modal Pilih Admin WhatsApp Request Kuis (Presisi Pengunggah Modul) -->
   <div id="wa-admin-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl max-w-sm w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200">
       <div class="flex justify-between items-center border-b pb-2">
@@ -588,7 +612,7 @@
   <!-- Firebase SDK & Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, increment, setDoc, getDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, increment, setDoc, getDoc, query, where, getDocs, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCot0XGB8--jZrEd_AkC51CbT_UCTTLUpc",
@@ -676,6 +700,14 @@
     let editingExistingMateriId = null;
     let selectedWaMateriId = null;
 
+    function isGuestUser() {
+      return !currentUser || currentUser.nip === "00000";
+    }
+
+    function isSuperAdmin() {
+      return currentUser && SUPERADMIN_NIPS.includes(currentUser.nip);
+    }
+
     // TRACKING TRAFFIC PAGEVIEW STATS (FIREBASE)
     async function trackPageTraffic() {
       try {
@@ -709,13 +741,9 @@
       localStorage.setItem(`sinau_completed_quizzes_${currentUser.nip}`, JSON.stringify(Array.from(completed)));
     }
 
-    function isSuperAdmin() {
-      return currentUser && SUPERADMIN_NIPS.includes(currentUser.nip);
-    }
-
     // CEK NOTIFIKASI KUIS BARU DITERBITKAN SAAT PEGAWAI LOGIN
     async function checkUserNotifications() {
-      if (!currentUser || !currentUser.nip) return;
+      if (isGuestUser()) return;
 
       try {
         const q = query(
@@ -730,7 +758,6 @@
           snap.forEach((docSnap) => {
             const data = docSnap.data();
             messages.push(data.message);
-            // Tandai sudah dibaca
             updateDoc(doc(db, "notifications", docSnap.id), { read: true });
           });
 
@@ -753,8 +780,19 @@
         document.getElementById('user-info-bar').classList.remove('hidden');
         document.getElementById('user-info-bar').classList.add('flex');
         document.getElementById('btn-login-nav').classList.add('hidden');
-        document.getElementById('btn-upload-nav').classList.remove('hidden');
-        document.getElementById('btn-upload-nav').classList.add('flex');
+
+        // Jika Guest (Tamu), sembunyikan fitur Upload Modul
+        if (isGuestUser()) {
+          document.getElementById('btn-upload-nav').classList.add('hidden');
+          document.getElementById('btn-upload-nav').classList.remove('flex');
+          document.getElementById('btn-dropdown-upload').classList.add('hidden');
+          document.getElementById('hero-upload-btn-container').classList.add('hidden');
+        } else {
+          document.getElementById('btn-upload-nav').classList.remove('hidden');
+          document.getElementById('btn-upload-nav').classList.add('flex');
+          document.getElementById('btn-dropdown-upload').classList.remove('hidden');
+          document.getElementById('hero-upload-btn-container').classList.remove('hidden');
+        }
 
         document.getElementById('user-display-name').innerText = currentUser.nama;
         document.getElementById('profile-full-name').innerText = currentUser.nama;
@@ -775,6 +813,7 @@
         document.getElementById('btn-login-nav').classList.remove('hidden');
         document.getElementById('btn-upload-nav').classList.add('hidden');
         document.getElementById('btn-upload-nav').classList.remove('flex');
+        document.getElementById('hero-upload-btn-container').classList.add('hidden');
       }
 
       renderMateriCards(document.getElementById('input-search')?.value || "");
@@ -787,7 +826,7 @@
       localStorage.setItem('sinau_user', JSON.stringify(guestObj));
       updateUIForLogin();
       toggleLoginModal(false);
-      alert("Anda berhasil masuk sebagai User Tamu (Guest). Selamat belajar!");
+      alert("Anda berhasil masuk sebagai User Tamu (Guest). Selamat membaca materi & mengerjakan kuis!");
     };
 
     window.toggleLoginModal = function(show) {
@@ -811,8 +850,8 @@
     };
 
     window.toggleUploadModal = function(show) {
-      if (!currentUser) {
-        alert("Silakan Login Pegawai terlebih dahulu untuk mengunggah modul!");
+      if (isGuestUser()) {
+        alert("Fitur unggah modul khusus untuk Pegawai Resmi KPwBI Jember. Silakan login terlebih dahulu!");
         toggleLoginModal(true);
         return;
       }
@@ -822,6 +861,11 @@
     };
 
     window.toggleWaAdminModal = function(show, materiId = null) {
+      if (isGuestUser()) {
+        alert("Silakan login sebagai Pegawai terlebih dahulu!");
+        toggleLoginModal(true);
+        return;
+      }
       if (materiId) selectedWaMateriId = materiId;
       const modal = document.getElementById('wa-admin-modal');
       if (show) modal.classList.remove('hidden');
@@ -861,8 +905,8 @@
     };
 
     window.handleUploadClick = function() {
-      if (!currentUser) {
-        alert("Silakan Login Pegawai terlebih dahulu!");
+      if (isGuestUser()) {
+        alert("Silakan Login Pegawai terlebih dahulu untuk mengunggah modul!");
         toggleLoginModal(true);
       } else {
         toggleUploadModal(true);
@@ -885,14 +929,91 @@
       const m = allMateriData[selectedWaMateriId];
       const targetPhone = ADMIN_WA_NUMBERS[adminKey] || ADMIN_WA_NUMBERS.mochtar;
 
-      const text = `Halo Admin SINAU KPwBI Jember!\n\nSaya *${currentUser.nama}* (NIP: ${currentUser.nip}) ingin mengajukan request kuis AI untuk modul yang baru saya upload:\n\n📌 *Judul Modul:* ${m.judul}\n📂 *Kategori:* ${m.kategori}\n🔗 *Lampiran:* ${m.link || 'Berkas Terlampir'}\n\nMohon bantuannya untuk diracikkan kuisnya ya Admin. Terima kasih! 🙏`;
+      const text = `Halo Admin SINAU KPwBI Jember!\n\nSaya *${currentUser.nama}* (NIP: ${currentUser.nip}) ingin mengajukan request kuis AI untuk modul yang saya upload:\n\n📌 *Judul Modul:* ${m.judul}\n📂 *Kategori:* ${m.kategori}\n🔗 *Lampiran:* ${m.link || 'Berkas Terlampir'}\n\nMohon bantuannya untuk diracikkan kuisnya ya Admin. Terima kasih! 🙏`;
 
       const url = `https://wa.me/${targetPhone}?text=${encodeURIComponent(text)}`;
       window.open(url, '_blank');
       toggleWaAdminModal(false);
     };
 
-    // Login Form Submit (Cek Password Kustom dari Firebase)
+    // FITUR INTERAKTIF: TOGGLE LIKE MODUL
+    window.toggleLikeMateri = async function(materiId) {
+      if (isGuestUser()) {
+        alert("Silakan Login Pegawai untuk menyukai modul ini!");
+        toggleLoginModal(true);
+        return;
+      }
+
+      const item = allMateriData[materiId];
+      if (!item) return;
+
+      const likes = item.likes || [];
+      const userNip = currentUser.nip;
+      const hasLiked = likes.includes(userNip);
+
+      try {
+        const docRef = doc(db, "materi", materiId);
+        if (hasLiked) {
+          await updateDoc(docRef, { likes: arrayRemove(userNip) });
+        } else {
+          await updateDoc(docRef, { likes: arrayUnion(userNip) });
+        }
+      } catch (err) {
+        console.error("Error Toggle Like:", err);
+      }
+    };
+
+    // FITUR INTERAKTIF: TOGGLE DISPLAY KOMENTAR
+    window.toggleCommentsSection = function(materiId) {
+      const el = document.getElementById(`comments-section-${materiId}`);
+      if (el) el.classList.toggle('hidden');
+    };
+
+    // FITUR INTERAKTIF: KIRIM KOMENTAR DENGAN FITUR MENTION (@PEGAWAI)
+    window.kirimKomentar = async function(materiId) {
+      if (isGuestUser()) {
+        alert("Silakan Login Pegawai terlebih dahulu untuk berkomentar!");
+        toggleLoginModal(true);
+        return;
+      }
+
+      const inputEl = document.getElementById(`input-comment-${materiId}`);
+      const text = inputEl.value.trim();
+      if (!text) return;
+
+      try {
+        const docRef = doc(db, "materi", materiId);
+        const newComment = {
+          nama: currentUser.nama,
+          nip: currentUser.nip,
+          teks: text,
+          timestamp: new Date().toISOString()
+        };
+
+        await updateDoc(docRef, {
+          comments: arrayUnion(newComment)
+        });
+
+        // Deteksi Jika Ada Mention Pegawai (misal: @17241 atau mention nama)
+        DATA_PEGAWAI.forEach(async (p) => {
+          if (p.nip !== "00000" && text.toLowerCase().includes(`@${p.nama.toLowerCase()}`) || text.includes(p.nip)) {
+            await addDoc(collection(db, "notifications"), {
+              targetNip: p.nip,
+              message: `${currentUser.nama} menyebut Anda dalam komentar modul '${allMateriData[materiId]?.judul}'! 💬`,
+              read: false,
+              timestamp: new Date()
+            });
+          }
+        });
+
+        inputEl.value = "";
+      } catch (err) {
+        console.error("Error Kirim Komentar:", err);
+        alert("Gagal mengirim komentar.");
+      }
+    };
+
+    // Login Form Submit
     document.getElementById('form-login').addEventListener('submit', async (e) => {
       e.preventDefault();
       const nipInput = document.getElementById('login-nip').value.trim();
@@ -1018,10 +1139,10 @@
       return out;
     }
 
-    // Submit Upload Form (SISTEM TERBIT INSTAN + 50 POIN PASTI)
+    // Submit Upload Form
     document.getElementById('form-upload').addEventListener('submit', async (e) => {
       e.preventDefault();
-      if (!currentUser) return;
+      if (isGuestUser()) return;
 
       const btn = document.getElementById('btn-submit');
       btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengunggah Modul...`;
@@ -1059,7 +1180,6 @@
           if (match) driveLink = match[0];
         }
 
-        // Simpan Modul Baru ke Firestore (Kuis Kosong Dulu)
         const newDocRef = await addDoc(collection(db, "materi"), {
           pengarang: currentUser.nama,
           nip: currentUser.nip,
@@ -1071,10 +1191,11 @@
           fileType: fileInput.type,
           link: driveLink,
           questions: [],
+          likes: [],
+          comments: [],
           timestamp: new Date()
         });
 
-        // Tambah +50 Poin Langsung untuk Pengunggah
         await addDoc(collection(db, "users"), {
           nama: currentUser.nama,
           nip: currentUser.nip,
@@ -1085,7 +1206,6 @@
         toggleUploadModal(false);
         document.getElementById('form-upload').reset();
 
-        // Tanyakan apakah ingin langsung request kuis WA
         if (confirm("Apakah Anda ingin langsung meminta Admin meracik kuis untuk modul ini via WhatsApp?")) {
           toggleWaAdminModal(true, newDocRef.id);
         }
@@ -1099,7 +1219,7 @@
       }
     });
 
-    // MODE EDITOR SWITCHER (VISUAL VS JSON)
+    // MODE EDITOR SWITCHER
     window.switchQuizEditorTab = function(mode) {
       const btnVisual = document.getElementById('tab-mode-visual');
       const btnJson = document.getElementById('tab-mode-json');
@@ -1167,7 +1287,6 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       const container = document.getElementById('quiz-editor-container');
       container.innerHTML = "";
 
-      // Jika kuis kosong, buatkan 10 slot default
       const list = (questions && questions.length > 0) ? questions : Array(10).fill({
         soal: "", a: "", b: "", c: "", d: "", kunci: "A"
       });
@@ -1243,7 +1362,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       return updated;
     }
 
-    // SIMPAN FINAL KUIS OLEH ADMIN (+20 POIN ADMIN & +30 POIN PENGUNGGAH)
+    // SIMPAN FINAL KUIS OLEH ADMIN
     window.simpanFinalKuisMateri = async function() {
       if (!isSuperAdmin()) {
         alert("Hanya Admin yang berwenang menerbitkan kuis!");
@@ -1267,14 +1386,12 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
 
           await updateDoc(docRef, { questions: finalQuestions });
 
-          // Berikan Poin +20 ke Admin yang Meracik
           await addDoc(collection(db, "users"), {
             nama: currentUser.nama,
             nip: currentUser.nip,
             poin: 20
           });
 
-          // Jika ini kuis baru pertama kali diterbitkan untuk modul tersebut, berikan +30 Poin ke Pengunggah Modul
           if (materiItem && (!materiItem.questions || materiItem.questions.length === 0)) {
             if (materiItem.nip) {
               await addDoc(collection(db, "users"), {
@@ -1283,7 +1400,6 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
                 poin: 30
               });
 
-              // Kirim Notifikasi ke Firebase untuk Pengunggah Modul
               await addDoc(collection(db, "notifications"), {
                 targetNip: materiItem.nip,
                 message: `Kuis untuk modul Anda '${materiItem.judul}' telah diterbitkan oleh Admin! Anda mendapat tambahan +30 Poin! 🎉`,
@@ -1392,6 +1508,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       }
     };
 
+    // RENDER FEED MATERI DENGAN SORTING ENGAGEMENT TERTINGGI (LIKE + KOMENTAR)
     function renderMateriCards(filterKeyword = "") {
       const container = document.getElementById('materi-container');
       container.innerHTML = "";
@@ -1399,7 +1516,16 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       const completedSet = getCompletedQuizIds();
 
       const kw = filterKeyword.toLowerCase();
-      const filtered = cachedMateriList.filter(({ item }) => {
+      let listToRender = [...cachedMateriList];
+
+      // AUTO-SORTING: MODUL DENGAN ENGAGEMENT TERTINGGI (LIKE + KOMENTAR) MUNCUL DI PADA ATAS
+      listToRender.sort((a, b) => {
+        const scoreA = (a.item.likes ? a.item.likes.length : 0) + (a.item.comments ? a.item.comments.length : 0);
+        const scoreB = (b.item.likes ? b.item.likes.length : 0) + (b.item.comments ? b.item.comments.length : 0);
+        return scoreB - scoreA;
+      });
+
+      const filtered = listToRender.filter(({ item }) => {
         if (kw === "[kuis_only]") return item.questions && item.questions.length > 0;
         if (!kw) return true;
         return (item.judul || '').toLowerCase().includes(kw) ||
@@ -1418,7 +1544,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
 
       filtered.forEach(({ id, item }) => {
         const card = document.createElement('div');
-        card.className = "p-3.5 sm:p-5 border border-slate-200 rounded-xl hover:shadow-md transition bg-white space-y-2.5 sm:space-y-3 relative";
+        card.className = "p-3.5 sm:p-5 border border-slate-200 rounded-xl hover:shadow-md transition bg-white space-y-3 relative";
         
         let linkHTML = item.link ? `<a href="${item.link}" target="_blank" class="w-full sm:w-auto text-center inline-flex items-center justify-center gap-1.5 text-xs text-bi-blue bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-1.5 rounded-lg font-semibold transition"><i class="fa-brands fa-google-drive text-green-600"></i> Buka Lampiran Berkas</a>` : '';
         
@@ -1431,16 +1557,25 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
             </button>
           `;
         } else {
-          // Jika kuis belum ada, sediakan tombol Request Kuis
-          quizBtnHTML = `
-            <button onclick="toggleWaAdminModal(true, '${id}')" class="w-full sm:w-auto text-xs bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold px-3.5 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5 shadow-sm">
-              <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i> Ajukan Kuis ke Admin (+30 Pts)
-            </button>
-          `;
+          // HANYA MUNCULKAN REQUEST KUIS WA UNTUK PEGAWAI PENGUNGGAH MODUL (BUKAN TAMU / BUKAN ORANG LAIN)
+          const isAuthor = currentUser && (currentUser.nip === item.nip || currentUser.nama === item.pengarang);
+          if (isAuthor && !isGuestUser()) {
+            quizBtnHTML = `
+              <button onclick="toggleWaAdminModal(true, '${id}')" class="w-full sm:w-auto text-xs bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold px-3.5 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5 shadow-sm">
+                <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i> Ajukan Kuis ke Admin (+30 Pts)
+              </button>
+            `;
+          } else {
+            quizBtnHTML = `
+              <span class="text-[11px] text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 font-medium flex items-center gap-1">
+                <i class="fa-solid fa-clock text-amber-500"></i> Kuis Sedang Diracik Admin
+              </span>
+            `;
+          }
         }
 
         let actionButtonsHTML = '';
-        const canManage = isSuperAdmin() || (currentUser && (currentUser.nip === item.nip || currentUser.nama === item.pengarang));
+        const canManage = isSuperAdmin() || (currentUser && !isGuestUser() && (currentUser.nip === item.nip || currentUser.nama === item.pengarang));
 
         if (canManage) {
           actionButtonsHTML = `
@@ -1456,8 +1591,23 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
           `;
         }
 
+        const likesArr = item.likes || [];
+        const commentsArr = item.comments || [];
+        const isLikedByMe = currentUser && likesArr.includes(currentUser.nip);
+
         const thumbIcon = getFileThumbnailIcon(item.fileName);
         const displayFileName = item.fileName || 'Modul Pembelajaran';
+
+        // KOMENTAR LIST HTML
+        let commentsListHTML = commentsArr.map(c => `
+          <div class="p-2 bg-slate-50 border rounded-lg text-xs space-y-0.5">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-bi-blue text-[11px]">${c.nama}</span>
+              <span class="text-[9px] text-gray-400">${new Date(c.timestamp).toLocaleDateString('id-ID')}</span>
+            </div>
+            <p class="text-gray-700 text-[11px]">${c.teks}</p>
+          </div>
+        `).join('');
 
         card.innerHTML = `
           <div class="flex justify-between items-start">
@@ -1478,9 +1628,45 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
             </div>
           </div>
 
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-2 border-t">
+          <!-- ACTION BAR INTERAKTIF (LIKE & KOMENTAR) -->
+          <div class="flex items-center justify-between border-t pt-2 text-xs text-gray-500">
+            <div class="flex items-center gap-4">
+              <button onclick="toggleLikeMateri('${id}')" class="flex items-center gap-1.5 font-semibold transition ${isLikedByMe ? 'text-red-500 font-bold' : 'hover:text-red-500'}">
+                <i class="fa-solid fa-heart ${isLikedByMe ? 'text-red-500 animate-pulse' : ''}"></i>
+                <span>${likesArr.length} Suka</span>
+              </button>
+
+              <button onclick="toggleCommentsSection('${id}')" class="flex items-center gap-1.5 font-semibold hover:text-bi-blue transition">
+                <i class="fa-regular fa-comment text-bi-blue"></i>
+                <span>${commentsArr.length} Komentar</span>
+              </button>
+            </div>
+
+            <span class="text-[10px] text-slate-400"><i class="fa-solid fa-fire text-orange-400"></i> ${likesArr.length + commentsArr.length} Score</span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-1">
             ${linkHTML}
             ${quizBtnHTML}
+          </div>
+
+          <!-- SEKSI KOMENTAR TOGGLEABLE -->
+          <div id="comments-section-${id}" class="hidden pt-3 border-t space-y-2 bg-slate-50/50 p-3 rounded-xl border border-slate-100">
+            <h4 class="text-xs font-bold text-bi-blue flex items-center gap-1.5">
+              <i class="fa-solid fa-comments text-blue-600"></i> Diskusi & Feedback Pegawai
+            </h4>
+
+            <div class="space-y-1.5 max-h-40 overflow-y-auto">
+              ${commentsListHTML || '<p class="text-[10px] text-gray-400 italic">Belum ada komentar. Jadilah yang pertama memberikan umpan balik!</p>'}
+            </div>
+
+            <div class="flex items-center gap-2 pt-1">
+              <input type="text" id="input-comment-${id}" placeholder="Tulis tanggapan / ajak rekan (@Nama Pegawai)..." 
+                class="flex-1 px-3 py-1.5 text-xs border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-800 focus:outline-none">
+              <button onclick="kirimKomentar('${id}')" class="bg-bi-blue hover:bg-bi-blue-dark text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow">
+                Kirim
+              </button>
+            </div>
           </div>
         `;
         container.appendChild(card);
@@ -1505,12 +1691,30 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
         return;
       }
 
+      let highestScore = -1;
+      let topTitle = "-";
+      let noQuizTitles = [];
+
       snapshot.forEach((docSnap) => {
         const id = docSnap.id;
         const item = docSnap.data();
         allMateriData[id] = item;
         cachedMateriList.push({ id, item });
+
+        // Hitung Analitik Top Module & Attention Module
+        const score = (item.likes ? item.likes.length : 0) + (item.comments ? item.comments.length : 0);
+        if (score > highestScore && score > 0) {
+          highestScore = score;
+          topTitle = `${item.judul} (${score} Score Engagement)`;
+        }
+
+        if (!item.questions || item.questions.length === 0) {
+          noQuizTitles.push(item.judul);
+        }
       });
+
+      document.getElementById('analytics-top-module').innerText = topTitle;
+      document.getElementById('analytics-attention-module').innerText = noQuizTitles.length > 0 ? noQuizTitles.slice(0, 2).join(", ") : "Semua modul sudah ada kuisnya!";
 
       renderMateriCards(document.getElementById('input-search')?.value || "");
     });
@@ -1570,7 +1774,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
     // Pengerjaan Kuis AI
     window.mulaiKuisAI = function(materiId) {
       if (!currentUser) {
-        alert("Silakan Login Pegawai terlebih dahulu!");
+        alert("Silakan Login terlebih dahulu!");
         toggleLoginModal(true);
         return;
       }
