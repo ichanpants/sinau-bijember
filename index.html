@@ -74,12 +74,14 @@
           <!-- Dropdown Pembelajaran -->
           <div class="relative group">
             <button class="px-3 py-2 rounded-lg hover:bg-bi-blue-light font-semibold flex items-center gap-1.5 transition">
-              <i class="fa-solid fa-book text-yellow-400"></i> Modul & Kuis <i class="fa-solid fa-chevron-down text-[9px] opacity-70"></i>
+              <i class="fa-solid fa-book text-yellow-400"></i> Modul & Video <i class="fa-solid fa-chevron-down text-[9px] opacity-70"></i>
             </button>
-            <div class="absolute left-0 top-full pt-1 hidden group-hover:block w-48 z-50">
+            <div class="absolute left-0 top-full pt-1 hidden group-hover:block w-52 z-50">
               <div class="bg-white text-gray-800 rounded-xl shadow-xl border border-slate-200 py-2 text-xs space-y-1">
-                <a href="#" onclick="filterByMenu('semua')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-list text-bi-blue"></i> Semua Modul Materi</a>
-                <a href="#" onclick="filterByMenu('kuis')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-brain text-yellow-600"></i> Kuis AI Tersedia</a>
+                <a href="#" onclick="filterByMenu('semua')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-list text-bi-blue"></i> Semua Konten Materi</a>
+                <a href="#" onclick="filterByMenu('dokumen')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-file-pdf text-blue-600"></i> Modul Dokumen (PDF/PPT)</a>
+                <a href="#" onclick="filterByMenu('video')" class="px-4 py-2 hover:bg-orange-50 flex items-center gap-2"><i class="fa-solid fa-video text-orange-500"></i> Video Pembelajaran</a>
+                <a href="#" onclick="filterByMenu('kuis')" class="px-4 py-2 hover:bg-yellow-50 flex items-center gap-2 border-t pt-2"><i class="fa-solid fa-brain text-yellow-600"></i> Kuis AI Tersedia</a>
               </div>
             </div>
           </div>
@@ -96,8 +98,8 @@
             </button>
             <div class="absolute left-0 top-full pt-1 hidden group-hover:block w-52 z-50">
               <div class="bg-white text-gray-800 rounded-xl shadow-xl border border-slate-200 py-2 text-xs space-y-1">
-                <a href="#" onclick="alert('Skema Poin Pembelajaran SINAU:\n- Unggah Modul Baru = +50 Poin\n- Kuis Terbit oleh Admin = +30 Poin (Pengunggah)\n- Admin Racik Kuis = +20 Poin\n- Kerjakan Kuis = +10 Poin / Jawaban Benar\n- Beri Feedback/Komen = Interaktif!')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-500"></i> Ketentuan Poin</a>
-                <a href="#" onclick="alert('Cara Berbagi Modul:\n1. Klik Upload Modul (Khusus Pegawai)\n2. Pilih Berkas PDF/Word/PPT (+50 Poin Instan)\n3. Klik Request Kuis ke WA Admin (+30 Poin jika Kuis Terbit)')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-upload text-blue-600"></i> Cara Unggah Modul</a>
+                <a href="#" onclick="alert('Skema Poin Pembelajaran SINAU:\n- Unggah Dokumen / Video = +50 Poin\n- Kuis Terbit oleh Admin = +30 Poin (Pengunggah)\n- Admin Racik Kuis = +20 Poin\n- Kerjakan Kuis = +10 Poin / Jawaban Benar\n- Beri Feedback & Like = Interaktif!')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-500"></i> Ketentuan Poin</a>
+                <a href="#" onclick="alert('Cara Berbagi Modul & Video:\n1. Klik Upload (Khusus Pegawai)\n2. Pilih Jenis: Dokumen atau Video Pembelajaran\n3. Upload File (+50 Poin Instan)\n4. Request Kuis ke WA Admin untuk kuis AI')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-upload text-blue-600"></i> Cara Upload Konten</a>
               </div>
             </div>
           </div>
@@ -134,7 +136,7 @@
                   <p id="profile-unit" class="text-[10px] text-gray-500">Unit: -</p>
                 </div>
                 <button id="btn-dropdown-upload" onclick="toggleUploadModal(true)" class="w-full text-left px-2 py-1.5 hover:bg-blue-50 rounded-lg font-semibold text-bi-blue flex items-center gap-2">
-                  <i class="fa-solid fa-cloud-arrow-up text-yellow-600"></i> Unggah Modul (+50 Pts)
+                  <i class="fa-solid fa-cloud-arrow-up text-yellow-600"></i> Upload Modul / Video (+50 Pts)
                 </button>
                 <button onclick="bukaModalGantiPass()" class="w-full text-left px-2 py-1.5 hover:bg-blue-50 rounded-lg font-semibold text-gray-700 flex items-center gap-2">
                   <i class="fa-solid fa-key text-blue-600"></i> Ubah Password
@@ -168,10 +170,10 @@
         <img src="Spanduk Modern SINAU v2.0.png" alt="SINAU v2.0 - Sharing Ilmu Nambah wawAsan terpadU" 
              class="w-full h-auto object-contain rounded-xl sm:rounded-2xl transform transition duration-500 group-hover:scale-[1.01]">
         
-        <!-- Overlay Tombol Action Cepat (Hanya Muncul Jika Bukan Guest) -->
+        <!-- Overlay Tombol Action Cepat -->
         <div id="hero-upload-btn-container" class="absolute bottom-1.5 right-1.5 sm:bottom-3 sm:right-3 flex items-center gap-1.5">
           <button onclick="handleUploadClick()" class="bg-yellow-500/90 hover:bg-yellow-500 text-bi-blue px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-[9px] sm:text-xs font-bold shadow-md transition flex items-center gap-1 backdrop-blur-xs">
-            <i class="fa-solid fa-cloud-arrow-up text-[10px] sm:text-xs"></i> <span>Upload Modul</span> <span class="hidden sm:inline">(+50 Pts)</span>
+            <i class="fa-solid fa-cloud-arrow-up text-[10px] sm:text-xs"></i> <span>Upload Modul/Video</span> <span class="hidden sm:inline">(+50 Pts)</span>
           </button>
         </div>
       </div>
@@ -181,9 +183,12 @@
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div>
             <h2 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
-              <i class="fa-solid fa-fire text-orange-500"></i> Modul Pembelajaran (Urutan Engagement)
+              <i class="fa-solid fa-fire text-orange-500"></i> Feed Materi & Video Pembelajaran
             </h2>
-            <p class="text-[10px] sm:text-xs text-gray-500">Modul dengan Like & Komentar terbanyak otomatis muncul di paling atas.</p>
+            <p class="text-[10px] sm:text-xs text-gray-500">
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-blue-600 mr-1"></span>Dokumen Materi &nbsp;
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-orange-500 mr-1"></span>Video Pembelajaran
+            </p>
           </div>
           <!-- Input Search Materi -->
           <div class="relative w-full sm:w-64">
@@ -229,7 +234,7 @@
               <p id="stat-views-count" class="text-xs sm:text-sm font-bold text-bi-blue">0</p>
             </div>
             <div class="bg-white p-2 rounded-lg border">
-              <p class="text-[9px] sm:text-[10px] text-gray-500">Modul Pembelajaran</p>
+              <p class="text-[9px] sm:text-[10px] text-gray-500">Dokumen & Video</p>
               <p id="stat-materi-count" class="text-xs sm:text-sm font-bold text-yellow-600">0</p>
             </div>
           </div>
@@ -263,11 +268,11 @@
 
         <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
           <div class="flex items-center gap-1.5 text-emerald-700 mb-0.5">
-            <i class="fa-solid fa-file-powerpoint text-xs sm:text-sm"></i>
-            <span class="text-[11px] sm:text-xs font-semibold">Total Modul</span>
+            <i class="fa-solid fa-layer-group text-xs sm:text-sm"></i>
+            <span class="text-[11px] sm:text-xs font-semibold">Total Konten</span>
           </div>
           <p id="modal-stat-materi" class="text-lg sm:text-xl font-bold text-emerald-700">0</p>
-          <p class="text-[9px] sm:text-[10px] text-gray-500">Modul terbit</p>
+          <p class="text-[9px] sm:text-[10px] text-gray-500">Dokumen + Video</p>
         </div>
 
         <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
@@ -289,17 +294,24 @@
         </div>
       </div>
 
-      <!-- ANALITIK BARU: HIGHLIGHT MODUL TERPOPULER & MODUL PERLU PERHATIAN -->
+      <!-- ANALITIK ENGAGEMENT TERPISAH: DOKUMEN VS VIDEO -->
       <div class="space-y-2 border-t pt-3">
         <h4 class="text-xs font-bold text-bi-blue flex items-center gap-1.5">
-          <i class="fa-solid fa-chart-pie text-orange-500"></i> Insight Engagement Materi
+          <i class="fa-solid fa-chart-pie text-orange-500"></i> Rincian Insight Engagement
         </h4>
 
-        <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl space-y-1">
-          <p class="text-[11px] font-bold text-amber-900 flex items-center gap-1">
-            <i class="fa-solid fa-crown text-yellow-500"></i> Modul Terpopuler (Highest Engagement):
+        <div class="p-3 bg-blue-50/80 border border-blue-200 rounded-xl space-y-1">
+          <p class="text-[11px] font-bold text-bi-blue flex items-center gap-1">
+            <i class="fa-solid fa-file-pdf text-blue-600"></i> Top Dokumen Pembelajaran:
           </p>
           <p id="analytics-top-module" class="text-xs font-semibold text-bi-blue truncate">-</p>
+        </div>
+
+        <div class="p-3 bg-orange-50/80 border border-orange-200 rounded-xl space-y-1">
+          <p class="text-[11px] font-bold text-orange-900 flex items-center gap-1">
+            <i class="fa-solid fa-video text-orange-500"></i> Top Video Pembelajaran:
+          </p>
+          <p id="analytics-top-video" class="text-xs font-semibold text-orange-800 truncate">-</p>
         </div>
 
         <div class="p-3 bg-rose-50 border border-rose-200 rounded-xl space-y-1">
@@ -396,12 +408,12 @@
     </div>
   </div>
 
-  <!-- Modal Upload Materi (Khusus Pegawai Resmi) -->
+  <!-- Modal Upload Materi / Video (DENGAN TOGGLE 2 PILIHAN) -->
   <div id="upload-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-3.5 border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-2.5">
         <h3 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
-          <i class="fa-solid fa-cloud-arrow-up text-yellow-600"></i> Upload Modul Baru (+50 Poin)
+          <i class="fa-solid fa-cloud-arrow-up text-yellow-600"></i> Upload Konten Pembelajaran (+50 Poin)
         </h3>
         <button onclick="toggleUploadModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
           <i class="fa-solid fa-xmark"></i>
@@ -409,44 +421,61 @@
       </div>
 
       <form id="form-upload" class="space-y-3">
+        <!-- PILIHAN TIPE KONTEN: DOKUMEN VS VIDEO -->
+        <div class="space-y-1">
+          <label class="block text-xs font-bold text-gray-700">Pilih Jenis Konten Pembelajaran:</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label id="label-type-doc" class="flex items-center justify-center gap-2 p-2.5 bg-blue-50 border-2 border-bi-blue text-bi-blue rounded-xl font-bold text-xs cursor-pointer transition">
+              <input type="radio" name="uploadType" value="dokumen" checked onchange="switchUploadType('dokumen')" class="hidden">
+              <i class="fa-solid fa-file-pdf text-blue-600"></i> Dokumen (PDF/PPT/Word)
+            </label>
+            <label id="label-type-video" class="flex items-center justify-center gap-2 p-2.5 bg-slate-50 border border-slate-300 text-slate-600 rounded-xl font-bold text-xs cursor-pointer transition">
+              <input type="radio" name="uploadType" value="video" onchange="switchUploadType('video')" class="hidden">
+              <i class="fa-solid fa-video text-orange-500"></i> Video Pembelajaran
+            </label>
+          </div>
+        </div>
+
         <div class="bg-blue-50 p-2.5 rounded-lg border border-blue-100 flex justify-between items-center">
           <span class="text-[11px] sm:text-xs text-blue-900 font-semibold"><i class="fa-solid fa-user-check mr-1 text-bi-blue"></i> Pengunggah:</span>
           <span id="upload-author-display" class="text-[11px] sm:text-xs font-bold text-bi-blue truncate max-w-[180px]">-</span>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input type="text" id="input-judul" placeholder="Judul Materi Pembelajaran" required 
+          <input type="text" id="input-judul" placeholder="Judul Materi / Video" required 
             class="w-full px-3.5 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
           <input type="text" id="input-kategori" placeholder="Kategori (misal: SPPUR/CBP)" required 
             class="w-full px-3.5 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">Catatan / Ringkasan Modul <span class="font-normal text-gray-500">(opsional)</span></label>
-          <textarea id="input-isi" rows="2" placeholder="Topik atau gambaran umum isi modul..." 
+          <label class="block text-xs font-bold text-gray-700 mb-1">Catatan / Ringkasan Konten <span class="font-normal text-gray-500">(opsional)</span></label>
+          <textarea id="input-isi" rows="2" placeholder="Topik atau gambaran umum isi modul/video..." 
             class="w-full px-3.5 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none"></textarea>
         </div>
 
         <div class="space-y-1">
-          <label class="block text-xs font-bold text-gray-700"><i class="fa-brands fa-google-drive text-green-600 mr-1"></i> Upload File Modul (PDF, PPT, Word)</label>
+          <label id="input-file-label" class="block text-xs font-bold text-gray-700">
+            <i class="fa-brands fa-google-drive text-green-600 mr-1"></i> Upload File Dokumen (PDF, PPT, Word)
+          </label>
           <input type="file" id="input-file" accept=".pdf,.ppt,.pptx,.doc,.docx" required
             class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-bi-blue hover:file:bg-blue-100">
         </div>
 
         <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-[11px] text-emerald-800 flex items-center gap-2">
           <i class="fa-solid fa-bolt text-emerald-600 text-sm shrink-0"></i>
-          <span><strong>Instan & Bebas Hambatan:</strong> Modul langsung terbit dan Anda mendapatkan <strong>+50 Poin</strong> instan!</span>
+          <span><strong>Instan & Bebas Hambatan:</strong> Konten langsung terbit dan Anda mendapatkan <strong>+50 Poin</strong> instan!</span>
         </div>
 
         <button type="submit" id="btn-submit"
           class="w-full bg-bi-blue hover:bg-bi-blue-dark text-white font-semibold py-2.5 rounded-lg text-xs sm:text-sm transition shadow flex items-center justify-center gap-2">
-          <i class="fa-solid fa-cloud-arrow-up"></i> Terbitkan Modul Pembelajaran (+50 Pts)
+          <i class="fa-solid fa-cloud-arrow-up"></i> Terbitkan Konten (+50 Pts)
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Modal Pilih Admin WhatsApp Request Kuis (Presisi Pengunggah Modul) -->
+  <!-- Modal Pilih Admin WhatsApp Request Kuis -->
   <div id="wa-admin-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl max-w-sm w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200">
       <div class="flex justify-between items-center border-b pb-2">
@@ -458,7 +487,7 @@
         </button>
       </div>
 
-      <p class="text-xs text-gray-600">Pilih Admin KPwBI Jember yang ingin Anda hubungi via WhatsApp untuk meracik kuis modul ini:</p>
+      <p class="text-xs text-gray-600">Pilih Admin KPwBI Jember yang ingin Anda hubungi via WhatsApp untuk meracik kuis materi/video ini:</p>
 
       <div class="space-y-2">
         <button onclick="kirimWARequestDirect('mochtar')" class="w-full p-3 bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-400 rounded-xl text-left transition flex items-center justify-between group">
@@ -488,7 +517,7 @@
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b pb-3">
         <div>
           <h3 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
-            <i class="fa-solid fa-wand-magic-sparkles text-yellow-600"></i> Kelola & Racik Kuis AI Modul (Admin)
+            <i class="fa-solid fa-wand-magic-sparkles text-yellow-600"></i> Kelola & Racik Kuis AI (Admin)
           </h3>
           <p class="text-[11px] sm:text-xs text-gray-500">Edit visual atau copas langsung JSON mentah dari Gemini/Ollama.</p>
         </div>
@@ -549,7 +578,7 @@
     <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200">
       <div class="flex justify-between items-center border-b pb-2.5">
         <h3 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
-          <i class="fa-solid fa-pen-to-square text-blue-600"></i> Edit Informasi Materi
+          <i class="fa-solid fa-pen-to-square text-blue-600"></i> Edit Informasi Konten
         </h3>
         <button onclick="toggleEditModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
           <i class="fa-solid fa-xmark"></i>
@@ -560,7 +589,7 @@
         <input type="hidden" id="edit-materi-id">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-gray-700 mb-1">Judul Materi</label>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Judul Konten</label>
             <input type="text" id="edit-judul" required class="w-full px-3.5 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
           </div>
           <div>
@@ -629,7 +658,7 @@
 
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyR30go-8sp-JWqgLQ6qdm1jCru3QoWqZUXHy92JgRT45-_0Jd6AePOQRImJgdS-t00/exec";
 
-    // NIP DUA SUPERADMIN (Mochtar Muhtadi Iksan & M. Bayu Setiawan)
+    // NIP DUA SUPERADMIN
     const SUPERADMIN_NIPS = ["17241", "17471"];
     const ADMIN_WA_NUMBERS = {
       mochtar: "6281252777143",
@@ -699,6 +728,7 @@
     let pendingUploadData = null;
     let editingExistingMateriId = null;
     let selectedWaMateriId = null;
+    let currentSelectedUploadType = "dokumen";
 
     function isGuestUser() {
       return !currentUser || currentUser.nip === "00000";
@@ -708,7 +738,7 @@
       return currentUser && SUPERADMIN_NIPS.includes(currentUser.nip);
     }
 
-    // TRACKING TRAFFIC PAGEVIEW STATS (FIREBASE)
+    // TRACKING TRAFFIC PAGEVIEW STATS
     async function trackPageTraffic() {
       try {
         const statsRef = doc(db, "analytics", "traffic");
@@ -741,6 +771,27 @@
       localStorage.setItem(`sinau_completed_quizzes_${currentUser.nip}`, JSON.stringify(Array.from(completed)));
     }
 
+    // SWITCH TIPE UPLOAD (DOKUMEN VS VIDEO)
+    window.switchUploadType = function(type) {
+      currentSelectedUploadType = type;
+      const lblDoc = document.getElementById('label-type-doc');
+      const lblVid = document.getElementById('label-type-video');
+      const fileLabel = document.getElementById('input-file-label');
+      const fileInput = document.getElementById('input-file');
+
+      if (type === 'dokumen') {
+        lblDoc.className = "flex items-center justify-center gap-2 p-2.5 bg-blue-50 border-2 border-bi-blue text-bi-blue rounded-xl font-bold text-xs cursor-pointer transition";
+        lblVid.className = "flex items-center justify-center gap-2 p-2.5 bg-slate-50 border border-slate-300 text-slate-600 rounded-xl font-bold text-xs cursor-pointer transition";
+        fileLabel.innerHTML = `<i class="fa-brands fa-google-drive text-green-600 mr-1"></i> Upload File Dokumen (PDF, PPT, Word)`;
+        fileInput.accept = ".pdf,.ppt,.pptx,.doc,.docx";
+      } else {
+        lblVid.className = "flex items-center justify-center gap-2 p-2.5 bg-orange-50 border-2 border-orange-500 text-orange-700 rounded-xl font-bold text-xs cursor-pointer transition";
+        lblDoc.className = "flex items-center justify-center gap-2 p-2.5 bg-slate-50 border border-slate-300 text-slate-600 rounded-xl font-bold text-xs cursor-pointer transition";
+        fileLabel.innerHTML = `<i class="fa-solid fa-video text-orange-500 mr-1"></i> Upload File Video (MP4, WebM, MKV)`;
+        fileInput.accept = "video/mp4,video/webm,video/mkv";
+      }
+    };
+
     // CEK NOTIFIKASI KUIS BARU DITERBITKAN SAAT PEGAWAI LOGIN
     async function checkUserNotifications() {
       if (isGuestUser()) return;
@@ -763,7 +814,7 @@
 
           const banner = document.getElementById('login-notification-banner');
           const textEl = document.getElementById('login-notification-text');
-          textEl.innerHTML = `<strong>Kuis Baru Terbit!</strong> ${messages.join(" | ")}`;
+          textEl.innerHTML = `<strong>Kuis / Mention Baru!</strong> ${messages.join(" | ")}`;
           banner.classList.remove('hidden');
         }
       } catch (err) {
@@ -781,7 +832,6 @@
         document.getElementById('user-info-bar').classList.add('flex');
         document.getElementById('btn-login-nav').classList.add('hidden');
 
-        // Jika Guest (Tamu), sembunyikan fitur Upload Modul
         if (isGuestUser()) {
           document.getElementById('btn-upload-nav').classList.add('hidden');
           document.getElementById('btn-upload-nav').classList.remove('flex');
@@ -826,7 +876,7 @@
       localStorage.setItem('sinau_user', JSON.stringify(guestObj));
       updateUIForLogin();
       toggleLoginModal(false);
-      alert("Anda berhasil masuk sebagai User Tamu (Guest). Selamat membaca materi & mengerjakan kuis!");
+      alert("Anda berhasil masuk sebagai User Tamu (Guest). Selamat membaca materi, menonton video & mengerjakan kuis!");
     };
 
     window.toggleLoginModal = function(show) {
@@ -851,7 +901,7 @@
 
     window.toggleUploadModal = function(show) {
       if (isGuestUser()) {
-        alert("Fitur unggah modul khusus untuk Pegawai Resmi KPwBI Jember. Silakan login terlebih dahulu!");
+        alert("Fitur unggah modul/video khusus untuk Pegawai Resmi KPwBI Jember. Silakan login terlebih dahulu!");
         toggleLoginModal(true);
         return;
       }
@@ -899,6 +949,10 @@
     window.filterByMenu = function(type) {
       if (type === 'semua') {
         renderMateriCards("");
+      } else if (type === 'dokumen') {
+        renderMateriCards("[DOKUMEN_ONLY]");
+      } else if (type === 'video') {
+        renderMateriCards("[VIDEO_ONLY]");
       } else if (type === 'kuis') {
         renderMateriCards("[KUIS_ONLY]");
       }
@@ -906,7 +960,7 @@
 
     window.handleUploadClick = function() {
       if (isGuestUser()) {
-        alert("Silakan Login Pegawai terlebih dahulu untuk mengunggah modul!");
+        alert("Silakan Login Pegawai terlebih dahulu untuk mengunggah konten!");
         toggleLoginModal(true);
       } else {
         toggleUploadModal(true);
@@ -922,24 +976,24 @@
       }
     };
 
-    // KIRIM REQUEST KUIS KE WHATSAPP ADMIN (DIRECT DEEP-LINKING)
+    // KIRIM REQUEST KUIS KE WHATSAPP ADMIN
     window.kirimWARequestDirect = function(adminKey) {
       if (!selectedWaMateriId || !allMateriData[selectedWaMateriId]) return;
 
       const m = allMateriData[selectedWaMateriId];
       const targetPhone = ADMIN_WA_NUMBERS[adminKey] || ADMIN_WA_NUMBERS.mochtar;
 
-      const text = `Halo Admin SINAU KPwBI Jember!\n\nSaya *${currentUser.nama}* (NIP: ${currentUser.nip}) ingin mengajukan request kuis AI untuk modul yang saya upload:\n\n📌 *Judul Modul:* ${m.judul}\n📂 *Kategori:* ${m.kategori}\n🔗 *Lampiran:* ${m.link || 'Berkas Terlampir'}\n\nMohon bantuannya untuk diracikkan kuisnya ya Admin. Terima kasih! 🙏`;
+      const text = `Halo Admin SINAU KPwBI Jember!\n\nSaya *${currentUser.nama}* (NIP: ${currentUser.nip}) ingin mengajukan request kuis AI untuk konten yang saya upload:\n\n📌 *Judul:* ${m.judul}\n📂 *Kategori:* ${m.kategori}\n🎬 *Tipe:* ${(m.contentType || 'dokumen').toUpperCase()}\n🔗 *Lampiran:* ${m.link || 'Berkas Terlampir'}\n\nMohon bantuannya untuk diracikkan kuisnya ya Admin. Terima kasih! 🙏`;
 
       const url = `https://wa.me/${targetPhone}?text=${encodeURIComponent(text)}`;
       window.open(url, '_blank');
       toggleWaAdminModal(false);
     };
 
-    // FITUR INTERAKTIF: TOGGLE LIKE MODUL
+    // TOGGLE LIKE MODUL
     window.toggleLikeMateri = async function(materiId) {
       if (isGuestUser()) {
-        alert("Silakan Login Pegawai untuk menyukai modul ini!");
+        alert("Silakan Login Pegawai untuk menyukai konten ini!");
         toggleLoginModal(true);
         return;
       }
@@ -963,13 +1017,59 @@
       }
     };
 
-    // FITUR INTERAKTIF: TOGGLE DISPLAY KOMENTAR
+    // TOGGLE SEKSI KOMENTAR
     window.toggleCommentsSection = function(materiId) {
       const el = document.getElementById(`comments-section-${materiId}`);
       if (el) el.classList.toggle('hidden');
     };
 
-    // FITUR INTERAKTIF: KIRIM KOMENTAR DENGAN FITUR MENTION (@PEGAWAI)
+    // AUTO-COMPLETE DROPDOWN MENTION PEGAWAI
+    window.handleCommentInput = function(e, materiId) {
+      const val = e.value;
+      const cursorPos = e.selectionStart;
+      const textUpToCursor = val.slice(0, cursorPos);
+      const atIndex = textUpToCursor.lastIndexOf('@');
+      
+      const dropdown = document.getElementById(`mention-dropdown-${materiId}`);
+      if (!dropdown) return;
+
+      if (atIndex !== -1 && !textUpToCursor.slice(atIndex).includes(' ')) {
+        const queryStr = textUpToCursor.slice(atIndex + 1).toLowerCase();
+        
+        const matches = DATA_PEGAWAI.filter(p => 
+          p.nip !== "00000" && 
+          (p.nama.toLowerCase().includes(queryStr) || p.nip.includes(queryStr))
+        ).slice(0, 5);
+
+        if (matches.length > 0) {
+          dropdown.innerHTML = matches.map(p => `
+            <div onclick="selectMentionPegawai('${materiId}', '${p.nama}', ${atIndex})" class="p-2 hover:bg-blue-50 cursor-pointer flex justify-between items-center text-xs border-b last:border-b-0">
+              <span class="font-bold text-bi-blue truncate"><i class="fa-solid fa-at text-yellow-500 mr-1"></i>${p.nama}</span>
+              <span class="text-[10px] text-gray-400">NIP: ${p.nip}</span>
+            </div>
+          `).join('');
+          dropdown.classList.remove('hidden');
+        } else {
+          dropdown.classList.add('hidden');
+        }
+      } else {
+        dropdown.classList.add('hidden');
+      }
+    };
+
+    window.selectMentionPegawai = function(materiId, nama, atIndex) {
+      const inputEl = document.getElementById(`input-comment-${materiId}`);
+      const dropdown = document.getElementById(`mention-dropdown-${materiId}`);
+      
+      const textBefore = inputEl.value.slice(0, atIndex);
+      const textAfter = inputEl.value.slice(inputEl.selectionStart);
+      
+      inputEl.value = `${textBefore}@${nama} ${textAfter}`;
+      dropdown.classList.add('hidden');
+      inputEl.focus();
+    };
+
+    // KIRIM KOMENTAR
     window.kirimKomentar = async function(materiId) {
       if (isGuestUser()) {
         alert("Silakan Login Pegawai terlebih dahulu untuk berkomentar!");
@@ -994,12 +1094,11 @@
           comments: arrayUnion(newComment)
         });
 
-        // Deteksi Jika Ada Mention Pegawai (misal: @17241 atau mention nama)
         DATA_PEGAWAI.forEach(async (p) => {
-          if (p.nip !== "00000" && text.toLowerCase().includes(`@${p.nama.toLowerCase()}`) || text.includes(p.nip)) {
+          if (p.nip !== "00000" && (text.toLowerCase().includes(`@${p.nama.toLowerCase()}`) || text.includes(p.nip))) {
             await addDoc(collection(db, "notifications"), {
               targetNip: p.nip,
-              message: `${currentUser.nama} menyebut Anda dalam komentar modul '${allMateriData[materiId]?.judul}'! 💬`,
+              message: `${currentUser.nama} menyebut Anda dalam komentar '${allMateriData[materiId]?.judul}'! 💬`,
               read: false,
               timestamp: new Date()
             });
@@ -1139,13 +1238,13 @@
       return out;
     }
 
-    // Submit Upload Form
+    // SUBMIT UPLOAD DOKUMEN / VIDEO
     document.getElementById('form-upload').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (isGuestUser()) return;
 
       const btn = document.getElementById('btn-submit');
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengunggah Modul...`;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengunggah ${currentSelectedUploadType === 'video' ? 'Video' : 'Dokumen'}...`;
       btn.disabled = true;
 
       const judul = document.getElementById('input-judul').value;
@@ -1154,7 +1253,7 @@
       const fileInput = document.getElementById('input-file').files[0];
 
       if (!fileInput) {
-        alert("Silakan unggah file modul terlebih dahulu!");
+        alert("Silakan unggah file terlebih dahulu!");
         btn.disabled = false;
         return;
       }
@@ -1181,6 +1280,7 @@
         }
 
         const newDocRef = await addDoc(collection(db, "materi"), {
+          contentType: currentSelectedUploadType, // "dokumen" ATAU "video"
           pengarang: currentUser.nama,
           nip: currentUser.nip,
           unit: currentUser.unit,
@@ -1202,19 +1302,19 @@
           poin: 50
         });
 
-        alert("Selamat! Modul Anda berhasil diterbitkan dan Anda meraih +50 POIN!\n\nAnda bisa langsung mengklik 'Ajukan Kuis ke Admin' agar kuis AI diracikkan!");
+        alert(`Selamat! ${currentSelectedUploadType === 'video' ? 'Video Pembelajaran' : 'Dokumen Modul'} Anda berhasil diterbitkan dan Anda meraih +50 POIN!\n\nAnda bisa langsung mengklik 'Ajukan Kuis ke Admin' agar kuis AI diracikkan!`);
         toggleUploadModal(false);
         document.getElementById('form-upload').reset();
 
-        if (confirm("Apakah Anda ingin langsung meminta Admin meracik kuis untuk modul ini via WhatsApp?")) {
+        if (confirm("Apakah Anda ingin langsung meminta Admin meracik kuis untuk konten ini via WhatsApp?")) {
           toggleWaAdminModal(true, newDocRef.id);
         }
 
       } catch (err) {
         console.error("Error Upload:", err);
-        alert("Gagal mengunggah modul. Silakan coba beberapa saat lagi.");
+        alert("Gagal mengunggah file. Silakan coba beberapa saat lagi.");
       } finally {
-        btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Terbitkan Modul Pembelajaran (+50 Pts)`;
+        btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Terbitkan Konten (+50 Pts)`;
         btn.disabled = false;
       }
     });
@@ -1402,7 +1502,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
 
               await addDoc(collection(db, "notifications"), {
                 targetNip: materiItem.nip,
-                message: `Kuis untuk modul Anda '${materiItem.judul}' telah diterbitkan oleh Admin! Anda mendapat tambahan +30 Poin! 🎉`,
+                message: `Kuis untuk '${materiItem.judul}' telah diterbitkan oleh Admin! Anda mendapat tambahan +30 Poin! 🎉`,
                 read: false,
                 timestamp: new Date()
               });
@@ -1424,7 +1524,10 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       }
     };
 
-    function getFileThumbnailIcon(fileName) {
+    function getFileThumbnailIcon(fileName, contentType) {
+      if (contentType === 'video') {
+        return '<i class="fa-solid fa-play-circle text-orange-500 text-3xl sm:text-4xl"></i>';
+      }
       if (!fileName) return '<i class="fa-solid fa-file text-blue-600 text-2xl sm:text-3xl"></i>';
       const ext = fileName.split('.').pop().toLowerCase();
       if (ext === 'pdf') return '<i class="fa-solid fa-file-pdf text-red-500 text-2xl sm:text-3xl"></i>';
@@ -1482,11 +1585,11 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
           isi: document.getElementById('edit-isi').value
         });
 
-        alert("Informasi materi berhasil diperbarui!");
+        alert("Informasi konten berhasil diperbarui!");
         toggleEditModal(false);
       } catch (err) {
         console.error("Error Edit:", err);
-        alert("Gagal memperbarui materi.");
+        alert("Gagal memperbarui konten.");
       } finally {
         btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan`;
         btn.disabled = false;
@@ -1497,18 +1600,18 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       const item = allMateriData[id];
       if (!item) return;
 
-      if (confirm(`Apakah Anda yakin ingin menghapus materi "${item.judul}"?`)) {
+      if (confirm(`Apakah Anda yakin ingin menghapus "${item.judul}"?`)) {
         try {
           await deleteDoc(doc(db, "materi", id));
-          alert("Materi berhasil dihapus.");
+          alert("Konten berhasil dihapus.");
         } catch (err) {
           console.error("Error Delete:", err);
-          alert("Gagal menghapus materi.");
+          alert("Gagal menghapus.");
         }
       }
     };
 
-    // RENDER FEED MATERI DENGAN SORTING ENGAGEMENT TERTINGGI (LIKE + KOMENTAR)
+    // RENDER FEED MATERI (DIBAEDAKAN PANEL WARNA ORANGE UNTUK VIDEO VS BIRU UNTUK DOKUMEN)
     function renderMateriCards(filterKeyword = "") {
       const container = document.getElementById('materi-container');
       container.innerHTML = "";
@@ -1518,7 +1621,6 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       const kw = filterKeyword.toLowerCase();
       let listToRender = [...cachedMateriList];
 
-      // AUTO-SORTING: MODUL DENGAN ENGAGEMENT TERTINGGI (LIKE + KOMENTAR) MUNCUL DI PADA ATAS
       listToRender.sort((a, b) => {
         const scoreA = (a.item.likes ? a.item.likes.length : 0) + (a.item.comments ? a.item.comments.length : 0);
         const scoreB = (b.item.likes ? b.item.likes.length : 0) + (b.item.comments ? b.item.comments.length : 0);
@@ -1526,6 +1628,8 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       });
 
       const filtered = listToRender.filter(({ item }) => {
+        if (kw === "[dokumen_only]") return (item.contentType || 'dokumen') === 'dokumen';
+        if (kw === "[video_only]") return item.contentType === 'video';
         if (kw === "[kuis_only]") return item.questions && item.questions.length > 0;
         if (!kw) return true;
         return (item.judul || '').toLowerCase().includes(kw) ||
@@ -1537,16 +1641,36 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
         container.innerHTML = `
           <div class="text-center py-6 text-gray-400">
             <i class="fa-solid fa-search text-2xl mb-1.5 text-slate-300"></i>
-            <p class="text-xs sm:text-sm">Tidak ada materi yang ditemukan.</p>
+            <p class="text-xs sm:text-sm">Tidak ada konten yang ditemukan.</p>
           </div>`;
         return;
       }
 
       filtered.forEach(({ id, item }) => {
+        const isVideo = item.contentType === 'video';
         const card = document.createElement('div');
-        card.className = "p-3.5 sm:p-5 border border-slate-200 rounded-xl hover:shadow-md transition bg-white space-y-3 relative";
         
-        let linkHTML = item.link ? `<a href="${item.link}" target="_blank" class="w-full sm:w-auto text-center inline-flex items-center justify-center gap-1.5 text-xs text-bi-blue bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-1.5 rounded-lg font-semibold transition"><i class="fa-brands fa-google-drive text-green-600"></i> Buka Lampiran Berkas</a>` : '';
+        // WARNA PANEL: ORANGE UNTUK VIDEO, BIRU UNTUK DOKUMEN
+        card.className = isVideo 
+          ? "p-3.5 sm:p-5 border-2 border-orange-200 bg-orange-50/40 rounded-xl hover:shadow-md transition space-y-3 relative"
+          : "p-3.5 sm:p-5 border border-slate-200 bg-white rounded-xl hover:shadow-md transition space-y-3 relative";
+
+        let mediaDisplayHTML = '';
+        if (isVideo && item.link) {
+          mediaDisplayHTML = `
+            <div class="w-full rounded-xl overflow-hidden bg-black shadow-inner my-2">
+              <video controls class="w-full max-h-72 object-contain">
+                <source src="${item.link}" type="${item.fileType || 'video/mp4'}">
+                Browser Anda tidak mendukung pemutaran video.
+              </video>
+            </div>
+          `;
+        }
+
+        let linkBtnHTML = item.link ? `
+          <a href="${item.link}" target="_blank" class="w-full sm:w-auto text-center inline-flex items-center justify-center gap-1.5 text-xs ${isVideo ? 'text-orange-800 bg-orange-100 hover:bg-orange-200 border-orange-300' : 'text-bi-blue bg-blue-50 hover:bg-blue-100 border-blue-200'} border px-3 py-1.5 rounded-lg font-semibold transition">
+            <i class="${isVideo ? 'fa-solid fa-download text-orange-600' : 'fa-brands fa-google-drive text-green-600'}"></i> ${isVideo ? 'Download Video' : 'Buka Lampiran Berkas'}
+          </a>` : '';
         
         let quizBtnHTML = '';
         if (item.questions && item.questions.length > 0) {
@@ -1557,7 +1681,6 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
             </button>
           `;
         } else {
-          // HANYA MUNCULKAN REQUEST KUIS WA UNTUK PEGAWAI PENGUNGGAH MODUL (BUKAN TAMU / BUKAN ORANG LAIN)
           const isAuthor = currentUser && (currentUser.nip === item.nip || currentUser.nama === item.pengarang);
           if (isAuthor && !isGuestUser()) {
             quizBtnHTML = `
@@ -1581,10 +1704,10 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
           actionButtonsHTML = `
             <div class="flex items-center gap-1.5 ml-2">
               ${isSuperAdmin() ? `<button onclick="bukaEditKuisMateri('${id}')" title="Racik / Edit Soal Kuis" class="p-1 sm:p-1.5 text-xs text-yellow-600 hover:bg-yellow-50 rounded-md transition border border-yellow-300"><i class="fa-solid fa-wand-magic-sparkles"></i></button>` : ''}
-              <button onclick="bukaEditMateri('${id}')" title="Edit Info Materi" class="p-1 sm:p-1.5 text-xs text-blue-600 hover:bg-blue-50 rounded-md transition border border-blue-200">
+              <button onclick="bukaEditMateri('${id}')" title="Edit Info Konten" class="p-1 sm:p-1.5 text-xs text-blue-600 hover:bg-blue-50 rounded-md transition border border-blue-200">
                 <i class="fa-solid fa-pen-to-square"></i>
               </button>
-              <button onclick="hapusMateri('${id}')" title="Hapus Materi" class="p-1 sm:p-1.5 text-xs text-red-600 hover:bg-red-50 rounded-md transition border border-red-200">
+              <button onclick="hapusMateri('${id}')" title="Hapus Konten" class="p-1 sm:p-1.5 text-xs text-red-600 hover:bg-red-50 rounded-md transition border border-red-200">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
             </div>
@@ -1595,10 +1718,9 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
         const commentsArr = item.comments || [];
         const isLikedByMe = currentUser && likesArr.includes(currentUser.nip);
 
-        const thumbIcon = getFileThumbnailIcon(item.fileName);
-        const displayFileName = item.fileName || 'Modul Pembelajaran';
+        const thumbIcon = getFileThumbnailIcon(item.fileName, item.contentType);
+        const displayFileName = item.fileName || (isVideo ? 'Video Pembelajaran' : 'Dokumen Modul');
 
-        // KOMENTAR LIST HTML
         let commentsListHTML = commentsArr.map(c => `
           <div class="p-2 bg-slate-50 border rounded-lg text-xs space-y-0.5">
             <div class="flex justify-between items-center">
@@ -1611,7 +1733,12 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
 
         card.innerHTML = `
           <div class="flex justify-between items-start">
-            <span class="text-[10px] sm:text-xs font-semibold px-2 py-0.5 bg-blue-100 text-bi-blue rounded-full">${item.kategori}</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] sm:text-xs font-bold px-2 py-0.5 ${isVideo ? 'bg-orange-500 text-white' : 'bg-blue-100 text-bi-blue'} rounded-full">
+                <i class="${isVideo ? 'fa-solid fa-video' : 'fa-solid fa-file-pdf'} mr-1"></i>${isVideo ? 'VIDEO' : 'DOKUMEN'}
+              </span>
+              <span class="text-[10px] sm:text-xs font-semibold px-2 py-0.5 bg-slate-100 text-slate-700 rounded-full">${item.kategori}</span>
+            </div>
             <div class="flex items-center">
               <span class="text-[10px] sm:text-xs text-gray-400 truncate max-w-[140px] sm:max-w-none"><i class="fa-regular fa-user mr-1"></i>${item.pengarang}</span>
               ${actionButtonsHTML}
@@ -1619,16 +1746,18 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
           </div>
           
           <div class="flex items-center gap-3 py-0.5">
-            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-center shrink-0 shadow-sm">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 ${isVideo ? 'bg-orange-100 border-orange-300' : 'bg-slate-100 border-slate-200'} rounded-xl border flex items-center justify-center shrink-0 shadow-sm">
               ${thumbIcon}
             </div>
             <div class="min-w-0 flex-1">
-              <h3 class="font-bold text-bi-blue text-sm sm:text-base truncate">${item.judul}</h3>
+              <h3 class="font-bold ${isVideo ? 'text-orange-950' : 'text-bi-blue'} text-sm sm:text-base truncate">${item.judul}</h3>
               <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5 flex items-center gap-1 truncate"><i class="fa-solid fa-paperclip text-[10px]"></i> ${displayFileName}</p>
             </div>
           </div>
 
-          <!-- ACTION BAR INTERAKTIF (LIKE & KOMENTAR) -->
+          ${mediaDisplayHTML}
+
+          <!-- ACTION BAR INTERAKTIF -->
           <div class="flex items-center justify-between border-t pt-2 text-xs text-gray-500">
             <div class="flex items-center gap-4">
               <button onclick="toggleLikeMateri('${id}')" class="flex items-center gap-1.5 font-semibold transition ${isLikedByMe ? 'text-red-500 font-bold' : 'hover:text-red-500'}">
@@ -1646,12 +1775,12 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
           </div>
 
           <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-1">
-            ${linkHTML}
+            ${linkBtnHTML}
             ${quizBtnHTML}
           </div>
 
-          <!-- SEKSI KOMENTAR TOGGLEABLE -->
-          <div id="comments-section-${id}" class="hidden pt-3 border-t space-y-2 bg-slate-50/50 p-3 rounded-xl border border-slate-100">
+          <!-- SEKSI KOMENTAR DENGAN AUTOCOMPLETE DROPDOWN MENTION -->
+          <div id="comments-section-${id}" class="hidden pt-3 border-t space-y-2 bg-slate-50/50 p-3 rounded-xl border border-slate-100 relative">
             <h4 class="text-xs font-bold text-bi-blue flex items-center gap-1.5">
               <i class="fa-solid fa-comments text-blue-600"></i> Diskusi & Feedback Pegawai
             </h4>
@@ -1660,8 +1789,11 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
               ${commentsListHTML || '<p class="text-[10px] text-gray-400 italic">Belum ada komentar. Jadilah yang pertama memberikan umpan balik!</p>'}
             </div>
 
+            <!-- POPUP DROPDOWN MENTION PEGAWAI -->
+            <div id="mention-dropdown-${id}" class="hidden absolute bottom-12 left-3 right-16 bg-white border border-slate-300 rounded-xl shadow-xl z-50 max-h-36 overflow-y-auto"></div>
+
             <div class="flex items-center gap-2 pt-1">
-              <input type="text" id="input-comment-${id}" placeholder="Tulis tanggapan / ajak rekan (@Nama Pegawai)..." 
+              <input type="text" id="input-comment-${id}" oninput="handleCommentInput(this, '${id}')" placeholder="Ketik @ untuk pilih & mention nama pegawai..." 
                 class="flex-1 px-3 py-1.5 text-xs border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-800 focus:outline-none">
               <button onclick="kirimKomentar('${id}')" class="bg-bi-blue hover:bg-bi-blue-dark text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow">
                 Kirim
@@ -1673,7 +1805,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       });
     }
 
-    // Realtime Listener Firestore Materi
+    // Realtime Listener Firestore Materi & Video
     onSnapshot(collection(db, "materi"), (snapshot) => {
       cachedMateriList = [];
       allMateriData = {};
@@ -1685,14 +1817,18 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
         document.getElementById('materi-container').innerHTML = `
           <div class="text-center py-6 text-gray-400">
             <i class="fa-solid fa-folder-open text-3xl mb-1.5 text-slate-300"></i>
-            <p class="text-xs sm:text-sm">Belum ada materi pembelajaran.</p>
+            <p class="text-xs sm:text-sm">Belum ada dokumen/video pembelajaran.</p>
             <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">Jadilah pegawai pertama yang berbagi ilmu!</p>
           </div>`;
         return;
       }
 
-      let highestScore = -1;
-      let topTitle = "-";
+      let highestDocScore = -1;
+      let topDocTitle = "-";
+
+      let highestVidScore = -1;
+      let topVidTitle = "-";
+
       let noQuizTitles = [];
 
       snapshot.forEach((docSnap) => {
@@ -1701,11 +1837,18 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
         allMateriData[id] = item;
         cachedMateriList.push({ id, item });
 
-        // Hitung Analitik Top Module & Attention Module
         const score = (item.likes ? item.likes.length : 0) + (item.comments ? item.comments.length : 0);
-        if (score > highestScore && score > 0) {
-          highestScore = score;
-          topTitle = `${item.judul} (${score} Score Engagement)`;
+        
+        if (item.contentType === 'video') {
+          if (score > highestVidScore && score > 0) {
+            highestVidScore = score;
+            topVidTitle = `${item.judul} (${score} Engagement)`;
+          }
+        } else {
+          if (score > highestDocScore && score > 0) {
+            highestDocScore = score;
+            topDocTitle = `${item.judul} (${score} Engagement)`;
+          }
         }
 
         if (!item.questions || item.questions.length === 0) {
@@ -1713,8 +1856,9 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
         }
       });
 
-      document.getElementById('analytics-top-module').innerText = topTitle;
-      document.getElementById('analytics-attention-module').innerText = noQuizTitles.length > 0 ? noQuizTitles.slice(0, 2).join(", ") : "Semua modul sudah ada kuisnya!";
+      document.getElementById('analytics-top-module').innerText = topDocTitle;
+      document.getElementById('analytics-top-video').innerText = topVidTitle;
+      document.getElementById('analytics-attention-module').innerText = noQuizTitles.length > 0 ? noQuizTitles.slice(0, 2).join(", ") : "Semua modul/video sudah ada kuisnya!";
 
       renderMateriCards(document.getElementById('input-search')?.value || "");
     });
