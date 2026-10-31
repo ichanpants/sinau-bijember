@@ -42,6 +42,19 @@
 </head>
 <body class="bg-slate-100 text-gray-800 font-sans min-h-screen flex flex-col">
 
+  <!-- Banner Notifikasi Login Pegawai -->
+  <div id="login-notification-banner" class="hidden bg-emerald-600 text-white text-xs py-2.5 px-4 shadow-lg border-b border-emerald-700 sticky top-0 z-50 transition">
+    <div class="max-w-6xl mx-auto flex justify-between items-center gap-2">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-bell text-yellow-300 text-sm animate-bounce"></i>
+        <span id="login-notification-text">Pemberitahuan Sistem</span>
+      </div>
+      <button onclick="closeNotificationBanner()" class="text-emerald-100 hover:text-white font-bold text-sm px-2">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+
   <!-- Header / Navbar -->
   <header class="bg-bi-blue text-white shadow-lg sticky top-0 z-40 border-b-2 border-yellow-500">
     <div class="max-w-6xl mx-auto px-3 sm:px-4 py-2.5 flex justify-between items-center">
@@ -83,8 +96,8 @@
             </button>
             <div class="absolute left-0 top-full pt-1 hidden group-hover:block w-52 z-50">
               <div class="bg-white text-gray-800 rounded-xl shadow-xl border border-slate-200 py-2 text-xs space-y-1">
-                <a href="#" onclick="alert('Aturan Poin SINAU:\n- Upload Materi Baru = +50 Poin\n- Mengerjakan Kuis = +10 Poin per Jawaban Benar')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-500"></i> Ketentuan Poin</a>
-                <a href="#" onclick="alert('Petunjuk Upload Modul:\n1. Klik Upload Materi\n2. Pilih Berkas PDF/Word/PPT\n3. AI Ollama Lokal akan memproses 10 Soal Kuis\n4. Anda bisa memeriksa & mengedit kuis (visual / copas JSON langsung)!')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-upload text-blue-600"></i> Cara Unggah Modul</a>
+                <a href="#" onclick="alert('Skema Poin Pembelajaran SINAU:\n- Unggah Modul Baru = +50 Poin\n- Kuis Terbit oleh Admin = +30 Poin (Pegawai)\n- Admin Racik Kuis = +20 Poin\n- Kerjakan Kuis = +10 Poin / Jawaban Benar')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-500"></i> Ketentuan Poin Baru</a>
+                <a href="#" onclick="alert('Cara Berbagi Modul:\n1. Klik Upload Modul\n2. Pilih Berkas PDF/Word/PPT (+50 Poin Langsung!)\n3. Klik Request Kuis ke WA Admin (+30 Poin jika Kuis Terbit!)')" class="px-4 py-2 hover:bg-blue-50 flex items-center gap-2"><i class="fa-solid fa-upload text-blue-600"></i> Cara Unggah Modul</a>
               </div>
             </div>
           </div>
@@ -121,7 +134,7 @@
                   <p id="profile-unit" class="text-[10px] text-gray-500">Unit: -</p>
                 </div>
                 <button onclick="toggleUploadModal(true)" class="w-full text-left px-2 py-1.5 hover:bg-blue-50 rounded-lg font-semibold text-bi-blue flex items-center gap-2">
-                  <i class="fa-solid fa-cloud-arrow-up text-yellow-600"></i> Unggah Modul
+                  <i class="fa-solid fa-cloud-arrow-up text-yellow-600"></i> Unggah Modul (+50 Pts)
                 </button>
                 <button onclick="bukaModalGantiPass()" class="w-full text-left px-2 py-1.5 hover:bg-blue-50 rounded-lg font-semibold text-gray-700 flex items-center gap-2">
                   <i class="fa-solid fa-key text-blue-600"></i> Ubah Password
@@ -359,12 +372,12 @@
     </div>
   </div>
 
-  <!-- Modal Upload Materi -->
+  <!-- Modal Upload Materi (Sistem Cepat Tanpa Antre Kuis AI) -->
   <div id="upload-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-3.5 border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-2.5">
         <h3 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
-          <i class="fa-solid fa-cloud-arrow-up text-yellow-600"></i> Upload Materi Baru (+50 Poin)
+          <i class="fa-solid fa-cloud-arrow-up text-yellow-600"></i> Upload Modul Baru (+50 Poin)
         </h3>
         <button onclick="toggleUploadModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
           <i class="fa-solid fa-xmark"></i>
@@ -378,15 +391,15 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input type="text" id="input-judul" placeholder="Judul Materi" required 
+          <input type="text" id="input-judul" placeholder="Judul Materi Pembelajaran" required 
             class="w-full px-3.5 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
           <input type="text" id="input-kategori" placeholder="Kategori (misal: SPPUR/CBP)" required 
             class="w-full px-3.5 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">Catatan / Fokus Materi <span class="font-normal text-gray-500">(opsional)</span></label>
-          <textarea id="input-isi" rows="2" placeholder="Opsional: tulis topik/bagian yang ingin ditekankan." 
+          <label class="block text-xs font-bold text-gray-700 mb-1">Catatan / Ringkasan Modul <span class="font-normal text-gray-500">(opsional)</span></label>
+          <textarea id="input-isi" rows="2" placeholder="Topik atau gambaran umum isi modul..." 
             class="w-full px-3.5 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-800 focus:outline-none"></textarea>
         </div>
 
@@ -396,20 +409,54 @@
             class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-bi-blue hover:file:bg-blue-100">
         </div>
 
-        <div class="p-2.5 bg-yellow-50 border border-yellow-200 rounded-xl text-[11px] text-yellow-800 flex items-center gap-2">
-          <i class="fa-solid fa-wand-magic-sparkles text-yellow-600 text-sm shrink-0"></i>
-          <span><strong>Auto AI Ollama Quiz:</strong> AI meracik kuis & Anda bisa mengecek/mengedit kuis (visual atau copas JSON langsung)!</span>
+        <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-[11px] text-emerald-800 flex items-center gap-2">
+          <i class="fa-solid fa-bolt text-emerald-600 text-sm shrink-0"></i>
+          <span><strong>Instan & Bebas Hambatan:</strong> Modul langsung terbit dan Anda mendapatkan <strong>+50 Poin</strong> instan! Pembuatan kuis bisa direquest ke Admin setelahnya.</span>
         </div>
 
         <button type="submit" id="btn-submit"
           class="w-full bg-bi-blue hover:bg-bi-blue-dark text-white font-semibold py-2.5 rounded-lg text-xs sm:text-sm transition shadow flex items-center justify-center gap-2">
-          <i class="fa-solid fa-wand-magic-sparkles"></i> Racik Kuis AI & Periksa Soal
+          <i class="fa-solid fa-cloud-arrow-up"></i> Terbitkan Modul Pembelajaran (+50 Pts)
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Modal Editor & Pratinjau Kuis AI Sebelum Terbit / Edit Superadmin -->
+  <!-- Modal Pilih Admin WhatsApp Request Kuis -->
+  <div id="wa-admin-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="text-sm font-bold text-bi-blue flex items-center gap-2">
+          <i class="fa-brands fa-whatsapp text-emerald-500 text-base"></i> Kirim Request Kuis ke Admin
+        </h3>
+        <button onclick="toggleWaAdminModal(false)" class="text-gray-400 hover:text-gray-600 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-gray-600">Pilih Admin KPwBI Jember yang ingin Anda hubungi via WhatsApp untuk meracik kuis modul ini:</p>
+
+      <div class="space-y-2">
+        <button onclick="kirimWARequestDirect('mochtar')" class="w-full p-3 bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-400 rounded-xl text-left transition flex items-center justify-between group">
+          <div>
+            <p class="font-bold text-xs text-bi-blue group-hover:text-emerald-700">Admin Mochtar Muhtadi Iksan</p>
+            <p class="text-[10px] text-gray-500">+62 812-5277-7143 (UIKSP)</p>
+          </div>
+          <i class="fa-brands fa-whatsapp text-emerald-500 text-xl group-hover:scale-110 transition"></i>
+        </button>
+
+        <button onclick="kirimWARequestDirect('bayu')" class="w-full p-3 bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-400 rounded-xl text-left transition flex items-center justify-between group">
+          <div>
+            <p class="font-bold text-xs text-bi-blue group-hover:text-emerald-700">Admin M. Bayu Setiawan</p>
+            <p class="text-[10px] text-gray-500">+62 888-4082-636 (UPUR)</p>
+          </div>
+          <i class="fa-brands fa-whatsapp text-emerald-500 text-xl group-hover:scale-110 transition"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Editor Kuis (Fitur Admin Only) -->
   <div id="edit-quiz-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl max-w-3xl w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200 max-h-[90vh] overflow-y-auto">
       
@@ -417,9 +464,9 @@
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b pb-3">
         <div>
           <h3 class="text-sm sm:text-base font-bold text-bi-blue flex items-center gap-2">
-            <i class="fa-solid fa-pen-to-square text-yellow-600"></i> Periksa & Edit 10 Soal Kuis AI
+            <i class="fa-solid fa-wand-magic-sparkles text-yellow-600"></i> Kelola & Racik Kuis AI Modul (Admin)
           </h3>
-          <p class="text-[11px] sm:text-xs text-gray-500">Edit satu per satu atau copas langsung JSON mentah dari Gemini/Ollama.</p>
+          <p class="text-[11px] sm:text-xs text-gray-500">Edit visual atau copas langsung JSON mentah dari Gemini/Ollama.</p>
         </div>
 
         <!-- Toggle Switch Mode Visual VS Mode Massal (JSON) -->
@@ -440,11 +487,11 @@
         </div>
       </div>
 
-      <!-- MODE 2: Copas Langsung Raw JSON (Aman & Cepat) -->
+      <!-- MODE 2: Copas Langsung Raw JSON -->
       <div id="quiz-editor-json-wrapper" class="hidden space-y-3">
         <div class="bg-blue-50 border border-blue-200 p-3 rounded-xl text-xs text-blue-900 space-y-1">
           <p class="font-bold flex items-center gap-1.5"><i class="fa-solid fa-copy text-bi-blue"></i> Salin Prompt / Copas Jawaban JSON Gemini</p>
-          <p class="text-[11px] text-slate-600">Kamu bisa minta Gemini/ChatGPT di HP/Laptop meracik 10 soal, lalu langsung paste hasilnya ke dalam kotak di bawah ini:</p>
+          <p class="text-[11px] text-slate-600">Admin bisa minta Gemini/ChatGPT meracik 10 soal, lalu paste hasilnya di bawah ini:</p>
           <div class="pt-1 flex gap-2">
             <button type="button" onclick="copyGeminiPrompt()" class="bg-white hover:bg-slate-100 border text-bi-blue px-2.5 py-1 rounded font-bold text-[10px] transition">
               <i class="fa-regular fa-copy mr-1"></i> Salin Prompt Gemini
@@ -467,7 +514,7 @@
       <div class="pt-3 border-t flex justify-between items-center sticky bottom-0 bg-white p-2">
         <button type="button" onclick="toggleEditQuizModal(false)" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg text-xs transition">Batal</button>
         <button type="button" id="btn-save-final-quiz" onclick="simpanFinalKuisMateri()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs transition shadow flex items-center gap-1.5">
-          <i class="fa-solid fa-circle-check"></i> Simpan & Terbitkan Materi (+50 Pts)
+          <i class="fa-solid fa-circle-check"></i> Terbitkan Kuis (+20 Pts Admin & +30 Pts Pengunggah)
         </button>
       </div>
     </div>
@@ -513,7 +560,7 @@
     </div>
   </div>
 
-  <!-- Modal pengerjaan Kuis AI 10 Soal -->
+  <!-- Modal Pengerjaan Kuis AI 10 Soal -->
   <div id="quiz-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl max-w-xl w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-2.5">
@@ -541,7 +588,7 @@
   <!-- Firebase SDK & Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, increment, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, increment, setDoc, getDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCot0XGB8--jZrEd_AkC51CbT_UCTTLUpc",
@@ -558,13 +605,17 @@
 
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyR30go-8sp-JWqgLQ6qdm1jCru3QoWqZUXHy92JgRT45-_0Jd6AePOQRImJgdS-t00/exec";
 
-    // AKUN SUPERADMIN NIP: 17241 (Mochtar Muhtadi IKSAN)
-    const SUPERADMIN_NIP = "17241";
+    // NIP DUA SUPERADMIN (Mochtar Muhtadi Iksan & M. Bayu Setiawan)
+    const SUPERADMIN_NIPS = ["17241", "17471"];
+    const ADMIN_WA_NUMBERS = {
+      mochtar: "6281252777143",
+      bayu: "628884082636"
+    };
 
     const DATA_PEGAWAI = [
       {"nip": "17241", "nama": "MOCHTAR MUHTADI IKSAN", "unit": "UIKSP", "pangkat": "Pelaksana"},
-      {"nip": "00000", "nama": "Guest User (Tamu)", "unit": "Umum", "pangkat": "Tamu"},
       {"nip": "17471", "nama": "M BAYU SETIAWAN", "unit": "UPUR", "pangkat": "Pelaksana"},
+      {"nip": "00000", "nama": "Guest User (Tamu)", "unit": "Umum", "pangkat": "Tamu"},
       {"nip": "17388", "nama": "ADHYTYA BAGUS RIZKIANTO", "unit": "UPUR", "pangkat": "Pelaksana"},
       {"nip": "15133", "nama": "AGAPITO GANESHA JMN", "unit": "UIKSP", "pangkat": "Asisten Manajer"},
       {"nip": "16405", "nama": "PANJI PAMUNGKAS AAY", "unit": "UPUR", "pangkat": "Pelaksana"},
@@ -623,6 +674,7 @@
 
     let pendingUploadData = null;
     let editingExistingMateriId = null;
+    let selectedWaMateriId = null;
 
     // TRACKING TRAFFIC PAGEVIEW STATS (FIREBASE)
     async function trackPageTraffic() {
@@ -658,8 +710,43 @@
     }
 
     function isSuperAdmin() {
-      return currentUser && currentUser.nip === SUPERADMIN_NIP;
+      return currentUser && SUPERADMIN_NIPS.includes(currentUser.nip);
     }
+
+    // CEK NOTIFIKASI KUIS BARU DITERBITKAN SAAT PEGAWAI LOGIN
+    async function checkUserNotifications() {
+      if (!currentUser || !currentUser.nip) return;
+
+      try {
+        const q = query(
+          collection(db, "notifications"), 
+          where("targetNip", "==", currentUser.nip),
+          where("read", "==", false)
+        );
+
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+          let messages = [];
+          snap.forEach((docSnap) => {
+            const data = docSnap.data();
+            messages.push(data.message);
+            // Tandai sudah dibaca
+            updateDoc(doc(db, "notifications", docSnap.id), { read: true });
+          });
+
+          const banner = document.getElementById('login-notification-banner');
+          const textEl = document.getElementById('login-notification-text');
+          textEl.innerHTML = `<strong>Kuis Baru Terbit!</strong> ${messages.join(" | ")}`;
+          banner.classList.remove('hidden');
+        }
+      } catch (err) {
+        console.error("Error Checking Notifications:", err);
+      }
+    }
+
+    window.closeNotificationBanner = function() {
+      document.getElementById('login-notification-banner').classList.add('hidden');
+    };
 
     function updateUIForLogin() {
       if (currentUser) {
@@ -680,6 +767,8 @@
         } else {
           document.getElementById('superadmin-badge').classList.add('hidden');
         }
+
+        checkUserNotifications();
       } else {
         document.getElementById('user-info-bar').classList.add('hidden');
         document.getElementById('user-info-bar').classList.remove('flex');
@@ -723,11 +812,18 @@
 
     window.toggleUploadModal = function(show) {
       if (!currentUser) {
-        alert("Silakan Login Pegawai terlebih dahulu untuk mengunggah materi!");
+        alert("Silakan Login Pegawai terlebih dahulu untuk mengunggah modul!");
         toggleLoginModal(true);
         return;
       }
       const modal = document.getElementById('upload-modal');
+      if (show) modal.classList.remove('hidden');
+      else modal.classList.add('hidden');
+    };
+
+    window.toggleWaAdminModal = function(show, materiId = null) {
+      if (materiId) selectedWaMateriId = materiId;
+      const modal = document.getElementById('wa-admin-modal');
       if (show) modal.classList.remove('hidden');
       else modal.classList.add('hidden');
     };
@@ -780,6 +876,20 @@
         updateUIForLogin();
         alert("Anda telah keluar.");
       }
+    };
+
+    // KIRIM REQUEST KUIS KE WHATSAPP ADMIN (DIRECT DEEP-LINKING)
+    window.kirimWARequestDirect = function(adminKey) {
+      if (!selectedWaMateriId || !allMateriData[selectedWaMateriId]) return;
+
+      const m = allMateriData[selectedWaMateriId];
+      const targetPhone = ADMIN_WA_NUMBERS[adminKey] || ADMIN_WA_NUMBERS.mochtar;
+
+      const text = `Halo Admin SINAU KPwBI Jember!\n\nSaya *${currentUser.nama}* (NIP: ${currentUser.nip}) ingin mengajukan request kuis AI untuk modul yang baru saya upload:\n\n📌 *Judul Modul:* ${m.judul}\n📂 *Kategori:* ${m.kategori}\n🔗 *Lampiran:* ${m.link || 'Berkas Terlampir'}\n\nMohon bantuannya untuk diracikkan kuisnya ya Admin. Terima kasih! 🙏`;
+
+      const url = `https://wa.me/${targetPhone}?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+      toggleWaAdminModal(false);
     };
 
     // Login Form Submit (Cek Password Kustom dari Firebase)
@@ -886,93 +996,6 @@
       });
     };
 
-    const MAX_TEXT_CHARS = 8000;
-
-    const decodeXmlEntities = (s) => {
-      const t = document.createElement('textarea');
-      t.innerHTML = s;
-      return t.value;
-    };
-
-    const xmlToText = (xml, paraTag) => {
-      const withBreaks = xml
-        .replace(/<w:instrText[^>]*>[\s\S]*?<\/w:instrText>/g, '')
-        .replace(/<(?:a|w):br\s*\/>/g, '\n')
-        .replace(/<w:tab\s*\/>/g, ' ')
-        .replace(new RegExp(`</${paraTag}>`, 'g'), '\n');
-      return decodeXmlEntities(withBreaks.replace(/<[^>]+>/g, ''))
-        .replace(/[ \t]+\n/g, '\n')
-        .replace(/\n{3,}/g, '\n\n')
-        .trim();
-    };
-
-    async function extractFileContent(file, base64) {
-      const ext = file.name.split('.').pop().toLowerCase();
-
-      if (ext === 'pdf') {
-        if (typeof pdfjsLib === 'undefined') return { kind: 'unsupported' };
-        const buf = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-
-        const pages = [];
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const tc = await page.getTextContent();
-          const t = tc.items
-            .map(it => it.str + (it.hasEOL ? '\n' : ' '))
-            .join('')
-            .replace(/[ \t]+/g, ' ')
-            .replace(/\n{3,}/g, '\n\n')
-            .trim();
-          if (t) pages.push({ n: i, t });
-        }
-
-        const total = pages.reduce((s, p) => s + p.t.length, 0);
-        if (total < 30) return { kind: 'empty' };
-
-        const perPage = Math.max(200, Math.floor(MAX_TEXT_CHARS / pages.length));
-        const text = pages
-          .map(p => `[Halaman ${p.n}]\n${p.t.slice(0, perPage)}`)
-          .join('\n\n')
-          .slice(0, MAX_TEXT_CHARS);
-        return { kind: 'text', text };
-      }
-
-      if (ext === 'docx' || ext === 'pptx') {
-        if (typeof JSZip === 'undefined') return { kind: 'unsupported' };
-        const zip = await JSZip.loadAsync(file);
-        let text = '';
-
-        if (ext === 'docx') {
-          const docFile = zip.file('word/document.xml');
-          if (docFile) text = xmlToText(await docFile.async('string'), 'w:p');
-        } else {
-          const slideNum = (n) => parseInt(n.match(/(\d+)\.xml$/)[1], 10);
-          const slideNames = Object.keys(zip.files)
-            .filter(n => /^ppt\/slides\/slide\d+\.xml$/.test(n))
-            .sort((a, b) => slideNum(a) - slideNum(b));
-
-          const chunks = [];
-          for (const name of slideNames) {
-            const n = slideNum(name);
-            let chunk = `[Slide ${n}]\n` + xmlToText(await zip.file(name).async('string'), 'a:p');
-            const notesFile = zip.file(`ppt/notesSlides/notesSlide${n}.xml`);
-            if (notesFile) {
-              const notes = xmlToText(await notesFile.async('string'), 'a:p');
-              if (notes) chunk += `\n(Catatan: ${notes})`;
-            }
-            chunks.push(chunk);
-          }
-          text = chunks.join('\n\n');
-        }
-
-        if (text.length < 30) return { kind: 'empty' };
-        return { kind: 'text', text: text.slice(0, MAX_TEXT_CHARS) };
-      }
-
-      return { kind: 'unsupported' };
-    }
-
     function normalizeQuestions(list) {
       if (!Array.isArray(list)) return [];
       const out = [];
@@ -995,66 +1018,14 @@
       return out;
     }
 
-    // PROMPT SEDERHANA KE OLLAMA NGROK
-    async function generateQuestionsWithGemini(judul, kategori, catatan, content) {
-      const OLLAMA_URL = "https://swept-composed-bunch.ngrok-free.dev/api/generate";
-
-      if (content.kind !== 'text' && !(catatan && catatan.trim().length >= 30)) {
-        throw new Error("Isi file tidak bisa dibaca (PDF hasil scan/gambar). Tulis ringkasan materi di kolom Catatan (minimal 30 karakter).");
-      }
-      let teksMateri = content.kind === 'text' ? content.text : catatan;
-
-      const promptText = `Buatkan TEPAT 10 soal kuis pilihan ganda SEDERHANA & JELAS dalam Bahasa Indonesia berdasarkan teks ini:
-Judul: ${judul}
-Kategori: ${kategori}
-Materi: ${teksMateri}
-
-SYARAT FORMAT:
-1. Soal harus langsung berorientasi fakta/definisi utama.
-2. Setiap soal punya 4 pilihan jawaban (A, B, C, D) dan 1 kunci jawaban pasti.
-3. Kembalikan HANYA JSON MURNI tanpa penjelasan apapun:
-[{"soal":"Sebutkan...","a":"...","b":"...","c":"...","d":"...","kunci":"A"}]`;
-
-      try {
-        const res = await fetch(OLLAMA_URL, {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': 'true'
-          },
-          body: JSON.stringify({
-            model: "llama3.2",
-            prompt: promptText,
-            stream: false,
-            format: "json",
-            options: {
-              num_ctx: 4096,
-              temperature: 0.2
-            }
-          })
-        });
-
-        if (!res.ok) {
-          throw new Error(`Koneksi ngrok HTTP ${res.status}`);
-        }
-
-        const data = await res.json();
-        const quizList = JSON.parse(data.response);
-        return normalizeQuestions(quizList);
-      } catch (err) {
-        console.error("Ollama ngrok error:", err);
-        throw new Error("Gagal terhubung ke AI Ollama Lokal. Pastikan Ollama & ngrok di laptop aktif!");
-      }
-    }
-
-    // Submit Upload Form -> Racik Kuis AI & Buka Modal Review Editor
+    // Submit Upload Form (SISTEM TERBIT INSTAN + 50 POIN PASTI)
     document.getElementById('form-upload').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!currentUser) return;
 
       const btn = document.getElementById('btn-submit');
-      const defaultBtnHTML = `<i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Racik Kuis AI & Periksa Soal`;
-      const setBtn = (msg) => { btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ${msg}`; };
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengunggah Modul...`;
+      btn.disabled = true;
 
       const judul = document.getElementById('input-judul').value;
       const kategori = document.getElementById('input-kategori').value;
@@ -1063,49 +1034,72 @@ SYARAT FORMAT:
 
       if (!fileInput) {
         alert("Silakan unggah file modul terlebih dahulu!");
+        btn.disabled = false;
         return;
       }
 
-      btn.disabled = true;
-
       try {
-        setBtn('Membaca berkas modul...');
         const base64Data = await readFileAsBase64(fileInput);
 
-        let content;
-        try {
-          content = await extractFileContent(fileInput, base64Data);
-        } catch (ex) {
-          content = { kind: 'unsupported' };
-        }
-
-        setBtn('AI Ollama meracik 10 kuis di laptop...');
-        const questionsList = await generateQuestionsWithGemini(judul, kategori, isi, content);
-
-        pendingUploadData = {
-          judul, kategori, isi,
+        let driveLink = "";
+        const payload = {
           fileName: fileInput.name,
-          fileType: fileInput.type,
-          base64Data,
-          questions: questionsList
+          mimeType: fileInput.type,
+          base64: base64Data
         };
 
-        editingExistingMateriId = null;
+        const response = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
 
-        renderQuizEditor(questionsList);
+        const resultText = await response.text();
+        if (resultText.includes("http")) {
+          const match = resultText.match(/https?:\/\/[^\s"]+/);
+          if (match) driveLink = match[0];
+        }
+
+        // Simpan Modul Baru ke Firestore (Kuis Kosong Dulu)
+        const newDocRef = await addDoc(collection(db, "materi"), {
+          pengarang: currentUser.nama,
+          nip: currentUser.nip,
+          unit: currentUser.unit,
+          judul: judul,
+          kategori: kategori,
+          isi: isi,
+          fileName: fileInput.name,
+          fileType: fileInput.type,
+          link: driveLink,
+          questions: [],
+          timestamp: new Date()
+        });
+
+        // Tambah +50 Poin Langsung untuk Pengunggah
+        await addDoc(collection(db, "users"), {
+          nama: currentUser.nama,
+          nip: currentUser.nip,
+          poin: 50
+        });
+
+        alert("Selamat! Modul Anda berhasil diterbitkan dan Anda meraih +50 POIN!\n\nAnda bisa langsung mengklik 'Ajukan Kuis ke Admin' agar kuis AI diracikkan!");
         toggleUploadModal(false);
-        toggleEditQuizModal(true);
+        document.getElementById('form-upload').reset();
+
+        // Tanyakan apakah ingin langsung request kuis WA
+        if (confirm("Apakah Anda ingin langsung meminta Admin meracik kuis untuk modul ini via WhatsApp?")) {
+          toggleWaAdminModal(true, newDocRef.id);
+        }
 
       } catch (err) {
         console.error("Error Upload:", err);
-        alert(err.message || "Terjadi kesalahan saat mengunggah berkas.");
+        alert("Gagal mengunggah modul. Silakan coba beberapa saat lagi.");
       } finally {
-        btn.innerHTML = defaultBtnHTML;
+        btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Terbitkan Modul Pembelajaran (+50 Pts)`;
         btn.disabled = false;
       }
     });
 
-    // FUNGSI UTAMA FITUR COPAS BULK JSON VS FORM VISUAL[cite: 14]
+    // MODE EDITOR SWITCHER (VISUAL VS JSON)
     window.switchQuizEditorTab = function(mode) {
       const btnVisual = document.getElementById('tab-mode-visual');
       const btnJson = document.getElementById('tab-mode-json');
@@ -1123,13 +1117,11 @@ SYARAT FORMAT:
         wrapJson.classList.remove('hidden');
         wrapVisual.classList.add('hidden');
 
-        // Isi textarea dengan JSON kuis saat ini
         const currentData = collectEditedQuiz();
         document.getElementById('editor-raw-json').value = JSON.stringify(currentData, null, 2);
       }
     };
 
-    // Terapkan JSON Mentah ke Form Visual
     window.parseRawJSONToVisual = function() {
       const rawText = document.getElementById('editor-raw-json').value.trim();
       if (!rawText) {
@@ -1151,7 +1143,7 @@ SYARAT FORMAT:
         alert(`Berhasil mengimpor ${normalized.length} soal kuis dari JSON! Form visual telah terisi otomatis.`);
 
       } catch (err) {
-        alert("Gagal membaca JSON! Pastikan format JSON dari Gemini/Ollama sudah benar (tanpa tanda koma berlebih).");
+        alert("Gagal membaca JSON! Pastikan format JSON dari Gemini/Ollama sudah benar.");
       }
     };
 
@@ -1171,12 +1163,16 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       alert("JSON 10 Soal Kuis berhasil disalin!");
     };
 
-    // Render Form Edit Kuis Visual[cite: 14]
     function renderQuizEditor(questions) {
       const container = document.getElementById('quiz-editor-container');
       container.innerHTML = "";
 
-      questions.forEach((q, idx) => {
+      // Jika kuis kosong, buatkan 10 slot default
+      const list = (questions && questions.length > 0) ? questions : Array(10).fill({
+        soal: "", a: "", b: "", c: "", d: "", kunci: "A"
+      });
+
+      list.forEach((q, idx) => {
         const box = document.createElement('div');
         box.className = "p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2.5 text-xs";
         
@@ -1195,26 +1191,26 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
           </div>
 
           <div>
-            <input type="text" id="editor-soal-${idx}" value="${q.soal.replace(/"/g, '&quot;')}" required placeholder="Teks Pertanyaan" 
+            <input type="text" id="editor-soal-${idx}" value="${(q.soal || '').replace(/"/g, '&quot;')}" required placeholder="Teks Pertanyaan" 
               class="w-full px-3 py-1.5 border border-gray-300 rounded-lg font-medium text-gray-800 focus:ring-1 focus:ring-blue-800">
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div class="flex items-center gap-1">
               <span class="font-bold text-gray-500 w-4">A.</span>
-              <input type="text" id="editor-opt-a-${idx}" value="${q.a.replace(/"/g, '&quot;')}" required class="w-full px-2.5 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-800">
+              <input type="text" id="editor-opt-a-${idx}" value="${(q.a || '').replace(/"/g, '&quot;')}" required class="w-full px-2.5 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-800">
             </div>
             <div class="flex items-center gap-1">
               <span class="font-bold text-gray-500 w-4">B.</span>
-              <input type="text" id="editor-opt-b-${idx}" value="${q.b.replace(/"/g, '&quot;')}" required class="w-full px-2.5 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-800">
+              <input type="text" id="editor-opt-b-${idx}" value="${(q.b || '').replace(/"/g, '&quot;')}" required class="w-full px-2.5 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-800">
             </div>
             <div class="flex items-center gap-1">
               <span class="font-bold text-gray-500 w-4">C.</span>
-              <input type="text" id="editor-opt-c-${idx}" value="${q.c.replace(/"/g, '&quot;')}" required class="w-full px-2.5 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-800">
+              <input type="text" id="editor-opt-c-${idx}" value="${(q.c || '').replace(/"/g, '&quot;')}" required class="w-full px-2.5 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-800">
             </div>
             <div class="flex items-center gap-1">
               <span class="font-bold text-gray-500 w-4">D.</span>
-              <input type="text" id="editor-opt-d-${idx}" value="${q.d.replace(/"/g, '&quot;')}" required class="w-full px-2.5 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-800">
+              <input type="text" id="editor-opt-d-${idx}" value="${(q.d || '').replace(/"/g, '&quot;')}" required class="w-full px-2.5 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-800">
             </div>
           </div>
         `;
@@ -1222,9 +1218,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       });
     }
 
-    // Mengambil data dari Editor Kuis (Bekerja otomatis baik dari Mode Visual maupun JSON)
     function collectEditedQuiz() {
-      // Jika user sedang di tab JSON, pastikan ter-parse dulu
       const wrapJson = document.getElementById('quiz-editor-json-wrapper');
       if (wrapJson && !wrapJson.classList.contains('hidden')) {
         parseRawJSONToVisual();
@@ -1249,11 +1243,16 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       return updated;
     }
 
-    // Simpan Final Kuis & Terbitkan Ke Firestore / Drive
+    // SIMPAN FINAL KUIS OLEH ADMIN (+20 POIN ADMIN & +30 POIN PENGUNGGAH)
     window.simpanFinalKuisMateri = async function() {
+      if (!isSuperAdmin()) {
+        alert("Hanya Admin yang berwenang menerbitkan kuis!");
+        return;
+      }
+
       const finalQuestions = collectEditedQuiz();
       if (finalQuestions.length < 1) {
-        alert("Harap lengkapi pertanyaan kuis terlebih dahulu!");
+        alert("Harap isi pertanyaan kuis terlebih dahulu!");
         return;
       }
 
@@ -1264,65 +1263,51 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       try {
         if (editingExistingMateriId) {
           const docRef = doc(db, "materi", editingExistingMateriId);
+          const materiItem = allMateriData[editingExistingMateriId];
+
           await updateDoc(docRef, { questions: finalQuestions });
-          alert("Soal kuis berhasil diperbarui!");
-        } else if (pendingUploadData) {
-          let driveLink = "";
-          const payload = {
-            fileName: pendingUploadData.fileName,
-            mimeType: pendingUploadData.fileType,
-            base64: pendingUploadData.base64Data
-          };
 
-          const response = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify(payload)
-          });
-
-          const resultText = await response.text();
-          if (resultText.includes("http")) {
-            const match = resultText.match(/https?:\/\/[^\s"]+/);
-            if (match) driveLink = match[0];
-          }
-
-          await addDoc(collection(db, "materi"), {
-            pengarang: currentUser.nama,
-            nip: currentUser.nip,
-            unit: currentUser.unit,
-            judul: pendingUploadData.judul,
-            kategori: pendingUploadData.kategori,
-            isi: pendingUploadData.isi,
-            fileName: pendingUploadData.fileName,
-            fileType: pendingUploadData.fileType,
-            link: driveLink,
-            questions: finalQuestions,
-            timestamp: new Date()
-          });
-
+          // Berikan Poin +20 ke Admin yang Meracik
           await addDoc(collection(db, "users"), {
             nama: currentUser.nama,
             nip: currentUser.nip,
-            poin: 50
+            poin: 20
           });
 
-          alert("Materi & Kuis AI Terverifikasi Berhasil Diterbitkan! Anda mendapatkan +50 Poin!");
+          // Jika ini kuis baru pertama kali diterbitkan untuk modul tersebut, berikan +30 Poin ke Pengunggah Modul
+          if (materiItem && (!materiItem.questions || materiItem.questions.length === 0)) {
+            if (materiItem.nip) {
+              await addDoc(collection(db, "users"), {
+                nama: materiItem.pengarang,
+                nip: materiItem.nip,
+                poin: 30
+              });
+
+              // Kirim Notifikasi ke Firebase untuk Pengunggah Modul
+              await addDoc(collection(db, "notifications"), {
+                targetNip: materiItem.nip,
+                message: `Kuis untuk modul Anda '${materiItem.judul}' telah diterbitkan oleh Admin! Anda mendapat tambahan +30 Poin! 🎉`,
+                read: false,
+                timestamp: new Date()
+              });
+            }
+          }
+
+          alert("Kuis berhasil diterbitkan! Poin telah disalurkan (+20 Poin Admin & +30 Poin Pengunggah).");
         }
 
         toggleEditQuizModal(false);
-        pendingUploadData = null;
         editingExistingMateriId = null;
-        document.getElementById('form-upload').reset();
 
       } catch (err) {
-        console.error("Error Simpan Final:", err);
-        alert("Gagal menyimpan materi.");
+        console.error("Error Simpan Kuis:", err);
+        alert("Gagal menyimpan kuis.");
       } finally {
-        btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Simpan & Terbitkan Materi (+50 Pts)`;
+        btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Terbitkan Kuis (+20 Pts Admin & +30 Pts Pengunggah)`;
         btn.disabled = false;
       }
     };
 
-    // Helper Icon Cover File
     function getFileThumbnailIcon(fileName) {
       if (!fileName) return '<i class="fa-solid fa-file text-blue-600 text-2xl sm:text-3xl"></i>';
       const ext = fileName.split('.').pop().toLowerCase();
@@ -1332,26 +1317,26 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       return '<i class="fa-solid fa-file-lines text-slate-500 text-2xl sm:text-3xl"></i>';
     }
 
-    // Filter Search Materi
     window.filterMateriList = function() {
       const keyword = document.getElementById('input-search').value.toLowerCase();
       renderMateriCards(keyword);
     };
 
-    // Buka Edit Kuis untuk Materi Eksisting (Superadmin / Owner)
     window.bukaEditKuisMateri = function(id) {
+      if (!isSuperAdmin()) {
+        alert("Fitur racik kuis dikelola oleh Admin.");
+        return;
+      }
+
       const item = allMateriData[id];
-      if (!item || !item.questions) return;
+      if (!item) return;
 
       editingExistingMateriId = id;
-      pendingUploadData = null;
-
       switchQuizEditorTab('visual');
-      renderQuizEditor(item.questions);
+      renderQuizEditor(item.questions || []);
       toggleEditQuizModal(true);
     };
 
-    // Buka Edit Informasi Materi
     window.bukaEditMateri = function(id) {
       const item = allMateriData[id];
       if (!item) return;
@@ -1364,7 +1349,6 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       toggleEditModal(true);
     };
 
-    // Submit Edit Form Informasi Materi
     document.getElementById('form-edit').addEventListener('submit', async (e) => {
       e.preventDefault();
       const id = document.getElementById('edit-materi-id').value;
@@ -1393,7 +1377,6 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       }
     });
 
-    // Fungsi Hapus Materi (Superadmin atau Pemilik)
     window.hapusMateri = async function(id) {
       const item = allMateriData[id];
       if (!item) return;
@@ -1447,6 +1430,13 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
               <i class="fa-solid ${isDone ? 'fa-check-double text-slate-400' : 'fa-brain'}"></i> ${isDone ? 'Kuis Selesai' : `Kerjakan Kuis (${item.questions.length} Soal)`}
             </button>
           `;
+        } else {
+          // Jika kuis belum ada, sediakan tombol Request Kuis
+          quizBtnHTML = `
+            <button onclick="toggleWaAdminModal(true, '${id}')" class="w-full sm:w-auto text-xs bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold px-3.5 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5 shadow-sm">
+              <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i> Ajukan Kuis ke Admin (+30 Pts)
+            </button>
+          `;
         }
 
         let actionButtonsHTML = '';
@@ -1455,7 +1445,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
         if (canManage) {
           actionButtonsHTML = `
             <div class="flex items-center gap-1.5 ml-2">
-              ${item.questions ? `<button onclick="bukaEditKuisMateri('${id}')" title="Edit Soal Kuis" class="p-1 sm:p-1.5 text-xs text-yellow-600 hover:bg-yellow-50 rounded-md transition border border-yellow-300"><i class="fa-solid fa-brain"></i></button>` : ''}
+              ${isSuperAdmin() ? `<button onclick="bukaEditKuisMateri('${id}')" title="Racik / Edit Soal Kuis" class="p-1 sm:p-1.5 text-xs text-yellow-600 hover:bg-yellow-50 rounded-md transition border border-yellow-300"><i class="fa-solid fa-wand-magic-sparkles"></i></button>` : ''}
               <button onclick="bukaEditMateri('${id}')" title="Edit Info Materi" class="p-1 sm:p-1.5 text-xs text-blue-600 hover:bg-blue-50 rounded-md transition border border-blue-200">
                 <i class="fa-solid fa-pen-to-square"></i>
               </button>
@@ -1577,7 +1567,7 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
       });
     });
 
-    // Fungsi Pengerjaan Kuis AI
+    // Pengerjaan Kuis AI
     window.mulaiKuisAI = function(materiId) {
       if (!currentUser) {
         alert("Silakan Login Pegawai terlebih dahulu!");
