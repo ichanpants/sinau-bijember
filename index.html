@@ -1656,16 +1656,18 @@ Kembalikan HANYA format JSON Array murni tanpa penjelasan/pembuka/penutup apapun
 
         let mediaDisplayHTML = '';
         if (isVideo && item.link) {
-          mediaDisplayHTML = `
-            <div class="w-full rounded-xl overflow-hidden bg-black shadow-inner my-2">
-              <video controls class="w-full max-h-72 object-contain">
-                <source src="${item.link}" type="${item.fileType || 'video/mp4'}">
-                Browser Anda tidak mendukung pemutaran video.
-              </video>
-            </div>
-          `;
+        // Konversi link Google Drive menjadi link preview/embed
+        let embedUrl = item.link;
+        if (embedUrl.includes('drive.google.com')) {
+        embedUrl = embedUrl.replace(/\/view.*$/, '/preview').replace(/\/edit.*$/, '/preview');
         }
 
+        mediaDisplayHTML = `
+        <div class="w-full rounded-xl overflow-hidden bg-black shadow-inner my-2 relative pt-[56.25%]">
+        <iframe src="${embedUrl}" class="absolute top-0 left-0 w-full h-full border-0" allow="autoplay" allowfullscreen></iframe>
+        </div>
+         `;
+        }
         let linkBtnHTML = item.link ? `
           <a href="${item.link}" target="_blank" class="w-full sm:w-auto text-center inline-flex items-center justify-center gap-1.5 text-xs ${isVideo ? 'text-orange-800 bg-orange-100 hover:bg-orange-200 border-orange-300' : 'text-bi-blue bg-blue-50 hover:bg-blue-100 border-blue-200'} border px-3 py-1.5 rounded-lg font-semibold transition">
             <i class="${isVideo ? 'fa-solid fa-download text-orange-600' : 'fa-brands fa-google-drive text-green-600'}"></i> ${isVideo ? 'Download Video' : 'Buka Lampiran Berkas'}
